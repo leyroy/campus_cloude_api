@@ -8,3 +8,78 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  firstName String
+  lastName  String
+  schoolId  String?
+  addressId String?
+  address   Address? @relation(fields: [addressId], references: [id])
+  school    School?  @relation(fields: [schoolId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model School{
+  id        String   @id @default(cuid())
+  name      String
+  description String?
+  userId    String
+  ownerId   String
+  addressId String?
+  address   Address? @relation(fields: [addressId], references: [id])
+  users     User[]
+  owner     Owner     @relation( fields: [ownerId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  OwnersSchool OwnersSchool[]
+}
+
+model Address {
+  id        String   @id @default(cuid())
+  street    String
+  city      String
+  state     String
+  zipCode   String
+  schoolId  String?
+  User      User[]
+  school    School[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Owner{
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  schools   School[] 
+  OwnersSchool OwnersSchool[]
+}
+
+// bridge table for many-to-many relationship between User and School
+model OwnersSchool {
+  ownerId String
+  schoolId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  owner     Owner   @relation(fields: [ownerId], references: [id])
+  school   School @relation(fields: [schoolId], references: [id])
+  @@id([ownerId, schoolId])
+}
+
+//Permissions model
+model Permission {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+//Role model
+model Role {
+  id          String       @id @default(cuid())
+  name        String       @unique
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
