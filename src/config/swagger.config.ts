@@ -1,4 +1,5 @@
 import swaggerJsdoc from 'swagger-jsdoc';
+import '../docs/users';
 const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
@@ -18,7 +19,8 @@ const swaggerOptions = {
     },
   },
   apis: [
-    './src/docs/schemas.ts',     // Include schema definitions
+    './src/docs/**/*.ts',
+    './src/docs/**/*.ts',    // Include schema definitions
     './src/routes/**/*.ts',         // Include route definitions
   ],
 };

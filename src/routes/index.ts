@@ -1,12 +1,10 @@
 import express from 'express';
-import { ErrorHandler } from '../libs/utils/errorHandler';
-
-const errorHandler = new ErrorHandler();
 
 const appRouter = express.Router();
 import userRouter from './users';
+import roleRouter from './role/routes';
 
-
-appRouter.use('/users', errorHandler.catchAsync(userRouter));
+appRouter.use('/users', userRouter);
+appRouter.use("/roles",roleRouter)
 
 export default appRouter;

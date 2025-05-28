@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
@@ -10,30 +9,37 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  firstName String
-  lastName  String
-  schoolId  String?
-  addressId String?
-  address   Address? @relation(fields: [addressId], references: [id])
-  school    School?  @relation(fields: [schoolId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              String   @id @default(cuid())
+  email           String   @unique
+  firstName       String
+  lastName        String
+  password        String
+  confirmPassword String
+  isActive        Boolean  @default(false)
+  phone           String
+  schoolId        String?
+  addressId       String?
+  address         Address? @relation(fields: [addressId], references: [id])
+  school          School?  @relation(fields: [schoolId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  UserRole UserRole[]
 }
 
-model School{
-  id        String   @id @default(cuid())
-  name      String
-  description String?
-  userId    String
-  ownerId   String
-  addressId String?
-  address   Address? @relation(fields: [addressId], references: [id])
-  users     User[]
-  owner     Owner     @relation( fields: [ownerId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model School {
+  id           String         @id @default(cuid())
+  name         String
+  description  String?
+  userId       String
+  ownerId      String
+  isActive     Boolean        @default(false)
+  addressId    String?
+  address      Address?       @relation(fields: [addressId], references: [id])
+  users        User[]
+  owner        Owner          @relation(fields: [ownerId], references: [id])
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
   OwnersSchool OwnersSchool[]
 }
 
@@ -50,36 +56,65 @@ model Address {
   updatedAt DateTime @updatedAt
 }
 
-model Owner{
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  schools   School[] 
+model Owner {
+  id           String         @id @default(cuid())
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  schools      School[]
   OwnersSchool OwnersSchool[]
 }
 
 // bridge table for many-to-many relationship between User and School
 model OwnersSchool {
-  ownerId String
-  schoolId String
+  ownerId   String
+  schoolId  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  owner     Owner   @relation(fields: [ownerId], references: [id])
-  school   School @relation(fields: [schoolId], references: [id])
+  owner     Owner    @relation(fields: [ownerId], references: [id])
+  school    School   @relation(fields: [schoolId], references: [id])
+
   @@id([ownerId, schoolId])
 }
 
 //Permissions model
 model Permission {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String           @id @default(uuid())
+  name        String           @unique      // e.g. 'student:create'
+  resource    String                            // e.g. 'student'
+  action      String                            // e.g. 'create'
+  description String?
+  roles       RolePermission[]
 }
+
 //Role model
 model Role {
-  id          String       @id @default(cuid())
-  name        String       @unique
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  id          String           @id @default(uuid())
+  name        String           @unique
+  description String?
+  permissions RolePermission[]
+  users       UserRole[]
 }
+
+model RolePermission {
+  id           String      @id @default(uuid())
+  roleId       String
+  permissionId String
+
+  role         Role        @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission  @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId])
+}
+
+model UserRole {
+  id      String     @id @default(uuid())
+  userId  String
+  roleId  String
+
+  user    User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role    Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roleId])
+}
+
+

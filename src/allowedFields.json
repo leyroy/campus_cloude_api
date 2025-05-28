@@ -1,0 +1,123 @@
+[
+  {
+    "modelName": "client",
+    "fields": [
+      "provider",
+      "output"
+    ]
+  },
+  {
+    "modelName": "db",
+    "fields": [
+      "provider",
+      "url"
+    ]
+  },
+  {
+    "modelName": "User",
+    "fields": [
+      "id",
+      "email",
+      "firstName",
+      "lastName",
+      "password",
+      "confirmPassword",
+      "isActive",
+      "phone",
+      "schoolId",
+      "addressId",
+      "createdAt",
+      "updatedAt"
+    ]
+  },
+  {
+    "modelName": "School",
+    "fields": [
+      "id",
+      "name",
+      "description",
+      "userId",
+      "ownerId",
+      "isActive",
+      "addressId",
+      "createdAt",
+      "updatedAt"
+    ]
+  },
+  {
+    "modelName": "Address",
+    "fields": [
+      "id",
+      "street",
+      "city",
+      "state",
+      "zipCode",
+      "schoolId",
+      "createdAt",
+      "updatedAt"
+    ]
+  },
+  {
+    "modelName": "Owner",
+    "fields": [
+      "id",
+      "createdAt",
+      "updatedAt"
+    ]
+  },
+  {
+    "modelName": "",
+    "fields": []
+  },
+  {
+    "modelName": "OwnersSchool",
+    "fields": [
+      "ownerId",
+      "schoolId",
+      "createdAt",
+      "updatedAt"
+    ]
+  },
+  {
+    "modelName": "",
+    "fields": []
+  },
+  {
+    "modelName": "Permission",
+    "fields": [
+      "id",
+      "name",
+      "resource",
+      "action",
+      "description"
+    ]
+  },
+  {
+    "modelName": "",
+    "fields": []
+  },
+  {
+    "modelName": "Role",
+    "fields": [
+      "id",
+      "name",
+      "description"
+    ]
+  },
+  {
+    "modelName": "RolePermission",
+    "fields": [
+      "id",
+      "roleId",
+      "permissionId"
+    ]
+  },
+  {
+    "modelName": "UserRole",
+    "fields": [
+      "id",
+      "userId",
+      "roleId"
+    ]
+  }
+]
