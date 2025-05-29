@@ -9,10 +9,10 @@
     "migrate": "npx prisma migrate dev --name init && pnpm extra:fields",
     "extra:fields": "ts-node src/extractFields.ts",
     "generate": "npx prisma generate",
-     "seed": "ts-node --transpile-only prisma/seed.ts"
+     "seed": "ts-node --transpile-only src/seed/seed.ts"
   },
   "prisma": {
-    "seed": "ts-node --transpile-only prisma/seed.ts"
+    "seed": "ts-node --transpile-only src/seed/seed.ts"
   },
   "author": "",
   "license": "ISC",

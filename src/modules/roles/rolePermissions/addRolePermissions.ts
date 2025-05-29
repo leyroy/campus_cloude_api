@@ -5,9 +5,9 @@ import { ErrorHandler } from "../../../middlewares/errorHandler";
 import { addRolePermissionsHelper } from "../../../services/role/addRolePermissionsHelper";
 
 export const addRolePermissions = async (req:Request,res:Response)=>{
-  const { roleId, permissionIds } = req.body;
-  
-  const results = await addRolePermissionsHelper(roleId, permissionIds);
+  const { roleId, permissionId } = req.body;
+
+  const results = await addRolePermissionsHelper(roleId, permissionId);
   if (!results.success) {
     throw ErrorHandler.internal("Failed to add role permissions");
   }

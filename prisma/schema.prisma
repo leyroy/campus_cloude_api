@@ -19,12 +19,21 @@ model User {
   phone           String
   schoolId        String?
   addressId       String?
-  address         Address? @relation(fields: [addressId], references: [id])
-  school          School?  @relation(fields: [schoolId], references: [id])
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  UserRole UserRole[]
+  // Relations
+  address Address? @relation(fields: [addressId], references: [id])
+  school  School?  @relation(fields: [schoolId], references: [id])
+
+  // Roles this user holds
+  userRoles UserRole[]
+
+  // Roles this user assigned to others
+  assignedRoles UserRole[] @relation("AssignedByRelation")
+
+  // Roles this user created
+  rolesCreated Role[] @relation("UserCreatedRoles")
 }
 
 model School {
@@ -78,43 +87,57 @@ model OwnersSchool {
 
 //Permissions model
 model Permission {
-  id          String           @id @default(uuid())
-  name        String           @unique      // e.g. 'student:create'
-  resource    String                            // e.g. 'student'
-  action      String                            // e.g. 'create'
+  id          String  @id @default(uuid())
+  name        String  @unique
+  resource    String
+  action      String
   description String?
-  roles       RolePermission[]
+
+  // Role-Permission bridge
+  rolePermissions RolePermission[]
 }
 
 //Role model
 model Role {
-  id          String           @id @default(uuid())
-  name        String           @unique
+  id          String   @id @default(uuid())
+  name        String   @unique
   description String?
-  permissions RolePermission[]
-  users       UserRole[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  isActive    Boolean  @default(true)
+
+  // Creator of this role
+  createdById String
+  createdBy   User   @relation("UserCreatedRoles", fields: [createdById], references: [id], onDelete: Cascade)
+
+  // Relations
+  rolePermissions RolePermission[]
+  userRoles       UserRole[]
 }
 
+// ✅ RolePermission bridge (many-to-many between Role & Permission)
 model RolePermission {
-  id           String      @id @default(uuid())
+  id           String @id @default(uuid())
   roleId       String
   permissionId String
 
-  role         Role        @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  permission   Permission  @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
 
   @@unique([roleId, permissionId])
 }
 
+// ✅ UserRole bridge (many-to-many between User & Role with metadata)
 model UserRole {
-  id      String     @id @default(uuid())
-  userId  String
-  roleId  String
+  id           String   @id @default(uuid())
+  userId       String
+  roleId       String
+  assignedById String
+  assignedAt   DateTime @default(now())
 
-  user    User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  role    Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  user       User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role       Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  assignedBy User @relation("AssignedByRelation", fields: [assignedById], references: [id], onDelete: Cascade)
 
   @@unique([userId, roleId])
 }
-
-

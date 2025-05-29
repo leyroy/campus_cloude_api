@@ -21,6 +21,8 @@ export enum TABELS_NAMES_ENUM {
   STAFF = "Staff",
   ROLE = "Role",
   PERMISSION = "Permission",
+  USER_ROLE = "UserRole",
+  ROLE_PERMISSION = "RolePermission",
   NOTIFICATION = "Notification",
   TIMETABLE = "Timetable",
 }

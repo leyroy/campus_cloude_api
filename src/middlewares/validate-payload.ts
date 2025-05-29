@@ -15,7 +15,7 @@ export const validatePayload: (model: TABELS_NAMES_ENUM) => RequestHandler =
     );
 
     if (unwantedFields.length > 0) {
-      console.log({...unwantedFields},"this is unwanted fields from the page")
+      console.log({...unwantedFields},"this is unwanted fields from the page:" + model);
       next(ErrorHandler.badRequest(`Invalid fields: ${unwantedFields.join(", ")}`));
     } else {
       next();

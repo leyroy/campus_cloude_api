@@ -3,8 +3,10 @@ import createUserController from "../../modules/users/controllers/create";
 import { validatePayload } from "../../middlewares/validate-payload";
 import { TABELS_NAMES_ENUM } from "../../types/shared/types";
 import { getUsersController } from "../../modules/users/controllers/getUser.controller";
+import { ErrorHandler } from "../../middlewares/errorHandler";
 
 const usersRouter = express.Router();
+const errorHandler = new ErrorHandler()
 
 /**
  * @swagger
@@ -32,7 +34,7 @@ const usersRouter = express.Router();
  *         description: Users not found.
  */
 
-usersRouter.get("/", getUsersController );
+usersRouter.get("/", errorHandler.catchAsync(getUsersController));
 
 /**
  * @swagger
@@ -64,5 +66,7 @@ usersRouter.get("/", getUsersController );
  *       404:
  *         description: Users not found.
  */
-usersRouter.post("/", validatePayload(TABELS_NAMES_ENUM.ADDRESS), createUserController);
+usersRouter.post("/", validatePayload(TABELS_NAMES_ENUM.USERS), errorHandler.catchAsync(createUserController)); 
+
+
 export default usersRouter;
