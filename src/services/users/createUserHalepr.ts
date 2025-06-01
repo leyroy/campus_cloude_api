@@ -17,9 +17,7 @@ export const createUserHelper = async (userData: UserDto):Promise<CreateReturns>
     if (existingUser) {
       throw ErrorHandler.conflict(`User with email ${userData.email} already exists`);
     }
-    
     const hashedPassword = await passwordManage.hashPassword(userData.password)
-
     await prisma.user.create({
       data: { ...userData,password:hashedPassword}
     });

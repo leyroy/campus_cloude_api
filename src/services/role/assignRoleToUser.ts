@@ -35,9 +35,8 @@ export const assignRoleToUser = async ({roleId, userId, assignedById}:HelperType
 
     const allRoles = await commonDbServices.getRoles()
     return{
-      message:"Created succefully",
+      message:"Role assigned successfully",
       success:true,
-      allRoles
     }
   } catch (error:unknown) {
     if (error instanceof ErrorHandler) {

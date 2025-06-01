@@ -1,3 +1,6 @@
+import { Request } from "express";
+import { IJwtPayload } from "../prisma";
+
 export type CreateReturns = {
   success: boolean;
   message: string;
@@ -25,4 +28,8 @@ export enum TABELS_NAMES_ENUM {
   ROLE_PERMISSION = "RolePermission",
   NOTIFICATION = "Notification",
   TIMETABLE = "Timetable",
+}
+
+export interface CustomRequest extends Request {
+  user: IJwtPayload
 }

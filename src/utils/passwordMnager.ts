@@ -1,6 +1,7 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import { ErrorHandler } from "../middlewares/errorHandler";
+import prisma from "../config/prisma.config";
 
 export interface PasswordConfig {
   saltRounds?: number;
@@ -34,7 +35,9 @@ export class PasswordService {
       this.validatePasswordStrength(plainPassword);
 
       // Hash with bcrypt
-      return await bcrypt.hash(plainPassword, this.config.saltRounds);
+      const hashedPassword = await bcrypt.hash(plainPassword, this.config.saltRounds);
+      console.log(plainPassword, hashedPassword);
+      return hashedPassword;
     } catch (error) {
       if (error instanceof Error) {
         throw ErrorHandler.badRequest(
@@ -46,16 +49,18 @@ export class PasswordService {
   }
 
   // Verify a plain text password against a hashed password
-  async verifyPassword(
+   verifyPassword(
     plainPassword: string,
     hashedPassword: string
-  ): Promise<boolean> {
+  ) {
     try {
       if (!plainPassword || !hashedPassword) {
+        console.log("Verifying password:", plainPassword, hashedPassword);
         return false;
       }
-
-      return await bcrypt.compare(plainPassword, hashedPassword);
+      const isMatch =  bcrypt.compareSync(plainPassword, hashedPassword);
+      console.log("Password match result:", isMatch);
+      return isMatch;
     } catch (error) {
       console.error("Password verification error:", error);
       return false;

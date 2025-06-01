@@ -8,7 +8,6 @@ export class CommonDbServices {
   }
 
   public async getUsers() {
-
     return await prisma.user.findMany({});
   }
 
@@ -21,26 +20,22 @@ export class CommonDbServices {
   public async createUser(data: any) {
     return await prisma.user.create({ data });
   }
-  
-
   public async updateUser(userId: string, data: any) {
     return await prisma.user.update({
       where: { id: userId },
       data,
     });
   }
-
   public async deleteUser(userId: string) {
     return await prisma.user.delete({ where: { id: userId } });
   }
-
- public async getUserPermissions(userId:string,roleId:string){
+  public async getUserPermissions(userId: string, roleId: string) {
     return await prisma.userRole.findFirst({
       where: {
         userId,
-        roleId
+        roleId,
       },
-      include:{
+      include: {
         role: {
           include: {
             rolePermissions: {
@@ -50,27 +45,50 @@ export class CommonDbServices {
             },
           },
         },
-      }
-    })
- }
+      },
+    });
+  }
   public async getUserByEmail(email: string) {
     return await prisma.user.findUnique({
       where: { email },
-      include: this.userWithRole ? { 
-        userRoles:{
-          include:{
-            role:{
-              include:{
-                rolePermissions:{
+      include: this.userWithRole
+        ? {
+            userRoles: {
+              include: {
+                role: {
                   include: {
-                    permission: true,
-                  }
-                }
-              }
-            }
+                    rolePermissions: {
+                      include: {
+                        permission: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
           }
-        }
-       } : undefined,
+        : undefined,
+    });
+  }
+  public async getUserByPhoneOrEmail({phone,email}:{phone:string,email:string}) {
+    return await prisma.user.findFirst({
+      where: { phone, email:email },
+      include:{
+            userRoles: {
+              include: {
+                role: {
+                  include: {
+                    rolePermissions: {
+                      include: {
+                        permission: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            address:true,
+          }
     });
   }
 
@@ -81,13 +99,13 @@ export class CommonDbServices {
   //role and permissions services
   public async getRoles() {
     return await prisma.role.findMany({
-      include:{
-        rolePermissions:{
-          include:{
-            permission:true
-          }
-        }
-      }
+      include: {
+        rolePermissions: {
+          include: {
+            permission: true,
+          },
+        },
+      },
     });
   }
   public async getRoleById(roleId: string) {
@@ -96,22 +114,22 @@ export class CommonDbServices {
     });
   }
 
-  public async getPermissions (){
+  public async getPermissions() {
     return prisma.permission.findMany({
-      include:{
-        rolePermissions:{
-          select:{
-            id:true
+      include: {
+        rolePermissions: {
+          select: {
+            id: true,
           },
-          include:{
-            role:{
-              select:{
-                name:true
-              }
-            }
-          }
-        }
-      }
-    })
+          include: {
+            role: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
   }
 }

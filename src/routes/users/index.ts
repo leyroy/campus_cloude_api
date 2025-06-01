@@ -15,12 +15,6 @@ const errorHandler = new ErrorHandler()
  *     tags: [Users]
  *     summary: Get all users
  *     description: Retrieve a list of all users in the system.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *              $ref: '#/components/schemas/UserRequest'
  *     responses:
  *       200:
  *         description: A list of users.

@@ -9,7 +9,7 @@
     "migrate": "npx prisma migrate dev --name init && pnpm extra:fields",
     "extra:fields": "ts-node src/extractFields.ts",
     "generate": "npx prisma generate",
-     "seed": "ts-node --transpile-only src/seed/seed.ts"
+    "seed": "ts-node --transpile-only src/seed/seed.ts"
   },
   "prisma": {
     "seed": "ts-node --transpile-only src/seed/seed.ts"
@@ -21,6 +21,7 @@
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.18",
     "@types/express": "^5.0.2",
+    "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^18.19.104",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
@@ -33,9 +34,11 @@
     "@loancrate/prisma-schema-parser": "^3.0.0",
     "@prisma/client": "^6.8.2",
     "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
     "nodemon": "^3.1.10",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",

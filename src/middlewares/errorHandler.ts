@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import e, { Request, Response, NextFunction } from "express";
 
 // Custom error class
 export class AppError extends Error {
@@ -117,6 +117,7 @@ export class ErrorHandler {
 
   // Convert various error types to AppError
   private convertToAppError(error: Error): AppError {
+    console.log(error);
     // MongoDB/Mongoose errors
     if (error.name === "ValidationError") {
       return new AppError("Validation failed", 400);
@@ -151,7 +152,7 @@ export class ErrorHandler {
     // Default for unknown errors
     return new AppError(
       this.isDevelopment ? error.message : "Internal server error",
-      500,
+      300,
       false
     );
   }
