@@ -2,12 +2,15 @@ import express from "express";
 import { ErrorHandler } from "../../middlewares/errorHandler";
 import { createRoleController } from "../../modules/roles/controllers/createRole";
 import { validatePayload } from "../../middlewares/validate-payload";
-import { TABELS_NAMES_ENUM } from "../../types/shared/types";
+import { Action, Resource, TABELS_NAMES_ENUM } from "../../types/shared/types";
 import { addRolePermissions } from "../../modules/roles/rolePermissions/addRolePermissions";
 import { assignRoleToUserController } from "../../modules/roles/rolePermissions/assignRoleToUser";
+import { authenticateToken } from "../../middlewares/authenticateToken";
+import permissionHandler from "../../middlewares/permissionsManager";
 
 const roleRouter = express.Router();
 const errorHandler = new ErrorHandler();
+roleRouter.use(authenticateToken)
 
 /**
  * @swagger
@@ -39,6 +42,7 @@ const errorHandler = new ErrorHandler();
  */
 roleRouter.post(
   "/",
+  permissionHandler({action:Action.CREATE, resource:Resource.ROLE}),
   validatePayload(TABELS_NAMES_ENUM.ROLE),
   errorHandler.catchAsync(createRoleController)
 );

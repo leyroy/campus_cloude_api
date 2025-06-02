@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -17,6 +16,9 @@ model User {
   confirmPassword String
   isActive        Boolean  @default(false)
   phone           String
+  phoneVerified   Boolean  @default(false)
+  emailVerified   Boolean  @default(false)
+  lastLogedIn     DateTime  @default(now())
   schoolId        String?
   addressId       String?
   createdAt       DateTime @default(now())
@@ -50,6 +52,22 @@ model School {
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   OwnersSchool OwnersSchool[]
+
+  Plan Plan[]
+}
+model Plan {
+  id          String     @id @default(uuid())
+  name        String
+  code        String     @unique
+  description String?
+  price       Float
+  currency    String     @default("USD")
+  billingCycle String    @default("MONTHLY") 
+  features    Json       
+  isActive    Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  
+  schools     School[]
 }
 
 model Address {

@@ -1,5 +1,4 @@
 //function to add role permissions
-
 import { Request, Response } from "express";
 import { ErrorHandler } from "../../../middlewares/errorHandler";
 import { addRolePermissionsHelper } from "../../../services/role/addRolePermissionsHelper";

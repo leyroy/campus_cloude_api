@@ -24,6 +24,9 @@
       "confirmPassword",
       "isActive",
       "phone",
+      "phoneVerified",
+      "emailVerified",
+      "lastLogedIn",
       "schoolId",
       "addressId",
       "createdAt",
@@ -42,6 +45,21 @@
       "addressId",
       "createdAt",
       "updatedAt"
+    ]
+  },
+  {
+    "modelName": "Plan",
+    "fields": [
+      "id",
+      "name",
+      "code",
+      "description",
+      "price",
+      "currency",
+      "billingCycle",
+      "features",
+      "isActive",
+      "createdAt"
     ]
   },
   {

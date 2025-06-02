@@ -33,3 +33,48 @@ export enum TABELS_NAMES_ENUM {
 export interface CustomRequest extends Request {
   user: IJwtPayload
 }
+
+export enum Resource {
+  STUDENT = 'student',
+  TEACHER = 'teacher',
+  CLASS = 'class',
+  SUBJECT = 'subject',
+  RESULT = 'result',
+  FEE = 'fee',
+  SCHOOL = 'school',
+  STAFF = 'staff',
+  ROLE = 'role',
+  PERMISSION = 'permission',
+  USER = 'user',
+  AUTH = 'auth',
+  REPORT = 'report'
+}
+
+export enum Action {
+  CREATE = 'create',
+  VIEW = 'view',
+  UPDATE = 'update',
+  DELETE = 'delete',
+  PROMOTE = 'promote',
+  SUSPEND = 'suspend',
+  ASSIGN_CLASS = 'assign_class',
+  ASSIGN_SUBJECT = 'assign_subject',
+  ASSIGN_TEACHER = 'assign_teacher',
+  PUBLISH = 'publish',
+  PAY = 'pay',
+  GENERATE_INVOICE = 'generate_invoice',
+  ASSIGN_OWNER = 'assign_owner',
+  ASSIGN_ROLE = 'assign_role',
+  RESET_PASSWORD = 'reset_password',
+  LOGIN = 'login',
+  LOGOUT = 'logout',
+  IMPERSONATE = 'impersonate',
+  GENERATE = 'generate',
+  EXPORT = 'export',
+  ASSIGN_TO_ROLE = 'assign_to_role'
+}
+
+export type PERMISSION = {
+  resource: Resource;
+  action: Action;
+};

@@ -9,9 +9,9 @@ It empowers schools to efficiently manage academics, finance, communication, sta
 ## 🧩 Modules Overview
 
 ### 🔐 1. Authentication & Authorization
-- Secure login for Admin, Teacher, Student, and Parent
-- Multi-tenant data isolation
-- Role-based access control
+- Secure login for Admin, Teacher, Student, and Parent✅
+- Multi-tenant data isolation✅
+- Role-based access control✅
 - Forgot/reset password
 - OTP/Email verification (optional)
 

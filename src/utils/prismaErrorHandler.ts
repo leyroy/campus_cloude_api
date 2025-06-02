@@ -1,5 +1,5 @@
 // utils/prismaErrorHandler.ts
-import { PrismaClientInitializationError, PrismaClientKnownRequestError, PrismaClientUnknownRequestError, PrismaClientValidationError } from "../generated/prisma/runtime/library";
+import { PrismaClientInitializationError, PrismaClientKnownRequestError, PrismaClientUnknownRequestError, PrismaClientValidationError } from "@prisma/client/runtime/library";
 import { ErrorHandler } from "../middlewares/errorHandler";
 
 export const handlePrismaError = (error: unknown): never => {

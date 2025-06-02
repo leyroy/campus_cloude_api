@@ -1,10 +1,5 @@
-import {
-  Permission,
-  Role,
-  RolePermission,
-  User,
-  UserRole,
-} from "../generated/prisma";
+import { Permission, Role, RolePermission, User, UserRole } from "@prisma/client";
+
 export type UserWithRoles = User & {
   userRoles: (UserRole & {
     role: Role & {

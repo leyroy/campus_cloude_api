@@ -1,5 +1,4 @@
-import { User } from "../generated/prisma";
-import jwt, { SignOptions } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { ENV_CONSTANTS } from "../constants/env_constants";
 import { ErrorHandler } from "../middlewares/errorHandler";
 import { UserWithRoles } from "../types/prisma";
@@ -31,8 +30,6 @@ export function generateTokens(user: UserWithRoles) {
      expiresIn: ENV_CONSTANTS.JWT_ENV.JWT_EXPIRES_IN as any || "1h",
   };
   const accessToken = jwt.sign(payload, ENV_CONSTANTS.JWT_ENV.JWT_SECRET, options);
-
-
 
   const refreshToken = jwt.sign(
     { userId: user.id },

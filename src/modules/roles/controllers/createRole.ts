@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { Role } from "../../../generated/prisma";
 import { createRole } from "../../../services/role/createRole";
 import { ErrorHandler } from "../../../middlewares/errorHandler";
+import { Role } from "@prisma/client";
 
 export async function createRoleController(req: Request, res: Response) {
   const data = req.body as Role;

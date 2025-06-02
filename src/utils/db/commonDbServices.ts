@@ -7,6 +7,19 @@ export class CommonDbServices {
     this.userWithRole = userWithRole;
   }
 
+  public async assignAllPermissionsToSuperAdmin(roleId: string) {
+    const permissions = await prisma.permission.findMany();
+    const permissionsIds = permissions.map((permission) => permission.id);
+    const saved = await prisma.rolePermission.createMany({
+      data: permissionsIds.map((permissionId) => ({
+        roleId,
+        permissionId,
+      })),
+      skipDuplicates: true
+    });
+    return saved;
+  }
+
   public async getUsers() {
     return await prisma.user.findMany({});
   }
@@ -70,25 +83,31 @@ export class CommonDbServices {
         : undefined,
     });
   }
-  public async getUserByPhoneOrEmail({phone,email}:{phone:string,email:string}) {
+  public async getUserByPhoneOrEmail({
+    phone,
+    email,
+  }: {
+    phone: string;
+    email: string;
+  }) {
     return await prisma.user.findFirst({
-      where: { phone, email:email },
-      include:{
-            userRoles: {
+      where: { phone, email: email },
+      include: {
+        userRoles: {
+          include: {
+            role: {
               include: {
-                role: {
+                rolePermissions: {
                   include: {
-                    rolePermissions: {
-                      include: {
-                        permission: true,
-                      },
-                    },
+                    permission: true,
                   },
                 },
               },
             },
-            address:true,
-          }
+          },
+        },
+        address: true,
+      },
     });
   }
 

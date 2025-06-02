@@ -1,4 +1,4 @@
-import e, { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 
 // Custom error class
 export class AppError extends Error {

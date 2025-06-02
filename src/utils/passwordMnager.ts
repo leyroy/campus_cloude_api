@@ -1,7 +1,6 @@
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import { ErrorHandler } from "../middlewares/errorHandler";
-import prisma from "../config/prisma.config";
 
 export interface PasswordConfig {
   saltRounds?: number;

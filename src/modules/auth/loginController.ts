@@ -4,8 +4,6 @@ import { CommonDbServices } from "../../utils/db/commonDbServices";
 import { PasswordService } from "../../utils/passwordMnager";
 import { generateTokens } from "../../utils/generateToken";
 import { handlePrismaError } from "../../utils/prismaErrorHandler";
-import bcryptjs from "bcryptjs";
-import { ENV_CONSTANTS } from "../../constants/env_constants";
 
 const commonDbServices = new CommonDbServices();
 const passwordService = new PasswordService();
@@ -34,9 +32,6 @@ const loginController = async (
       password,
       user.password
     );
-    console.log(ENV_CONSTANTS)
-    console.log("isValidPassword", isValidPassword);
-    console.log("user", user);
 
     // 🎯 Handle loginController logic here neger 😎
     if (!isValidPassword) {
@@ -67,10 +62,12 @@ const loginController = async (
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
+      sameSite:"strict",
       maxAge: 15 * 60 * 1000, // 15 minutes
     });
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
+      sameSite:"strict",
       secure: process.env.NODE_ENV === "production",
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
     });

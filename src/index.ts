@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from "express"
 import swaggerUi from "swagger-ui-express"
 import { ErrorHandler } from "./middlewares/errorHandler"
+import cookieParser from "cookie-parser"
 
 
 import cors from "cors"
@@ -13,6 +14,8 @@ const errorHandler = new ErrorHandler()
 
 //Middlware configuration
 app.use(express.json());
+//TODO: add more cookie parser options for security
+app.use(cookieParser())
 app.use(cors())
 dotenv.config();
 
