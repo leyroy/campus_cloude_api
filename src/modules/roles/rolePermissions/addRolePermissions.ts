@@ -1,7 +1,7 @@
 //function to add role permissions
 import { Request, Response } from "express";
 import { ErrorHandler } from "../../../middlewares/errorHandler";
-import { addRolePermissionsHelper } from "../../../services/role/addRolePermissionsHelper";
+import { addRolePermissionsHelper } from "../helpers/addRolePermissionsHelper";
 
 export const addRolePermissions = async (req:Request,res:Response)=>{
   const { roleId, permissionId } = req.body;

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createRole } from "../../../services/role/createRole";
+import { createRole } from "../helpers/createRole";
 import { ErrorHandler } from "../../../middlewares/errorHandler";
 import { Role } from "@prisma/client";
 

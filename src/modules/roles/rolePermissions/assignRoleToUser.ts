@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { ErrorHandler } from "../../../middlewares/errorHandler";
-import { assignRoleToUser } from "../../../services/role/assignRoleToUser";
+import { assignRoleToUser } from "../helpers/assignRoleToUser";
 
 export const assignRoleToUserController = async (
   req: Request,

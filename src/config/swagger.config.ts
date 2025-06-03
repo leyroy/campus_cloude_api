@@ -20,6 +20,7 @@ const swaggerOptions = {
   },
   apis: [
     './src/docs/**/*.ts',
+    './src/docs/**/*.json',
     './src/docs/**/*.ts',    // Include schema definitions
     './src/routes/**/*.ts',         // Include route definitions
   ],

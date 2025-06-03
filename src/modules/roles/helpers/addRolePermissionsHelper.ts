@@ -1,6 +1,6 @@
-import prisma from "../../config/prisma.config";
-import { AppError, ErrorHandler } from "../../middlewares/errorHandler";
-import { handlePrismaError } from "../../utils/prismaErrorHandler";
+import prisma from "../../../config/prisma.config";
+import { AppError, ErrorHandler } from "../../../middlewares/errorHandler";
+import { handlePrismaError } from "../../../utils/prismaErrorHandler";
 
 export const addRolePermissionsHelper = async (
   roleId: string,

@@ -1,9 +1,9 @@
-import prisma from "../../config/prisma.config";
-import { AppError, ErrorHandler } from "../../middlewares/errorHandler";
-import { CreateReturns } from "../../types/shared/types";
-import { UserDto } from "../../types/zodschemers/user";
-import { PasswordService } from "../../utils/passwordMnager";
-import { handlePrismaError } from "../../utils/prismaErrorHandler";
+import prisma from "../../../config/prisma.config";
+import { AppError, ErrorHandler } from "../../../middlewares/errorHandler";
+import { CreateReturns } from "../../../types/shared/types";
+import { UserDto } from "../../../types/zodschemers/user";
+import { PasswordService } from "../../../services/passwordMnager";
+import { handlePrismaError } from "../../../utils/prismaErrorHandler";
 
 const passwordManage = new PasswordService()
 

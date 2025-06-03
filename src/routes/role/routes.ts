@@ -77,7 +77,6 @@ roleRouter.post(
  */
 roleRouter.put("/add-permissions",validatePayload(TABELS_NAMES_ENUM.ROLE_PERMISSION), errorHandler.catchAsync(addRolePermissions));
 
-
 /**
  * @swagger
  * paths:
@@ -113,8 +112,6 @@ roleRouter.put("/add-permissions",validatePayload(TABELS_NAMES_ENUM.ROLE_PERMISS
  *         500:
  *           description: Internal server error, failed to assign role.
  */
-
-
 roleRouter.put("/assign-role-to-user",validatePayload(TABELS_NAMES_ENUM.USER_ROLE), errorHandler.catchAsync(assignRoleToUserController));
 
 export default roleRouter;

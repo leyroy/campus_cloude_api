@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { ErrorHandler } from "../../middlewares/errorHandler";
 import { CommonDbServices } from "../../utils/db/commonDbServices";
-import { PasswordService } from "../../utils/passwordMnager";
+import { PasswordService } from "../../services/passwordMnager";
 import { generateTokens } from "../../utils/generateToken";
-import { handlePrismaError } from "../../utils/prismaErrorHandler";
+import { handlePrismaError } from "../../utils/prismaErrorHandler"; 
 
 const commonDbServices = new CommonDbServices();
 const passwordService = new PasswordService();

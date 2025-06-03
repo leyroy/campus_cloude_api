@@ -1,7 +1,7 @@
-import prisma from "../../config/prisma.config"
-import { ErrorHandler } from "../../middlewares/errorHandler"
-import { CommonDbServices } from "../../utils/db/commonDbServices"
-import { handlePrismaError } from "../../utils/prismaErrorHandler"
+import prisma from "../../../config/prisma.config"
+import { ErrorHandler } from "../../../middlewares/errorHandler"
+import { CommonDbServices } from "../../../utils/db/commonDbServices"
+import { handlePrismaError } from "../../../utils/prismaErrorHandler"
 
 type HelperTypes = {
   roleId:string,

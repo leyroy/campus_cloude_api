@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { UserSchema } from "../../../types/zodschemers/user";
 import {  ErrorHandler } from "../../../middlewares/errorHandler";
-import { createUserHelper } from "../../../services/users/createUserHalepr";
+import { createUserHelper } from "../helpers/createUserHalepr";
 
 const errorHnadler = new ErrorHandler();
 export const createUserController = errorHnadler.catchAsync(

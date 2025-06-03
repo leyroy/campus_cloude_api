@@ -24,7 +24,6 @@
  *         description:
  *           type: string
  *           example: Administrator role with full access
- *
  */
 
 /**

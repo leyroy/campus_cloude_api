@@ -1,7 +1,7 @@
 import { Role } from "@prisma/client";
-import prisma from "../../config/prisma.config";
-import { AppError, ErrorHandler } from "../../middlewares/errorHandler";
-import { handlePrismaError } from "../../utils/prismaErrorHandler";
+import prisma from "../../../config/prisma.config";
+import { AppError, ErrorHandler } from "../../../middlewares/errorHandler";
+import { handlePrismaError } from "../../../utils/prismaErrorHandler";
 
 export const createRole = async (data: Role) => {
   try {
