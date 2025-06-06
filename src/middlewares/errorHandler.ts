@@ -152,7 +152,7 @@ export class ErrorHandler {
     // Default for unknown errors
     return new AppError(
       this.isDevelopment ? error.message : "Internal server error",
-      300,
+      500,
       false
     );
   }

@@ -2,8 +2,7 @@
   {
     "modelName": "client",
     "fields": [
-      "provider",
-      "output"
+      "provider"
     ]
   },
   {
@@ -23,9 +22,10 @@
       "password",
       "confirmPassword",
       "isActive",
+      "status",
       "phone",
-      "phoneVerified",
-      "emailVerified",
+      "isPhoneVerified",
+      "isEmailVerified",
       "lastLogedIn",
       "schoolId",
       "addressId",
@@ -38,11 +38,63 @@
     "fields": [
       "id",
       "name",
-      "description",
-      "userId",
-      "ownerId",
       "isActive",
+      "status",
       "addressId",
+      "createdAt",
+      "updatedAt"
+    ]
+  },
+  {
+    "modelName": "VerificationToken",
+    "fields": [
+      "id",
+      "identifier",
+      "token",
+      "expires",
+      "type"
+    ]
+  },
+  {
+    "modelName": "Session",
+    "fields": [
+      "id",
+      "sessionToken",
+      "userId",
+      "expires",
+      "userAgent",
+      "ipAddress",
+      "isActive",
+      "createdAt",
+      "updatedAt"
+    ]
+  },
+  {
+    "modelName": "SchoolProfile",
+    "fields": [
+      "id",
+      "schoolId",
+      "slogan",
+      "about",
+      "description",
+      "contactEmail",
+      "contactPhone",
+      "establishedAt",
+      "motto",
+      "colors",
+      "website",
+      "facebook",
+      "twitter",
+      "linkedin",
+      "instagram",
+      "youtube",
+      "principalName",
+      "principalBio",
+      "founderName",
+      "founderBio",
+      "licenseNumber",
+      "adminNote",
+      "updatedById",
       "createdAt",
       "updatedAt"
     ]
@@ -70,7 +122,8 @@
       "city",
       "state",
       "zipCode",
-      "schoolId",
+      "country",
+      "postalCode",
       "createdAt",
       "updatedAt"
     ]
@@ -80,7 +133,16 @@
     "fields": [
       "id",
       "createdAt",
-      "updatedAt"
+      "updatedAt",
+      "preferredContactMethod",
+      "preferredContactTime",
+      "educationBackground",
+      "userId",
+      "isActive",
+      "professionalExperience",
+      "currentPosition",
+      "previousPositions",
+      "yearsInEducation"
     ]
   },
   {
@@ -150,6 +212,76 @@
       "roleId",
       "assignedById",
       "assignedAt"
+    ]
+  },
+  {
+    "modelName": "Document",
+    "fields": [
+      "id",
+      "url",
+      "fileType",
+      "purpose",
+      "schoolId",
+      "userId",
+      "campusId",
+      "createdAt"
+    ]
+  },
+  {
+    "modelName": "FileType",
+    "fields": [
+      "IMAGE",
+      "PDF",
+      "DOCX",
+      "XLSX",
+      "PPTX",
+      "TEXT",
+      "CSV",
+      "ZIP",
+      "OTHER"
+    ]
+  },
+  {
+    "modelName": "DocPurpose",
+    "fields": [
+      "SCHOOL_LOGO",
+      "SCHOOL_SEAL",
+      "LICENSE_CERT",
+      "PROOF_OF_ADDRESS",
+      "HEADMASTER_ID",
+      "GENERAL_UPLOAD"
+    ]
+  },
+  {
+    "modelName": "ContactMethod",
+    "fields": [
+      "EMAIL",
+      "PHONE",
+      "IN_PERSON"
+    ]
+  },
+  {
+    "modelName": "AccountStatus",
+    "fields": [
+      "ACTIVE",
+      "INACTIVE",
+      "SUSPENDED",
+      "REJECTED",
+      "PENDING",
+      "DELETED"
+    ]
+  },
+  {
+    "modelName": "VerificationType",
+    "fields": [
+      "EMAIL_VERIFICATION",
+      "PASSWORD_RESET",
+      "PHONE_VERIFICATION",
+      "TWO_FACTOR_AUTHENTICATION",
+      "CHANGE_EMAIL",
+      "CHANGE_PHONE",
+      "ACCOUNT_ACTIVATION",
+      "ACCOUNT_DELETION"
     ]
   }
 ]

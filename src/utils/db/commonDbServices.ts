@@ -1,4 +1,5 @@
-import prisma from "../../config/prisma.config";
+import { School } from '@prisma/client';
+import prisma from '../../config/prisma.config';
 
 export class CommonDbServices {
   public userWithRole: boolean;
@@ -9,11 +10,11 @@ export class CommonDbServices {
 
   public async assignAllPermissionsToSuperAdmin(roleId: string) {
     const permissions = await prisma.permission.findMany();
-    const permissionsIds = permissions.map((permission) => permission.id);
+    const permissionsIds = permissions.map(permission => permission.id);
     const saved = await prisma.rolePermission.createMany({
-      data: permissionsIds.map((permissionId) => ({
+      data: permissionsIds.map(permissionId => ({
         roleId,
-        permissionId,
+        permissionId
       })),
       skipDuplicates: true
     });
@@ -26,7 +27,7 @@ export class CommonDbServices {
 
   public async getUserById(userId: string) {
     return await prisma.user.findUnique({
-      where: { id: userId },
+      where: { id: userId }
     });
   }
 
@@ -36,7 +37,7 @@ export class CommonDbServices {
   public async updateUser(userId: string, data: any) {
     return await prisma.user.update({
       where: { id: userId },
-      data,
+      data
     });
   }
   public async deleteUser(userId: string) {
@@ -46,19 +47,19 @@ export class CommonDbServices {
     return await prisma.userRole.findFirst({
       where: {
         userId,
-        roleId,
+        roleId
       },
       include: {
         role: {
           include: {
             rolePermissions: {
               include: {
-                permission: true,
-              },
-            },
-          },
-        },
-      },
+                permission: true
+              }
+            }
+          }
+        }
+      }
     });
   }
   public async getUserByEmail(email: string) {
@@ -72,24 +73,18 @@ export class CommonDbServices {
                   include: {
                     rolePermissions: {
                       include: {
-                        permission: true,
-                      },
-                    },
-                  },
-                },
-              },
-            },
+                        permission: true
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
-        : undefined,
+        : undefined
     });
   }
-  public async getUserByPhoneOrEmail({
-    phone,
-    email,
-  }: {
-    phone: string;
-    email: string;
-  }) {
+  public async getUserByPhoneOrEmail({ phone, email }: { phone: string; email: string }) {
     return await prisma.user.findFirst({
       where: { phone, email: email },
       include: {
@@ -99,15 +94,14 @@ export class CommonDbServices {
               include: {
                 rolePermissions: {
                   include: {
-                    permission: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-        address: true,
-      },
+                    permission: true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     });
   }
 
@@ -121,15 +115,15 @@ export class CommonDbServices {
       include: {
         rolePermissions: {
           include: {
-            permission: true,
-          },
-        },
-      },
+            permission: true
+          }
+        }
+      }
     });
   }
   public async getRoleById(roleId: string) {
     return await prisma.role.findUnique({
-      where: { id: roleId },
+      where: { id: roleId }
     });
   }
 
@@ -138,17 +132,23 @@ export class CommonDbServices {
       include: {
         rolePermissions: {
           select: {
-            id: true,
+            id: true
           },
           include: {
             role: {
               select: {
-                name: true,
-              },
-            },
-          },
-        },
-      },
+                name: true
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  public async createSchool(data: Pick<School, 'name'>) {
+    return await prisma.school.create({
+      data
     });
   }
 }

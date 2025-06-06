@@ -103,7 +103,6 @@ const extractModels = (data: Declarations = { declarations: [] }) => {
 };
 
 const allowedFields = extractModels(parsedSchema as Declarations);
-console.log(allowedFields, "allowedFields");
 writeFileSync("./src/allowedFields.json", JSON.stringify(allowedFields, null, 2));
 writeFileSync("./src/generatedSchema.json", JSON.stringify(parsedSchema, null, 2));
 

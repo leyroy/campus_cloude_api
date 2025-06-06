@@ -27,7 +27,6 @@ const errorHandler = new ErrorHandler()
  *       404:
  *         description: Users not found.
  */
-
 usersRouter.get("/", errorHandler.catchAsync(getUsersController));
 
 /**
@@ -61,6 +60,5 @@ usersRouter.get("/", errorHandler.catchAsync(getUsersController));
  *         description: Users not found.
  */
 usersRouter.post("/", validatePayload(TABELS_NAMES_ENUM.USERS), errorHandler.catchAsync(createUserController)); 
-
 
 export default usersRouter;
