@@ -1,6 +1,6 @@
-import { CookieOptions, Response } from "express";
-import { ENV_CONSTANTS } from "../constants/env_constants";
-import { calculateExpirationDate } from "./date-time";
+import { CookieOptions, Response } from 'express';
+import { ENV_CONSTANTS } from '../constants/env_constants';
+import { calculateExpirationDate } from './date-time';
 
 type CookiePayloadType = {
   res: Response;
@@ -11,7 +11,7 @@ type CookiePayloadType = {
 export const REFRESH_PATH = `${ENV_CONSTANTS.BASE_PATH}/auth/refresh`;
 
 const defaults: CookieOptions = {
-  httpOnly: true,
+  httpOnly: true
   //secure: config.NODE_ENV === "production" ? true : false,
   //sameSite: config.NODE_ENV === "production" ? "strict" : "lax",
 };
@@ -22,7 +22,7 @@ export const getRefreshTokenCookieOptions = (): CookieOptions => {
   return {
     ...defaults,
     expires,
-    path: REFRESH_PATH,
+    path: REFRESH_PATH
   };
 };
 
@@ -32,20 +32,20 @@ export const getAccessTokenCookieOptions = (): CookieOptions => {
   return {
     ...defaults,
     expires,
-    path: "/",
+    path: '/'
   };
 };
 
 export const setAuthenticationCookies = ({
   res,
   accessToken,
-  refreshToken,
+  refreshToken
 }: CookiePayloadType): Response =>
   res
-    .cookie("accessToken", accessToken, getAccessTokenCookieOptions())
-    .cookie("refreshToken", refreshToken, getRefreshTokenCookieOptions());
+    .cookie('accessToken', accessToken, getAccessTokenCookieOptions())
+    .cookie('refreshToken', refreshToken, getRefreshTokenCookieOptions());
 
 export const clearAuthenticationCookies = (res: Response): Response =>
-  res.clearCookie("accessToken").clearCookie("refreshToken", {
-    path: REFRESH_PATH,
+  res.clearCookie('accessToken').clearCookie('refreshToken', {
+    path: REFRESH_PATH
   });

@@ -4,6 +4,7 @@ import { logoutController } from '../../modules/auth/logout';
 import { ErrorHandler } from '../../middlewares/errorHandler';
 import { authenticateToken } from '../../middlewares/authenticateToken';
 import signUpController from '../../modules/auth/signupcontroller';
+import verifyEmailController from '../../modules/auth/verifyEmail.controller';
 
 const authRouter = epress.Router();
 
@@ -13,7 +14,7 @@ authRouter.post('/signup', errorHandler.catchAsync(signUpController));
 /**
  * @swagger
  * /campcloud/api/v1/auth:
- *   get:
+ *   post:
  *     tags: [Authentication]
  *     summary: Sign in with email or phone and password
  *     description: Login in with your credential(email/phone & password).
@@ -44,7 +45,7 @@ authRouter.post('/signup', errorHandler.catchAsync(signUpController));
  *             schema:
  *                $ref: '#/components/schemas/LoginResponse'
  */
-authRouter.get('/', errorHandler.catchAsync(loginController));
+authRouter.post('/', errorHandler.catchAsync(loginController));
 
 authRouter.use(authenticateToken);
 
@@ -75,5 +76,6 @@ authRouter.use(authenticateToken);
  *         description: Internal Server Error - An error occurred while processing the request.
  */
 authRouter.get('/logout', errorHandler.catchAsync(logoutController));
+authRouter.get('/verify-email', errorHandler.catchAsync(verifyEmailController));
 
 export default authRouter;

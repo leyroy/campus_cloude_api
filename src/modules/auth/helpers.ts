@@ -1,39 +1,70 @@
-import { VerificationToken } from '@prisma/client';
+import { VerificationToken, VerificationType } from '@prisma/client';
 import prisma from '../../config/prisma.config';
 import { generateUniqueCode } from '../../utils/uuid';
-import { fortyFiveMinutesFromNow } from '../../utils/date-time';
 import { VerificationEnum } from '../../enums/verification-code.enum';
+import { CreateSessionDto } from './types';
 
 type TokenType = {
   userId: string;
-  type: VerificationEnum;
+  type: VerificationType;
+  expires: Date;
 };
 
 export class AuthHelpers {
-  public async createVerificationCode({ userId, type }: TokenType): Promise<VerificationToken> {
+  public async createVerificationCode({
+    userId,
+    type,
+    expires,
+  }: TokenType): Promise<VerificationToken> {
     const verificationToken = await prisma.verificationToken.create({
       data: {
         token: generateUniqueCode(),
-        expires: fortyFiveMinutesFromNow(),
+        expires: expires,
         identifier: userId,
-        type: type
-      }
+        type: type,
+      },
     });
     return verificationToken;
   }
   public async createOwner({ userId }: { userId: string }) {
     return await prisma.owner.create({
       data: {
-        userId
-      }
+        userId,
+      },
     });
   }
   public async LinkSchoolToOwner({ schoolId, ownerId }: { schoolId: string; ownerId: string }) {
-    return await prisma.ownersSchool.create({
+    return await prisma.ownersSchool.create({ data: { schoolId, ownerId } });
+  }
+
+  public async createSession(session: CreateSessionDto) {
+    return await prisma.session.create({
       data: {
-        schoolId,
-        ownerId
-      }
+        expires: session.expires,
+        ipAddress: session.ipAddress,
+        sessionToken: session.sessionToken,
+        userAgent: session.userAgent,
+        userId: session.userId,
+        isActive: true,
+      },
     });
+  }
+  public async getVerificationCode(code: string, type: VerificationEnum) {
+    return await prisma.verificationToken.findUnique({
+      where: {
+        token: code,
+        type: type,
+        expires: {
+          gte: new Date(),
+        },
+      },
+    });
+  }
+  public async verifyUser(identifier: string) {
+    const verifiedUser = await prisma.user.update({
+      where: { id: identifier },
+      data: { isEmailVerified: true },
+    });
+    return verifiedUser;
   }
 }

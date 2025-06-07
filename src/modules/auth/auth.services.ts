@@ -3,19 +3,27 @@ import { VerificationEnum } from '../../enums/verification-code.enum';
 import { sendEmail } from '../../mailers/mailer';
 import { verifyEmailTemplate } from '../../mailers/templates/template';
 import { ErrorHandler } from '../../middlewares/errorHandler';
-import { PasswordService } from '../../services/passwordMnager';
-import { CommonDbServices } from '../../utils/db/commonDbServices';
-import { CreateUserDto } from '../../validators/auth.validator';
+import { passwordManager } from '../../services/passwordMnager';
+import { calculateExpirationDate, fortyFiveMinutesFromNow } from '../../utils/date-time';
+import { commonDbService } from '../../utils/db/commonDbServices';
+import { generateTokens } from '../../utils/generateToken';
+import { generateUniqueCode } from '../../utils/uuid';
+import { CreateUserDto, LoginDto } from '../../validators/auth.validator';
 import { AuthHelpers } from './helpers';
-const commonDbService = new CommonDbServices();
-const passwordManager = new PasswordService();
+import { CreateSessionDto } from './types';
+
 const authHelpers = new AuthHelpers();
+
+interface LoginPayload extends LoginDto {
+  userAgent?: string;
+  ipAddress?: string;
+}
 
 export class AuthService {
   public async registerUser(data: CreateUserDto) {
     const isUserExit = await commonDbService.getUserByPhoneOrEmail({
       phone: data.phone,
-      email: data.email
+      email: data.email,
     });
     if (isUserExit) {
       throw ErrorHandler.badRequest('User with this phone or email already exists');
@@ -24,24 +32,101 @@ export class AuthService {
     const hashedPassword = await passwordManager.hashPassword(user.password);
     const newUser = await commonDbService.createUser({
       ...user,
-      password: hashedPassword
+      password: hashedPassword,
     });
     const owner = await authHelpers.createOwner({ userId: newUser.id });
     const school = await commonDbService.createSchool({ name: schoolName });
-    await authHelpers.LinkSchoolToOwner({ schoolId: school.id, ownerId: owner.id });
-    const verificationCode = await authHelpers.createVerificationCode({ userId: newUser.id, type: VerificationEnum.EMAIL_VERIFICATION });
+    await authHelpers.LinkSchoolToOwner({
+      schoolId: school.id,
+      ownerId: owner.id,
+    });
+    const verificationCode = await authHelpers.createVerificationCode({
+      userId: newUser.id,
+      type: VerificationEnum.EMAIL_VERIFICATION,
+      expires: fortyFiveMinutesFromNow(),
+    });
     const verifyUrl = `${ENV_CONSTANTS.BASE_PATH}/verify-email?token=${verificationCode.token}`;
     sendEmail({
       to: newUser.email,
-      ...verifyEmailTemplate(verifyUrl)
+      ...verifyEmailTemplate(verifyUrl),
     });
     return {
       success: true,
-      message: 'User registered successfully',
+      message:
+        'User registered successfully and verification code was sent to your email, pleas kindly verify your account',
       data: {
         ...user,
-        schoolName
-      }
+        schoolName,
+      },
     };
+  }
+
+  public async loginUser({ email, password, phone, userAgent, ipAddress }: LoginPayload) {
+    const isUserExit = await commonDbService.getUserByPhoneOrEmail({
+      email,
+      phone,
+    });
+    if (!isUserExit) {
+      throw ErrorHandler.notFound('User not found');
+    }
+    const isValidPassword = await passwordManager.verifyPassword(password, isUserExit.password);
+    if (!isValidPassword) {
+      throw ErrorHandler.unauthorized('Invalid credentials');
+    }
+    if (!isUserExit.isActive) {
+      throw ErrorHandler.badRequest(
+        `Account: ${isUserExit.email} is not activated, please kindly wait until we activate your account`
+      );
+    }
+    if (!isUserExit.isEmailVerified) {
+      const verificationCode = await authHelpers.createVerificationCode({
+        userId: isUserExit.id,
+        type: VerificationEnum.EMAIL_VERIFICATION,
+        expires: fortyFiveMinutesFromNow(),
+      });
+      const verifyUrl = `${ENV_CONSTANTS.BASE_PATH}/verify-email?token=${verificationCode.token}`;
+
+      return {
+        refreshToken: '',
+        accessToken: '',
+        url: verifyUrl,
+        isEmailVerified: false,
+      };
+    }
+
+    const sessionPayload: CreateSessionDto = {
+      expires: calculateExpirationDate('7d'),
+      userAgent: userAgent!,
+      ipAddress: ipAddress!,
+      sessionToken: generateUniqueCode(),
+      userId: isUserExit.id,
+    };
+
+    const session = await authHelpers.createSession(sessionPayload);
+    const { accessToken, refreshToken } = generateTokens({
+      userId: isUserExit.id,
+      sessionId: session.id,
+    });
+    return {
+      accessToken,
+      isEmailVerified: true,
+      refreshToken,
+    };
+  }
+  public async verifyEmail(code: string) {
+    const verificationToken = await authHelpers.getVerificationCode(
+      code,
+      VerificationEnum.EMAIL_VERIFICATION
+    );
+    if (!verificationToken) {
+      throw ErrorHandler.notFound('Code verification code was not found');
+    }
+    const verifiedUser = await authHelpers.verifyUser(verificationToken.identifier);
+    if (!verifiedUser)
+      throw ErrorHandler.badRequest(
+        'We were not able to verify your account, please try again later'
+      );
+    await commonDbService.deleteVerificationCode(verificationToken.id);
+    return true;
   }
 }

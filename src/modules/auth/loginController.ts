@@ -1,74 +1,56 @@
 import { Request, Response, NextFunction } from 'express';
 import { ErrorHandler } from '../../middlewares/errorHandler';
-import { CommonDbServices } from '../../utils/db/commonDbServices';
-import { PasswordService } from '../../services/passwordMnager';
-import { generateTokens } from '../../utils/generateToken';
 import { handlePrismaError } from '../../utils/prismaErrorHandler';
+import { loginSchema } from '../../validators/auth.validator';
+import { AuthService } from './auth.services';
+import { sendEmail } from '../../mailers/mailer';
+import { HTTPSTATUS } from '../../constants/http-status';
+import { setAuthenticationCookies } from '../../utils/cookie';
+import { verifyEmailTemplate } from '../../mailers/templates/template';
 
-const commonDbServices = new CommonDbServices();
-const passwordService = new PasswordService();
+const authService = new AuthService();
 
 const loginController = async (req: Request, res: Response, next: NextFunction) => {
-  const { email, password, phone } = req.body;
-  if ((!email && !phone) || !password) {
-    throw ErrorHandler.badRequest('Invalid credendtials');
+  const data = req.body;
+  const isValidData = loginSchema.safeParse(data);
+  const userAgent = req.headers['user-agent'] || '';
+  const ipAddress = req.ip || req.connection.remoteAddress || 'unknown';
+
+  if (!isValidData.success || !isValidData.data.email) {
+    console.error('Validation failed:', isValidData.error);
+    throw ErrorHandler.badRequest(`Invalid data: ${isValidData?.error?.message}`);
   }
   try {
-    const user = await commonDbServices.getUserByPhoneOrEmail({ email, phone });
-    if (!user) {
-      throw ErrorHandler.notFound('User not found');
-    }
-    if (!user.isActive) {
-      throw ErrorHandler.badRequest(`Account: ${user.email} is not activated, please kindly activate your account`);
-    }
-    if (!user.isEmailVerified) {
-      throw ErrorHandler.badRequest(`Account: ${user.email} is not activated, please kindly activate your account`);
-    }
-    //validate password
-    const isValidPassword = await passwordService.verifyPassword(password, user.password);
+    const { refreshToken, accessToken, isEmailVerified, url } = await authService.loginUser({
+      ...isValidData.data,
+      userAgent,
+      ipAddress,
+    });
 
-    // 🎯 Handle loginController logic here neger 😎
-    if (!isValidPassword) {
-      throw ErrorHandler.badRequest('Invalid credentials');
+    if (!isEmailVerified) {
+      sendEmail({
+        ...verifyEmailTemplate(url!),
+        to: isValidData.data.email,
+      });
+      return res.status(HTTPSTATUS.OK).json({
+        isEmailVerified,
+        refreshToken,
+        accessToken,
+        message: 'An email has been sent to your account, Please verify your email to continue',
+      });
     }
-    const { accessToken, refreshToken } = generateTokens(user);
-
-    //formate user data
-    const userData = {
-      id: user.id,
-      email: user.email,
-      phone: user.phone,
-      isActive: user.isActive,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-      roles: user.userRoles.map(userRole => ({
-        id: userRole.role.id,
-        name: userRole.role.name,
-        permissions: userRole.role.rolePermissions.map(rolePermission => ({
-          id: rolePermission.permission.id,
-          resource: rolePermission.permission.resource,
-          action: rolePermission.permission.action
-        }))
-      }))
-    };
-    //set cookies
-    res.cookie('accessToken', accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 15 * 60 * 1000 // 15 minutes
-    });
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      sameSite: 'strict',
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 24 * 60 * 60 * 1000 // 24 hours
-    });
-    res.status(200).json({
-      message: 'Login successful',
-      success: true,
-      data: { user: userData }
-    });
+    return setAuthenticationCookies({
+      res,
+      accessToken,
+      refreshToken,
+    })
+      .status(HTTPSTATUS.OK)
+      .json({
+        message: 'User login successfully',
+        refreshToken,
+        accessToken,
+        isEmailVerified,
+      });
   } catch (error: unknown) {
     if (error instanceof ErrorHandler) {
       return next(error);

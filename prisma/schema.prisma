@@ -58,6 +58,7 @@ model VerificationToken {
   token      String           @unique
   expires    DateTime
   type       VerificationType
+  createdAt DateTime @default(now())
 
   @@index([identifier])
 }

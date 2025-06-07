@@ -1,11 +1,10 @@
 // scripts/extractFields.ts
-import { readFileSync, writeFileSync } from "fs";
-import { parsePrismaSchema } from "@loancrate/prisma-schema-parser";
-import { boolean } from "zod";
+import { readFileSync, writeFileSync } from 'fs';
+import { parsePrismaSchema } from '@loancrate/prisma-schema-parser';
 
-const schemaPath = "./prisma/schema.prisma";
+const schemaPath = './prisma/schema.prisma';
 
-const schema = readFileSync(schemaPath, "utf-8");
+const schema = readFileSync(schemaPath, 'utf-8');
 const parsedSchema = parsePrismaSchema(schema);
 
 interface Location {
@@ -68,19 +67,19 @@ interface ExtractedModel {
   fields: string[];
 }
 const extractModels = (data: Declarations = { declarations: [] }) => {
-  writeFileSync("./src/generatedSchema.json", JSON.stringify(data, null, 2));
-  return data.declarations?.map((model) => {
+  writeFileSync('./src/generatedSchema.json', JSON.stringify(data, null, 2));
+  return data.declarations?.map(model => {
     if (model.name) {
       const modelName = model.name.value;
       const fields = model.members
-        .filter((member) => {
-          if (member.type && member.type.kind && member.type.kind === "list") {
+        .filter(member => {
+          if (member.type && member.type.kind && member.type.kind === 'list') {
             return false;
           }
           if (
             member?.attributes &&
-            member?.attributes?.some((attr) =>
-              attr?.path?.value?.includes("relation")
+            member?.attributes?.some(attr =>
+              attr?.path?.value?.includes('relation')
             )
           ) {
             return false;
@@ -88,21 +87,27 @@ const extractModels = (data: Declarations = { declarations: [] }) => {
           // if (member.attributes && member.attributes.length > 0) return false;
           return true;
         })
-        .map((member) => member?.name?.value || "").filter(Boolean);
+        .map(member => member?.name?.value || '')
+        .filter(Boolean);
       return {
         modelName,
-        fields,
+        fields
       };
     } else {
       return {
-        modelName: "",
-        fields: [],
+        modelName: '',
+        fields: []
       };
     }
   });
 };
 
 const allowedFields = extractModels(parsedSchema as Declarations);
-writeFileSync("./src/allowedFields.json", JSON.stringify(allowedFields, null, 2));
-writeFileSync("./src/generatedSchema.json", JSON.stringify(parsedSchema, null, 2));
-
+writeFileSync(
+  './src/allowedFields.json',
+  JSON.stringify(allowedFields, null, 2)
+);
+writeFileSync(
+  './src/generatedSchema.json',
+  JSON.stringify(parsedSchema, null, 2)
+);

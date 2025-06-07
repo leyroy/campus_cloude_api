@@ -1,6 +1,6 @@
-import bcrypt from "bcryptjs";
-import crypto from "crypto";
-import { ErrorHandler } from "../middlewares/errorHandler";
+import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
+import { ErrorHandler } from '../middlewares/errorHandler';
 
 export interface PasswordConfig {
   saltRounds?: number;
@@ -18,7 +18,7 @@ export class PasswordService {
     requireUppercase: true,
     requireLowercase: true,
     requireNumbers: true,
-    requireSpecialChars: true,
+    requireSpecialChars: true
   };
 
   private config: Required<PasswordConfig>;
@@ -39,29 +39,24 @@ export class PasswordService {
       return hashedPassword;
     } catch (error) {
       if (error instanceof Error) {
-        throw ErrorHandler.badRequest(
-          `Password hashing failed: ${error.message}`
-        );
+        throw ErrorHandler.badRequest(`Password hashing failed: ${error.message}`);
       }
-      throw ErrorHandler.internal("Password hashing failed");
+      throw ErrorHandler.internal('Password hashing failed');
     }
   }
 
   // Verify a plain text password against a hashed password
-   verifyPassword(
-    plainPassword: string,
-    hashedPassword: string
-  ) {
+  verifyPassword(plainPassword: string, hashedPassword: string) {
     try {
       if (!plainPassword || !hashedPassword) {
-        console.log("Verifying password:", plainPassword, hashedPassword);
+        console.log('Verifying password:', plainPassword, hashedPassword);
         return false;
       }
-      const isMatch =  bcrypt.compareSync(plainPassword, hashedPassword);
-      console.log("Password match result:", isMatch);
+      const isMatch = bcrypt.compareSync(plainPassword, hashedPassword);
+      console.log('Password match result:', isMatch);
       return isMatch;
     } catch (error) {
-      console.error("Password verification error:", error);
+      console.error('Password verification error:', error);
       return false;
     }
   }
@@ -71,32 +66,27 @@ export class PasswordService {
     const errors: string[] = [];
 
     if (password.length < this.config.minLength) {
-      errors.push(
-        `Password must be at least ${this.config.minLength} characters long`
-      );
+      errors.push(`Password must be at least ${this.config.minLength} characters long`);
     }
 
     if (this.config.requireUppercase && !/[A-Z]/.test(password)) {
-      errors.push("Password must contain at least one uppercase letter");
+      errors.push('Password must contain at least one uppercase letter');
     }
 
     if (this.config.requireLowercase && !/[a-z]/.test(password)) {
-      errors.push("Password must contain at least one lowercase letter");
+      errors.push('Password must contain at least one lowercase letter');
     }
 
     if (this.config.requireNumbers && !/\d/.test(password)) {
-      errors.push("Password must contain at least one number");
+      errors.push('Password must contain at least one number');
     }
 
-    if (
-      this.config.requireSpecialChars &&
-      !/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password)
-    ) {
-      errors.push("Password must contain at least one special character");
+    if (this.config.requireSpecialChars && !/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password)) {
+      errors.push('Password must contain at least one special character');
     }
 
     if (errors.length > 0) {
-      throw new Error(errors.join(", "));
+      throw new Error(errors.join(', '));
     }
   }
 
@@ -106,8 +96,8 @@ export class PasswordService {
     hashedToken: string;
     expiresAt: Date;
   } {
-    const token = crypto.randomBytes(32).toString("hex");
-    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+    const token = crypto.randomBytes(32).toString('hex');
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
 
     return { token, hashedToken, expiresAt };
@@ -115,7 +105,7 @@ export class PasswordService {
 
   // Hash a reset token for storage
   hashResetToken(token: string): string {
-    return crypto.createHash("sha256").update(token).digest("hex");
+    return crypto.createHash('sha256').update(token).digest('hex');
   }
 
   // Check if password needs rehashing (if salt rounds changed)
@@ -135,39 +125,38 @@ export class PasswordService {
 
     // Length check
     if (password.length >= 8) score++;
-    else feedback.push("Use at least 8 characters");
+    else feedback.push('Use at least 8 characters');
 
     if (password.length >= 12) score++;
-    else if (password.length >= 8)
-      feedback.push("Longer passwords are more secure");
+    else if (password.length >= 8) feedback.push('Longer passwords are more secure');
 
     // Character variety
     if (/[a-z]/.test(password)) score++;
-    else feedback.push("Add lowercase letters");
+    else feedback.push('Add lowercase letters');
 
     if (/[A-Z]/.test(password)) score++;
-    else feedback.push("Add uppercase letters");
+    else feedback.push('Add uppercase letters');
 
     if (/\d/.test(password)) score++;
-    else feedback.push("Add numbers");
+    else feedback.push('Add numbers');
 
     if (/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password)) score++;
-    else feedback.push("Add special characters");
+    else feedback.push('Add special characters');
 
     // Reduce score for common patterns
     if (/(.)\1{2,}/.test(password)) {
       score = Math.max(0, score - 1);
-      feedback.push("Avoid repeated characters");
+      feedback.push('Avoid repeated characters');
     }
 
     if (/123|abc|qwe/i.test(password)) {
       score = Math.max(0, score - 1);
-      feedback.push("Avoid common sequences");
+      feedback.push('Avoid common sequences');
     }
 
     return {
       score: Math.min(4, score),
-      feedback: feedback.slice(0, 3), // Limit feedback to top 3 issues
+      feedback: feedback.slice(0, 3) // Limit feedback to top 3 issues
     };
   }
 }
@@ -277,3 +266,4 @@ export class PasswordService {
 //   }
 
 //   const hashedPassword = await passwordService.hashPassword(newPassword);
+export const passwordManager = new PasswordService();

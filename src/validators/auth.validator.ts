@@ -1,31 +1,34 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const emailSchema = z.string().trim().email().min(1).max(255);
 export const passwordSchema = z.string().trim().min(6).max(255);
 export const verificationCodeSchema = z.string().trim().min(1).max(25);
-
+const phoneSchema = z.string().trim().min(1, { message: 'Phone number is required' }).max(15);
 
 export const registerSchema = z
   .object({
-    firstName: z.string().trim().min(1, { message: "First name is required" }).max(255),
-    lastName: z.string().trim().min(1, { message: "Last name is required" }).max(255),
-    schoolName: z.string().trim().min(1, { message: "School name is required" }).max(255),
+    firstName: z.string().trim().min(1, { message: 'First name is required' }).max(255),
+    lastName: z.string().trim().min(1, { message: 'Last name is required' }).max(255),
+    schoolName: z.string().trim().min(1, { message: 'School name is required' }).max(255),
     email: emailSchema,
-    phone: z.string().trim().min(1, { message: "Phone number is required" }).max(15),
+    phone: z.string().trim().min(1, { message: 'Phone number is required' }).max(15),
     password: passwordSchema,
     confirmPassword: passwordSchema,
   })
   .refine((val) => val.password === val.confirmPassword, {
-    message: "Password does not match",
-    path: ["confirmPassword"],
+    message: 'Password does not match',
+    path: ['confirmPassword'],
   });
 
-export const loginSchema = z.object({
-  email: emailSchema,
-  password: passwordSchema,
-  phone: z.string().trim().min(1, { message: "Phone number is required" }).max(15), 
-  userAgent: z.string().optional(),
-});
+export const loginSchema = z
+  .object({
+    email: z.string().trim().email().max(255).optional(),
+    password: passwordSchema,
+    phone: z.string().trim().max(15).optional(),
+  })
+  .refine((data) => data.email || data.phone, {
+    message: 'Use either your email or phone to log in',
+  });
 
 export const verificationEmailSchema = z.object({
   code: verificationCodeSchema,

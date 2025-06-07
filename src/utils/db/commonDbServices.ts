@@ -1,5 +1,6 @@
 import { School } from '@prisma/client';
 import prisma from '../../config/prisma.config';
+import { VerificationEnum } from '../../enums/verification-code.enum';
 
 export class CommonDbServices {
   public userWithRole: boolean;
@@ -10,13 +11,13 @@ export class CommonDbServices {
 
   public async assignAllPermissionsToSuperAdmin(roleId: string) {
     const permissions = await prisma.permission.findMany();
-    const permissionsIds = permissions.map(permission => permission.id);
+    const permissionsIds = permissions.map((permission) => permission.id);
     const saved = await prisma.rolePermission.createMany({
-      data: permissionsIds.map(permissionId => ({
+      data: permissionsIds.map((permissionId) => ({
         roleId,
-        permissionId
+        permissionId,
       })),
-      skipDuplicates: true
+      skipDuplicates: true,
     });
     return saved;
   }
@@ -27,7 +28,7 @@ export class CommonDbServices {
 
   public async getUserById(userId: string) {
     return await prisma.user.findUnique({
-      where: { id: userId }
+      where: { id: userId },
     });
   }
 
@@ -37,7 +38,7 @@ export class CommonDbServices {
   public async updateUser(userId: string, data: any) {
     return await prisma.user.update({
       where: { id: userId },
-      data
+      data,
     });
   }
   public async deleteUser(userId: string) {
@@ -47,61 +48,29 @@ export class CommonDbServices {
     return await prisma.userRole.findFirst({
       where: {
         userId,
-        roleId
+        roleId,
       },
       include: {
         role: {
           include: {
             rolePermissions: {
               include: {
-                permission: true
-              }
-            }
-          }
-        }
-      }
+                permission: true,
+              },
+            },
+          },
+        },
+      },
     });
   }
   public async getUserByEmail(email: string) {
     return await prisma.user.findUnique({
       where: { email },
-      include: this.userWithRole
-        ? {
-            userRoles: {
-              include: {
-                role: {
-                  include: {
-                    rolePermissions: {
-                      include: {
-                        permission: true
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        : undefined
     });
   }
-  public async getUserByPhoneOrEmail({ phone, email }: { phone: string; email: string }) {
+  public async getUserByPhoneOrEmail({ phone, email }: { phone?: string; email?: string }) {
     return await prisma.user.findFirst({
       where: { phone, email: email },
-      include: {
-        userRoles: {
-          include: {
-            role: {
-              include: {
-                rolePermissions: {
-                  include: {
-                    permission: true
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     });
   }
 
@@ -115,15 +84,15 @@ export class CommonDbServices {
       include: {
         rolePermissions: {
           include: {
-            permission: true
-          }
-        }
-      }
+            permission: true,
+          },
+        },
+      },
     });
   }
   public async getRoleById(roleId: string) {
     return await prisma.role.findUnique({
-      where: { id: roleId }
+      where: { id: roleId },
     });
   }
 
@@ -132,23 +101,42 @@ export class CommonDbServices {
       include: {
         rolePermissions: {
           select: {
-            id: true
+            id: true,
           },
           include: {
             role: {
               select: {
-                name: true
-              }
-            }
-          }
-        }
-      }
+                name: true,
+              },
+            },
+          },
+        },
+      },
     });
   }
 
   public async createSchool(data: Pick<School, 'name'>) {
     return await prisma.school.create({
-      data
+      data,
+    });
+  }
+
+  public async getVerificationCode(code: string, type: VerificationEnum) {
+    return await prisma.verificationToken.findUnique({
+      where: {
+        token: code,
+        type,
+        expires: {
+          gte: new Date(),
+        },
+      },
+    });
+  }
+  public async deleteVerificationCode(id: string) {
+    return await prisma.verificationToken.delete({
+      where: { id: id },
     });
   }
 }
+
+export const commonDbService = new CommonDbServices();

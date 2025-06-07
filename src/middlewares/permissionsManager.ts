@@ -1,27 +1,25 @@
-import { Request, Response, NextFunction } from "express";
-import { CustomRequest, PERMISSION } from "../types/shared/types";
-import { ErrorHandler } from "./errorHandler";
-import { CommonDbServices } from "../utils/db/commonDbServices";
-import { hasPermission, HasPermission } from "../utils/hasPermissions";
+import { Request, Response, NextFunction } from 'express';
+import { CustomRequest, PERMISSION } from '../types/shared/types';
+import { ErrorHandler } from './errorHandler';
+import { commonDbService } from '../utils/db/commonDbServices';
+import { hasPermission, HasPermission } from '../utils/hasPermissions';
 
-const commonDbServices = new CommonDbServices();
-
-const permissionHandler = ({resource, action}: PERMISSION) => {
+const permissionHandler = ({ resource, action }: PERMISSION) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     const user = (req as CustomRequest)?.user;
     if (!user || !user.userId) {
-      throw ErrorHandler.unauthorized("Please log in to access this resource");
+      throw ErrorHandler.unauthorized('Please log in to access this resource');
     }
     try {
       // 🎯 Handle controllerName logic here neger 😎
-      const isUserExit = await commonDbServices.getUserById(user.userId)
-      if(!isUserExit){
-        throw ErrorHandler.unauthorized("Please log in and try agian")
+      const isUserExit = await commonDbService.getUserById(user.userId);
+      if (!isUserExit) {
+        throw ErrorHandler.unauthorized('Please log in and try agian');
       }
       const hasPemissionPayload = {
         userId: user.userId,
         resource: resource,
-        action,
+        action
       } as HasPermission;
       if (!(await hasPermission(hasPemissionPayload))) {
         throw ErrorHandler.forbidden(
@@ -30,8 +28,8 @@ const permissionHandler = ({resource, action}: PERMISSION) => {
       }
       next();
     } catch (error) {
-      console.log("error from pemissionManager",error)
-      next(error)
+      console.log('error from pemissionManager', error);
+      next(error);
     }
   };
 };
