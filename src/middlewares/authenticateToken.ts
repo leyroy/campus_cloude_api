@@ -1,40 +1,48 @@
-import jwt from "jsonwebtoken"
-import prisma from "../config/prisma.config";
-import { ErrorHandler } from "./errorHandler";
-import { handlePrismaError } from "../utils/prismaErrorHandler";
-import { NextFunction, Request, Response } from "express";
-import { IJwtPayload} from "../types/prisma";
-import { CustomRequest } from "../types/shared/types";
+import jwt from 'jsonwebtoken';
+import prisma from '../config/prisma.config';
+import { AppError, ErrorHandler } from './errorHandler';
+import { NextFunction, Request, Response } from 'express';
+import { CustomRequest, TokenTypes } from '../types/shared/types';
+import { HTTPSTATUS } from '../constants/http-status';
+import { ErrorCode } from '../enums/error-code.enum';
 
 export const authenticateToken = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { accessToken: token } = req.cookies;
 
     if (!token) {
-      throw ErrorHandler.unauthorized("No token provided");
+      throw new AppError(
+        'No token provided',
+        HTTPSTATUS.UNAUTHORIZED,
+        ErrorCode.AUTH_TOKEN_NOT_FOUND
+      );
     }
     // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as IJwtPayload;
-    console.log(decoded)
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as TokenTypes;
+    console.log(decoded);
     // Check if user still exists and is active
-    const user = await prisma.user.findUnique({where:{id:decoded.userId}});
-    
-    if (!user || !user.isActive) {
-    throw ErrorHandler.badRequest("User not found or inactive");
+    const user = await prisma.user.findUnique({ where: { id: decoded.userId } });
+
+    if (!user) {
+      throw new AppError(
+        'User not found or inactive',
+        HTTPSTATUS.UNAUTHORIZED,
+        ErrorCode.AUTH_USER_NOT_FOUND
+      );
+    }
+    if (!user?.isActive) {
+      throw ErrorHandler.unauthorized(
+        'Your account is not activated, kindly wait untill we verify your account'
+      );
+    }
+    if (!user.isEmailVerified) {
+      throw ErrorHandler.badRequest('Please kindly verify your account');
     }
     // Add user info to request
     (req as CustomRequest).user = decoded;
     next();
-
-  } catch (error:unknown) {
-    if ((error as any).name === 'TokenExpiredError') {
-      throw ErrorHandler.badRequest("Token expired")
-    }
-    if ((error as any).name === 'JsonWebTokenError') {
-      throw ErrorHandler.badRequest("Invalid token")
-    }
+  } catch (error: unknown) {
     console.error('Auth middleware error:', error);
-    handlePrismaError(error)
-    throw ErrorHandler.internal()
+    next(error);
   }
 };

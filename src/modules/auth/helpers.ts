@@ -67,4 +67,19 @@ export class AuthHelpers {
     });
     return verifiedUser;
   }
+
+  public async getSessionById(sessionId: string) {
+    return await prisma.session.findUnique({
+      where: { id: sessionId },
+      include: {
+        user: true,
+      },
+    });
+  }
+  public async updateSessionExpirationData(sessionId: string, newExpirationDate: Date) {
+    return await prisma.session.update({
+      where: { id: sessionId },
+      data: { expires: newExpirationDate },
+    });
+  }
 }

@@ -3,9 +3,8 @@ import { z } from 'zod';
 export const emailSchema = z.string().trim().email().min(1).max(255);
 export const passwordSchema = z.string().trim().min(6).max(255);
 export const verificationCodeSchema = z.string().trim().min(1).max(25);
-const phoneSchema = z.string().trim().min(1, { message: 'Phone number is required' }).max(15);
 
-export const registerSchema = z
+export const RegisterSchema = z
   .object({
     firstName: z.string().trim().min(1, { message: 'First name is required' }).max(255),
     lastName: z.string().trim().min(1, { message: 'Last name is required' }).max(255),
@@ -39,7 +38,7 @@ export const resetPasswordSchema = z.object({
   verificationCode: verificationCodeSchema,
 });
 
-export type CreateUserDto = z.infer<typeof registerSchema>;
+export type CreateUserDto = z.infer<typeof RegisterSchema>;
 export type LoginDto = z.infer<typeof loginSchema>;
 export type VerificationEmailDto = z.infer<typeof verificationEmailSchema>;
 export type ResetPasswordDto = z.infer<typeof resetPasswordSchema>;

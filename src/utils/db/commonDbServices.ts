@@ -137,6 +137,12 @@ export class CommonDbServices {
       where: { id: id },
     });
   }
+
+  public async deleteSession(id: string) {
+    return await prisma.session.delete({
+      where: { id },
+    });
+  }
 }
 
 export const commonDbService = new CommonDbServices();

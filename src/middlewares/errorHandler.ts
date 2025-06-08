@@ -1,9 +1,18 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from 'express';
+import { HTTPSTATUS } from '../constants/http-status';
+import {
+  PrismaClientInitializationError,
+  PrismaClientKnownRequestError,
+  PrismaClientUnknownRequestError,
+  PrismaClientValidationError,
+} from '@prisma/client/runtime/library';
+import { ErrorCode } from '../enums/error-code.enum';
 
 // Custom error class
 export class AppError extends Error {
   public statusCode: number;
   public isOperational: boolean;
+  public errorCode: string;
   public timestamp: string;
   public path?: string;
   public method?: string;
@@ -11,10 +20,12 @@ export class AppError extends Error {
   constructor(
     message: string,
     statusCode: number = 500,
+    errorCode: string = '',
     isOperational: boolean = true
   ) {
     super(message);
     this.statusCode = statusCode;
+    this.errorCode = errorCode;
     this.isOperational = isOperational;
     this.timestamp = new Date().toISOString();
 
@@ -39,21 +50,15 @@ interface Logger {
 // Default console logger
 class ConsoleLogger implements Logger {
   error(message: string, meta?: any): void {
-    console.error(
-      `[ERROR] ${message}`,
-      meta ? JSON.stringify(meta, null, 2) : ""
-    );
+    console.error(`[ERROR] ${message}`, meta ? JSON.stringify(meta, null, 2) : '');
   }
 
   warn(message: string, meta?: any): void {
-    console.warn(
-      `[WARN] ${message}`,
-      meta ? JSON.stringify(meta, null, 2) : ""
-    );
+    console.warn(`[WARN] ${message}`, meta ? JSON.stringify(meta, null, 2) : '');
   }
 
   info(message: string, meta?: any): void {
-    console.log(`[INFO] ${message}`, meta ? JSON.stringify(meta, null, 2) : "");
+    console.log(`[INFO] ${message}`, meta ? JSON.stringify(meta, null, 2) : '');
   }
 }
 
@@ -63,6 +68,7 @@ interface ErrorResponse {
   error: {
     message: string;
     statusCode: number;
+    errorCode: string;
     timestamp: string;
     path?: string;
     method?: string;
@@ -75,21 +81,13 @@ export class ErrorHandler {
   private logger: Logger;
   private isDevelopment: boolean;
 
-  constructor(
-    logger?: Logger,
-    isDevelopment: boolean = process.env.NODE_ENV === "development"
-  ) {
+  constructor(logger?: Logger, isDevelopment: boolean = process.env.NODE_ENV === 'development') {
     this.logger = logger || new ConsoleLogger();
     this.isDevelopment = isDevelopment;
   }
 
   // Express error middleware
-  public handleError = (
-    error: Error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): void => {
+  public handleError = (error: Error, req: Request, res: Response, next: NextFunction): void => {
     let appError: AppError;
 
     // Convert known errors to AppError
@@ -108,36 +106,59 @@ export class ErrorHandler {
     this.logError(appError, req);
 
     // Send error response
-    this.sendErrorResponse(
-      appError,
-      res,
-      req.headers["x-request-id"] as string
-    );
+    this.sendErrorResponse(appError, res, req.headers['x-request-id'] as string);
   };
 
   // Convert various error types to AppError
   private convertToAppError(error: Error): AppError {
     console.log(error);
     // MongoDB/Mongoose errors
-    if (error.name === "ValidationError") {
-      return new AppError("Validation failed", 400);
+    if (error instanceof PrismaClientKnownRequestError) {
+      switch (error.code) {
+        case 'P2002': // Unique constraint
+          const field = error.meta?.target as string[];
+          return new AppError(
+            `${field ? field.join(', ') : 'Field'} already exists`,
+            HTTPSTATUS.CONFLICT
+          );
+
+        case 'P2025': // Record not found
+          return new AppError('Record not found', HTTPSTATUS.NOT_FOUND);
+
+        case 'P2003': // Foreign key constraint
+          return new AppError('Invalid reference to related record', HTTPSTATUS.BAD_REQUEST);
+
+        case 'P2014': // Required relation missing
+          return new AppError('Required relationship is missing', HTTPSTATUS.CONFLICT);
+
+        default:
+          console.error('Prisma known error:', error);
+          return new AppError('Database operation failed', HTTPSTATUS.BAD_GATEWAY);
+      }
     }
 
-    if (error.name === "CastError") {
-      return new AppError("Invalid data format", 400);
+    if (error instanceof PrismaClientValidationError) {
+      console.error('Prisma validation error:', error.message);
+      return new AppError('Invalid data format', HTTPSTATUS.BAD_REQUEST);
     }
 
-    if (error.name === "MongoServerError" && (error as any).code === 11000) {
-      return new AppError("Duplicate field value", 409);
+    if (error instanceof PrismaClientInitializationError) {
+      console.error('Prisma initialization error:', error);
+      return new AppError('Database connection failed', HTTPSTATUS.BAD_GATEWAY);
+    }
+
+    if (error instanceof PrismaClientUnknownRequestError) {
+      console.error('Prisma unknown error:', error);
+      return new AppError('Unexpected database error', HTTPSTATUS.BAD_GATEWAY);
     }
 
     // JWT errors
-    if (error.name === "JsonWebTokenError") {
-      return new AppError("Invalid token", 401);
+    if (error.name === 'JsonWebTokenError') {
+      return new AppError('Invalid token', HTTPSTATUS.UNAUTHORIZED, ErrorCode.AUTH_INVALID_TOKEN);
     }
 
-    if (error.name === "TokenExpiredError") {
-      return new AppError("Token expired", 401);
+    if (error.name === 'TokenExpiredError') {
+      return new AppError('Token expired', HTTPSTATUS.UNAUTHORIZED, ErrorCode.AUTH_INVALID_TOKEN);
     }
 
     // // Multer errors
@@ -151,8 +172,9 @@ export class ErrorHandler {
 
     // Default for unknown errors
     return new AppError(
-      this.isDevelopment ? error.message : "Internal server error",
+      this.isDevelopment ? error.message : 'Internal server error',
       500,
+      ErrorCode.INTERNAL_SERVER_ERROR,
       false
     );
   }
@@ -165,33 +187,30 @@ export class ErrorHandler {
       timestamp: error.timestamp,
       path: error.path || req?.path,
       method: error.method || req?.method,
-      userAgent: req?.get("User-Agent"),
+      userAgent: req?.get('User-Agent'),
       ip: req?.ip,
       userId: (req as any)?.user?.id,
-      requestId: req?.headers["x-request-id"],
+      requestId: req?.headers['x-request-id'],
       stack: this.isDevelopment ? error.stack : undefined,
     };
 
     if (error.statusCode >= 500) {
-      this.logger.error("Server Error", logData);
+      this.logger.error('Server Error', logData);
     } else if (error.statusCode >= 400) {
-      this.logger.warn("Client Error", logData);
+      this.logger.warn('Client Error', logData);
     } else {
-      this.logger.info("Error Info", logData);
+      this.logger.info('Error Info', logData);
     }
   }
 
   // Send formatted error response
-  private sendErrorResponse(
-    error: AppError,
-    res: Response,
-    requestId?: string
-  ): void {
+  private sendErrorResponse(error: AppError, res: Response, requestId?: string): void {
     const errorResponse: ErrorResponse = {
       success: false,
       error: {
         message: error.message,
         statusCode: error.statusCode,
+        errorCode: error.errorCode,
         timestamp: error.timestamp,
         path: error.path,
         method: error.method,
@@ -205,8 +224,8 @@ export class ErrorHandler {
 
   // Handle uncaught exceptions and unhandled rejections
   public setupGlobalHandlers(): void {
-    process.on("uncaughtException", (error: Error) => {
-      this.logger.error("Uncaught Exception - Shutting down gracefully", {
+    process.on('uncaughtException', (error: Error) => {
+      this.logger.error('Uncaught Exception - Shutting down gracefully', {
         error: error.message,
         stack: error.stack,
       });
@@ -214,8 +233,8 @@ export class ErrorHandler {
       process.exit(1);
     });
 
-    process.on("unhandledRejection", (reason: any, promise: Promise<any>) => {
-      this.logger.error("Unhandled Rejection - Shutting down gracefully", {
+    process.on('unhandledRejection', (reason: any, promise: Promise<any>) => {
+      this.logger.error('Unhandled Rejection - Shutting down gracefully', {
         reason: reason?.message || reason,
         stack: reason?.stack,
       });
@@ -232,29 +251,32 @@ export class ErrorHandler {
   };
 
   // Create specific error types
-  public static badRequest(message: string = "Bad Request"): AppError {
-    return new AppError(message, 400);
+  public static badRequest(message: string = 'Bad Request'): AppError {
+    return new AppError(message, HTTPSTATUS.BAD_REQUEST);
   }
 
-  public static unauthorized(message: string = "Unauthorized"): AppError {
-    return new AppError(message, 401);
+  public static unauthorized(message: string = 'Unauthorized'): AppError {
+    return new AppError(message, HTTPSTATUS.UNAUTHORIZED, ErrorCode.AUTH_UNAUTHORIZED_ACCESS);
   }
 
-  public static forbidden(message: string = "Forbidden"): AppError {
-    return new AppError(message, 403);
+  public static forbidden(message: string = 'Forbidden'): AppError {
+    return new AppError(message, HTTPSTATUS.FORBIDDEN, ErrorCode.ACCESS_FORBIDDEN);
   }
 
-  public static notFound(message: string = "Resource not found"): AppError {
-    return new AppError(message, 404);
+  public static notFound(message: string = 'Resource not found'): AppError {
+    return new AppError(message, HTTPSTATUS.NOT_FOUND, ErrorCode.NOT_FOUND);
   }
 
-  public static conflict(message: string = "Conflict"): AppError {
-    return new AppError(message, 409);
+  public static conflict(message: string = 'Conflict'): AppError {
+    return new AppError(message, HTTPSTATUS.CONFLICT, ErrorCode.CONFLICT);
   }
 
-  public static internal(message: string = "Internal Server Error"): AppError {
-    return new AppError(message, 500, false);
+  public static internal(message: string = 'Internal Server Error'): AppError {
+    return new AppError(
+      message,
+      HTTPSTATUS.INTERNAL_SERVER_ERROR,
+      ErrorCode.INTERNAL_SERVER_ERROR,
+      false
+    );
   }
 }
-
-

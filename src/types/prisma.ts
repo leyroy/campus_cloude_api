@@ -1,4 +1,4 @@
-import { Permission, Role, RolePermission, User, UserRole } from "@prisma/client";
+import { Permission, Role, RolePermission, User, UserRole } from '@prisma/client';
 
 export type UserWithRoles = User & {
   userRoles: (UserRole & {
@@ -10,6 +10,7 @@ export type UserWithRoles = User & {
   })[];
 };
 export interface IJwtPayload {
+  sessionId: string;
   userId: string;
   email: string;
   roles: Array<{
@@ -40,7 +41,7 @@ export interface ILoginResponse {
   success: boolean;
   message: string;
   data?: {
-    user: Omit<UserWithRoles, "password">;
+    user: Omit<UserWithRoles, 'password'>;
     accessToken: string;
     refreshToken: string;
   };

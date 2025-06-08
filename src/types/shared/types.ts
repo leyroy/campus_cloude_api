@@ -1,37 +1,37 @@
-import { Request } from "express";
-import { IJwtPayload } from "../prisma";
+import { Request } from 'express';
+import { IJwtPayload } from '../prisma';
 
 export type CreateReturns = {
   success: boolean;
   message: string;
-}
+};
 
 export enum TABELS_NAMES_ENUM {
-  USERS = "User",
-  SCHOOL = "School",
-  OWNER = "Owner",
-  STUDENT = "Student",
-  TEACHER = "Teacher",
-  CLASS = "Class",
-  SUBJECT = "Subject",
-  ATTENDANCE = "Attendance",
-  EXAM = "Exam",
-  EXAM_RESULT = "ExamResult",
-  PARRENT = "Parent",
-  SCHOOL_FEE = "Fee",
-  ADDRESS = "Address",
-  EVENT = "Event",
-  STAFF = "Staff",
-  ROLE = "Role",
-  PERMISSION = "Permission",
-  USER_ROLE = "UserRole",
-  ROLE_PERMISSION = "RolePermission",
-  NOTIFICATION = "Notification",
-  TIMETABLE = "Timetable",
+  USERS = 'User',
+  SCHOOL = 'School',
+  OWNER = 'Owner',
+  STUDENT = 'Student',
+  TEACHER = 'Teacher',
+  CLASS = 'Class',
+  SUBJECT = 'Subject',
+  ATTENDANCE = 'Attendance',
+  EXAM = 'Exam',
+  EXAM_RESULT = 'ExamResult',
+  PARRENT = 'Parent',
+  SCHOOL_FEE = 'Fee',
+  ADDRESS = 'Address',
+  EVENT = 'Event',
+  STAFF = 'Staff',
+  ROLE = 'Role',
+  PERMISSION = 'Permission',
+  USER_ROLE = 'UserRole',
+  ROLE_PERMISSION = 'RolePermission',
+  NOTIFICATION = 'Notification',
+  TIMETABLE = 'Timetable',
 }
 
 export interface CustomRequest extends Request {
-  user: IJwtPayload
+  user: TokenTypes;
 }
 
 export enum Resource {
@@ -47,7 +47,7 @@ export enum Resource {
   PERMISSION = 'permission',
   USER = 'user',
   AUTH = 'auth',
-  REPORT = 'report'
+  REPORT = 'report',
 }
 
 export enum Action {
@@ -71,10 +71,15 @@ export enum Action {
   IMPERSONATE = 'impersonate',
   GENERATE = 'generate',
   EXPORT = 'export',
-  ASSIGN_TO_ROLE = 'assign_to_role'
+  ASSIGN_TO_ROLE = 'assign_to_role',
 }
 
 export type PERMISSION = {
   resource: Resource;
   action: Action;
+};
+
+export type TokenTypes = {
+  userId: string;
+  sessionId: string;
 };

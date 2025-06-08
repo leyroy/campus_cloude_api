@@ -1,12 +1,18 @@
 import { ENV_CONSTANTS } from '../../constants/env_constants';
+import { HTTPSTATUS } from '../../constants/http-status';
+import { ErrorCode } from '../../enums/error-code.enum';
 import { VerificationEnum } from '../../enums/verification-code.enum';
 import { sendEmail } from '../../mailers/mailer';
 import { verifyEmailTemplate } from '../../mailers/templates/template';
-import { ErrorHandler } from '../../middlewares/errorHandler';
+import { AppError, ErrorHandler } from '../../middlewares/errorHandler';
 import { passwordManager } from '../../services/passwordMnager';
-import { calculateExpirationDate, fortyFiveMinutesFromNow } from '../../utils/date-time';
+import {
+  calculateExpirationDate,
+  fortyFiveMinutesFromNow,
+  ONE_DAY_IN_MS,
+} from '../../utils/date-time';
 import { commonDbService } from '../../utils/db/commonDbServices';
-import { generateTokens } from '../../utils/generateToken';
+import { generateTokens, verifyJwtToken } from '../../utils/jwt';
 import { generateUniqueCode } from '../../utils/uuid';
 import { CreateUserDto, LoginDto } from '../../validators/auth.validator';
 import { AuthHelpers } from './helpers';
@@ -21,13 +27,6 @@ interface LoginPayload extends LoginDto {
 
 export class AuthService {
   public async registerUser(data: CreateUserDto) {
-    const isUserExit = await commonDbService.getUserByPhoneOrEmail({
-      phone: data.phone,
-      email: data.email,
-    });
-    if (isUserExit) {
-      throw ErrorHandler.badRequest('User with this phone or email already exists');
-    }
     const { schoolName, ...user } = data;
     const hashedPassword = await passwordManager.hashPassword(user.password);
     const newUser = await commonDbService.createUser({
@@ -128,5 +127,39 @@ export class AuthService {
       );
     await commonDbService.deleteVerificationCode(verificationToken.id);
     return true;
+  }
+  public async refreshToken(token: string) {
+    const { error, payload } = verifyJwtToken(token);
+    if (error || !payload) {
+      throw new AppError(
+        error || 'Invalid refresh token',
+        HTTPSTATUS.BAD_REQUEST,
+        ErrorCode.AUTH_REFRESH_TOKEN_NOT_FOUND
+      );
+    }
+    const sessionWithUser = await authHelpers.getSessionById(payload.sessionId);
+    if (!sessionWithUser) {
+      throw ErrorHandler.notFound('Session not found');
+    }
+    const { user, ...session } = sessionWithUser;
+    if (!session.isActive) {
+      throw ErrorHandler.badRequest('Session is not active');
+    }
+    const now = Date.now();
+    const sessionNeedsToBeUpdated = session.expires.getTime() - now < ONE_DAY_IN_MS;
+    if (sessionNeedsToBeUpdated) {
+      await authHelpers.updateSessionExpirationData(
+        session.id,
+        calculateExpirationDate(ENV_CONSTANTS.JWT_ENV.REFRESH_TOKEN_EXPIRES_IN)
+      );
+    }
+    const { accessToken, refreshToken } = generateTokens({
+      userId: user.id,
+      sessionId: session.id,
+    });
+    return {
+      accessToken,
+      refreshToken: sessionNeedsToBeUpdated ? refreshToken : undefined,
+    };
   }
 }

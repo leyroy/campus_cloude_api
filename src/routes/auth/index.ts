@@ -1,15 +1,21 @@
 import epress from 'express';
 import loginController from '../../modules/auth/loginController';
-import { logoutController } from '../../modules/auth/logout';
+import { logoutController } from '../../modules/auth/logout.controller';
 import { ErrorHandler } from '../../middlewares/errorHandler';
 import { authenticateToken } from '../../middlewares/authenticateToken';
 import signUpController from '../../modules/auth/signupcontroller';
 import verifyEmailController from '../../modules/auth/verifyEmail.controller';
+import zodValidator from '../../middlewares/zodValidator';
+import { RegisterSchema } from '../../validators/auth.validator';
 
 const authRouter = epress.Router();
 
 const errorHandler = new ErrorHandler();
-authRouter.post('/signup', errorHandler.catchAsync(signUpController));
+authRouter.post(
+  '/signup',
+  errorHandler.catchAsync(zodValidator(RegisterSchema)),
+  errorHandler.catchAsync(signUpController)
+);
 
 /**
  * @swagger
@@ -47,7 +53,7 @@ authRouter.post('/signup', errorHandler.catchAsync(signUpController));
  */
 authRouter.post('/', errorHandler.catchAsync(loginController));
 
-authRouter.use(authenticateToken);
+authRouter.use(errorHandler.catchAsync(authenticateToken));
 
 /**
  * @swagger
