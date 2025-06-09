@@ -1,8 +1,5 @@
-export const verifyEmailTemplate = (
-  url: string,
-  brandColor: string = "#2563EB"
-) => ({
-  subject: "Confirm your Squeezy account",
+export const verifyEmailTemplate = (url: string, brandColor: string = '#2563EB') => ({
+  subject: 'Confirm your Squeezy account',
   text: `Please verify your email address by clicking the following link: ${url}`,
   html: `
     <html><head><style>
@@ -32,11 +29,8 @@ export const verifyEmailTemplate = (
   `,
 });
 
-export const passwordResetTemplate = (
-  url: string,
-  brandColor: string = "#2563EB"
-) => ({
-  subject: "Reset Your Password",
+export const passwordResetTemplate = (url: string, brandColor: string = '#2563EB') => ({
+  subject: 'Reset Your Password',
   text: `To reset your password, please click the following link: ${url}`,
   html: `
     <html><head><style>

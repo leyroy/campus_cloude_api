@@ -1,0 +1,706 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "confirmPassword": {
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean",
+          "default": false
+        },
+        "status": {
+          "type": "string",
+          "default": "ACTIVE",
+          "enum": ["ACTIVE", "INACTIVE", "SUSPENDED", "REJECTED", "PENDING", "DELETED"]
+        },
+        "phone": {
+          "type": "string"
+        },
+        "isPhoneVerified": {
+          "type": "boolean",
+          "default": false
+        },
+        "isEmailVerified": {
+          "type": "boolean",
+          "default": false
+        },
+        "lastLogedIn": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "address": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Address"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "school": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/School"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "userRoles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UserRole"
+          }
+        },
+        "assignedRoles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UserRole"
+          }
+        },
+        "rolesCreated": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Role"
+          }
+        },
+        "Document": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Document"
+          }
+        },
+        "SchoolProfile": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SchoolProfile"
+          }
+        },
+        "Session": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Session"
+          }
+        }
+      }
+    },
+    "School": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean",
+          "default": false
+        },
+        "status": {
+          "type": "string",
+          "default": "ACTIVE",
+          "enum": ["ACTIVE", "INACTIVE", "SUSPENDED", "REJECTED", "PENDING", "DELETED"]
+        },
+        "address": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Address"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          }
+        },
+        "OwnersSchool": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OwnersSchool"
+          }
+        },
+        "Plan": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Plan"
+          }
+        },
+        "Document": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Document"
+          }
+        },
+        "SchoolProfile": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SchoolProfile"
+          }
+        }
+      }
+    },
+    "VerificationToken": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "identifier": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        },
+        "expires": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "EMAIL_VERIFICATION",
+            "PASSWORD_RESET",
+            "PHONE_VERIFICATION",
+            "TWO_FACTOR_AUTHENTICATION",
+            "CHANGE_EMAIL",
+            "CHANGE_PHONE",
+            "ACCOUNT_ACTIVATION",
+            "ACCOUNT_DELETION"
+          ]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "Session": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "sessionToken": {
+          "type": "string"
+        },
+        "expires": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "userAgent": {
+          "type": "string"
+        },
+        "ipAddress": {
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean",
+          "default": true
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "user": {
+          "$ref": "#/definitions/User"
+        }
+      }
+    },
+    "SchoolProfile": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "school": {
+          "$ref": "#/definitions/School"
+        },
+        "slogan": {
+          "type": "string"
+        },
+        "about": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "contactEmail": {
+          "type": "string"
+        },
+        "contactPhone": {
+          "type": "string"
+        },
+        "establishedAt": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        },
+        "motto": {
+          "type": "string"
+        },
+        "colors": {
+          "type": ["string", "null"]
+        },
+        "website": {
+          "type": ["string", "null"]
+        },
+        "facebook": {
+          "type": ["string", "null"]
+        },
+        "twitter": {
+          "type": ["string", "null"]
+        },
+        "linkedin": {
+          "type": ["string", "null"]
+        },
+        "instagram": {
+          "type": ["string", "null"]
+        },
+        "youtube": {
+          "type": ["string", "null"]
+        },
+        "principalName": {
+          "type": "string"
+        },
+        "principalBio": {
+          "type": "string"
+        },
+        "founderName": {
+          "type": "string"
+        },
+        "founderBio": {
+          "type": ["string", "null"]
+        },
+        "licenseNumber": {
+          "type": ["string", "null"]
+        },
+        "adminNote": {
+          "type": ["string", "null"]
+        },
+        "updatedById": {
+          "type": "string"
+        },
+        "updatedBy": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          }
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "Plan": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "description": {
+          "type": ["string", "null"]
+        },
+        "price": {
+          "type": "number"
+        },
+        "currency": {
+          "type": "string",
+          "default": "USD"
+        },
+        "billingCycle": {
+          "type": "string",
+          "default": "MONTHLY"
+        },
+        "features": {
+          "type": ["number", "string", "boolean", "object", "array", "null"]
+        },
+        "isActive": {
+          "type": "boolean",
+          "default": true
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "schools": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/School"
+          }
+        }
+      }
+    },
+    "Address": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "street": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "zipCode": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "postalCode": {
+          "type": "string"
+        },
+        "User": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          }
+        },
+        "school": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/School"
+          }
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "Owner": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "preferredContactMethod": {
+          "type": "string",
+          "default": "EMAIL"
+        },
+        "preferredContactTime": {
+          "type": "string",
+          "default": "MORNING"
+        },
+        "educationBackground": {
+          "type": ["string", "null"]
+        },
+        "userId": {
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean",
+          "default": false
+        },
+        "professionalExperience": {
+          "type": ["string", "null"]
+        },
+        "currentPosition": {
+          "type": ["string", "null"]
+        },
+        "previousPositions": {
+          "type": ["string", "null"]
+        },
+        "yearsInEducation": {
+          "type": ["integer", "null"]
+        },
+        "OwnersSchool": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OwnersSchool"
+          }
+        }
+      }
+    },
+    "OwnersSchool": {
+      "type": "object",
+      "properties": {
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "owner": {
+          "$ref": "#/definitions/Owner"
+        },
+        "school": {
+          "$ref": "#/definitions/School"
+        }
+      }
+    },
+    "Permission": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "resource": {
+          "type": "string"
+        },
+        "action": {
+          "type": "string"
+        },
+        "description": {
+          "type": ["string", "null"]
+        },
+        "rolePermissions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RolePermission"
+          }
+        }
+      }
+    },
+    "Role": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": ["string", "null"]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "isActive": {
+          "type": "boolean",
+          "default": true
+        },
+        "createdBy": {
+          "$ref": "#/definitions/User"
+        },
+        "rolePermissions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RolePermission"
+          }
+        },
+        "userRoles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UserRole"
+          }
+        }
+      }
+    },
+    "RolePermission": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "role": {
+          "$ref": "#/definitions/Role"
+        },
+        "permission": {
+          "$ref": "#/definitions/Permission"
+        }
+      }
+    },
+    "UserRole": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "assignedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "user": {
+          "$ref": "#/definitions/User"
+        },
+        "role": {
+          "$ref": "#/definitions/Role"
+        },
+        "assignedBy": {
+          "$ref": "#/definitions/User"
+        }
+      }
+    },
+    "Document": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "fileType": {
+          "type": "string",
+          "enum": ["IMAGE", "PDF", "DOCX", "XLSX", "PPTX", "TEXT", "CSV", "ZIP", "OTHER"]
+        },
+        "purpose": {
+          "type": "string",
+          "enum": [
+            "SCHOOL_LOGO",
+            "SCHOOL_SEAL",
+            "LICENSE_CERT",
+            "PROOF_OF_ADDRESS",
+            "HEADMASTER_ID",
+            "GENERAL_UPLOAD"
+          ]
+        },
+        "campusId": {
+          "type": ["string", "null"]
+        },
+        "uploadedBy": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "school": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/School"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  },
+  "type": "object",
+  "properties": {
+    "user": {
+      "$ref": "#/definitions/User"
+    },
+    "school": {
+      "$ref": "#/definitions/School"
+    },
+    "verificationToken": {
+      "$ref": "#/definitions/VerificationToken"
+    },
+    "session": {
+      "$ref": "#/definitions/Session"
+    },
+    "schoolProfile": {
+      "$ref": "#/definitions/SchoolProfile"
+    },
+    "plan": {
+      "$ref": "#/definitions/Plan"
+    },
+    "address": {
+      "$ref": "#/definitions/Address"
+    },
+    "owner": {
+      "$ref": "#/definitions/Owner"
+    },
+    "ownersSchool": {
+      "$ref": "#/definitions/OwnersSchool"
+    },
+    "permission": {
+      "$ref": "#/definitions/Permission"
+    },
+    "role": {
+      "$ref": "#/definitions/Role"
+    },
+    "rolePermission": {
+      "$ref": "#/definitions/RolePermission"
+    },
+    "userRole": {
+      "$ref": "#/definitions/UserRole"
+    },
+    "document": {
+      "$ref": "#/definitions/Document"
+    }
+  }
+}

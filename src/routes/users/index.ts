@@ -1,12 +1,12 @@
-import express from "express";
-import createUserController from "../../modules/users/controllers/create";
-import { validatePayload } from "../../middlewares/validate-payload";
-import { TABELS_NAMES_ENUM } from "../../types/shared/types";
-import { getUsersController } from "../../modules/users/controllers/getUser.controller";
-import { ErrorHandler } from "../../middlewares/errorHandler";
+import express from 'express';
+import createUserController from '../../modules/users/controllers/create';
+import { validatePayload } from '../../middlewares/validate-payload';
+import { TABELS_NAMES_ENUM } from '../../types/shared/types';
+import { getUsersController } from '../../modules/users/controllers/getUser.controller';
+import { ErrorHandler } from '../../middlewares/errorHandler';
 
 const usersRouter = express.Router();
-const errorHandler = new ErrorHandler()
+const errorHandler = new ErrorHandler();
 
 /**
  * @swagger
@@ -27,13 +27,14 @@ const errorHandler = new ErrorHandler()
  *       404:
  *         description: Users not found.
  */
-usersRouter.get("/", errorHandler.catchAsync(getUsersController));
+usersRouter.get('/', errorHandler.catchAsync(getUsersController));
 
 /**
  * @swagger
  * /campcloud/api/v1/users:
  *   post:
- *     tags: [Users]
+ *     tags:
+ *       - Users
  *     summary: Create a new user
  *     description: Create a new user in the system.
  *     requestBody:
@@ -41,7 +42,26 @@ usersRouter.get("/", errorHandler.catchAsync(getUsersController));
  *       content:
  *         application/json:
  *           schema:
- *              $ref: '#/components/schemas/UserRequest'
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: john.doe@example.com
+ *               firstName:
+ *                 type: string
+ *                 example: John
+ *               lastName:
+ *                 type: string
+ *                 example: Doe
+ *               phone:
+ *                 type: string
+ *                 example: 123-456-7890
+ *               password:
+ *                 type: string
+ *                 example: securepassword
+ *               confirmPassword:
+ *                 type: string
+ *                 example: securepassword
  *     responses:
  *       200:
  *         description: User created successfully.
@@ -50,15 +70,22 @@ usersRouter.get("/", errorHandler.catchAsync(getUsersController));
  *             schema:
  *               type: object
  *               properties:
- *                   message:
- *                     type: string
- *                     example: User created successfully
- *                   success:
- *                     type: boolean
- *                     example: true
+ *                 message:
+ *                   type: string
+ *                   example: User created successfully
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
  *       404:
  *         description: Users not found.
  */
-usersRouter.post("/", validatePayload(TABELS_NAMES_ENUM.USERS), errorHandler.catchAsync(createUserController)); 
+
+usersRouter.post(
+  '/',
+  validatePayload(TABELS_NAMES_ENUM.USERS),
+  errorHandler.catchAsync(createUserController)
+);
 
 export default usersRouter;

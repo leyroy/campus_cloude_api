@@ -6,6 +6,14 @@
     ]
   },
   {
+    "modelName": "jsonSchema",
+    "fields": [
+      "provider",
+      "output",
+      "keepRelationScalarFields"
+    ]
+  },
+  {
     "modelName": "db",
     "fields": [
       "provider",
