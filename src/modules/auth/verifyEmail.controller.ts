@@ -5,18 +5,16 @@ import { AuthService } from './auth.services';
 const authService = new AuthService();
 const verifyEmailController = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { code } = req.query as { code?: string };
-    if (!code) {
-      throw ErrorHandler.badRequest('Verification code is required');
+    const { token } = req.query as { token?: string };
+    if (!token) {
+      throw ErrorHandler.badRequest('Verification Token is required');
     }
-    const results = await authService.verifyEmail(code);
-    if (!results) throw ErrorHandler.badRequest('Invalid verification code or it has expired');
-    res
-      .status(200)
-      .json({
-        success: results,
-        message: 'Your email is succefully verified, please log in to your account',
-      });
+    const results = await authService.verifyEmail(token);
+    if (!results) throw ErrorHandler.badRequest('Invalid verification token or it has expired');
+    res.status(200).json({
+      success: results,
+      message: 'Your email is successfully verified, please log in to your account',
+    });
   } catch (err) {
     next(err);
   }

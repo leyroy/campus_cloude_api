@@ -1,9 +1,8 @@
 import prisma from '../../../config/prisma.config';
-import { AppError, ErrorHandler } from '../../../middlewares/errorHandler';
-import { CreateReturns } from '../../../types/shared/types';
+import { ErrorHandler } from '../../../middlewares/errorHandler';
 import { UserDto } from '../../../types/zodschemers/user';
 import { passwordManager } from '../../../services/passwordMnager';
-import { handlePrismaError } from '../../../utils/prismaErrorHandler';
+import { CreateReturns } from '../../../types/types';
 
 export const createUserHelper = async (userData: UserDto): Promise<CreateReturns> => {
   try {

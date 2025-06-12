@@ -2,9 +2,9 @@ import jwt from 'jsonwebtoken';
 import prisma from '../config/prisma.config';
 import { AppError, ErrorHandler } from './errorHandler';
 import { NextFunction, Request, Response } from 'express';
-import { CustomRequest, TokenTypes } from '../types/shared/types';
 import { HTTPSTATUS } from '../constants/http-status';
 import { ErrorCode } from '../enums/error-code.enum';
+import { CustomRequest, TokenTypes } from '../types/types';
 
 export const authenticateToken = async (req: Request, res: Response, next: NextFunction) => {
   try {

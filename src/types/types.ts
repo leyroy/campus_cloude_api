@@ -1,5 +1,4 @@
 import { Request } from 'express';
-import { IJwtPayload } from '../prisma';
 
 export type CreateReturns = {
   success: boolean;
@@ -82,4 +81,9 @@ export type PERMISSION = {
 export type TokenTypes = {
   userId: string;
   sessionId: string;
+};
+export type CangePasswordDto = {
+  oldPassword: string;
+  userId: string;
+  newPassword: string;
 };

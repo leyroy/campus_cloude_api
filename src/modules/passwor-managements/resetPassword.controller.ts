@@ -5,12 +5,12 @@ import { HTTPSTATUS } from '../../constants/http-status';
 
 const resetPassword = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { currentPassword, newPassword } = req.body;
-    const { token } = req.params;
+    const { newPassword } = req.body;
+    const { token } = req.query as { token?: string };
     if (!token) {
       throw ErrorHandler.badRequest('Token not found');
     }
-    const { message } = await passwordServices.resetPassword(token, currentPassword, newPassword);
+    const { message } = await passwordServices.resetPassword(token, newPassword);
     res.status(HTTPSTATUS.CREATED).json({ success: true, message });
   } catch (err) {
     next(err);
