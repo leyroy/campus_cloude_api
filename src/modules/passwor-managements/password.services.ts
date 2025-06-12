@@ -64,7 +64,7 @@ class PasswordServices {
     }
     const hashedPassword = await passwordManager.hashPassword(newPassword);
     const isSamePassword = passwordManager.verifyPassword(newPassword, user.password);
-    if (!hashedPassword) {
+    if (!isSamePassword) {
       throw ErrorHandler.badRequest('New password cannot be the same as the old password');
     }
     const updatedUser = await this.passwordHelper.updateUserPassword(user.id, hashedPassword);
