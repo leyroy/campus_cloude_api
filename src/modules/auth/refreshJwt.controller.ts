@@ -9,11 +9,11 @@ const authService = new AuthService();
 const refreshJwtController = async (req: Request, res: Response) => {
   const { refreshToken } = req.cookies;
   if (!refreshToken) {
-    throw new AppError(
-      'Refresh Token was not found',
-      HTTPSTATUS.NO_CONTENT,
-      ErrorCode.AUTH_REFRESH_TOKEN_NOT_FOUND
-    );
+    throw new AppError({
+      message: 'Refresh Token was not found',
+      statusCode: HTTPSTATUS.NO_CONTENT,
+      errorCode: ErrorCode.AUTH_REFRESH_TOKEN_NOT_FOUND,
+    });
   }
   const { accessToken, refreshToken: newRefreshToken } = await authService.refreshToken(
     refreshToken

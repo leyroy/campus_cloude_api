@@ -6,7 +6,7 @@ import { ErrorHandler } from '../../middlewares/errorHandler';
 const passwordRoutes = Router();
 const errorHandler = new ErrorHandler();
 
-passwordRoutes.post('/forgot-password', errorHandler.catchAsync(forgotPassword));
-passwordRoutes.post('/reset-password', errorHandler.catchAsync(resetPassword));
+passwordRoutes.get('/forgot-password', errorHandler.catchAsync(forgotPassword));
+passwordRoutes.put('/reset-password', errorHandler.catchAsync(resetPassword));
 
 export default passwordRoutes;

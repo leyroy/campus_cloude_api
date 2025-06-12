@@ -1,11 +1,13 @@
 import { VerificationType } from '@prisma/client';
-import { ErrorHandler } from '../../middlewares/errorHandler';
+import { AppError, ErrorHandler } from '../../middlewares/errorHandler';
 import { CommonDbServices } from '../../utils/db/commonDbServices';
 import { AuthHelpers } from '../auth/helpers';
+import { HTTPSTATUS } from '../../constants/http-status';
 import { PasswordHelper } from './passwordHelper';
 import { calculateExpirationDate, threeMinutesAgo } from '../../utils/date-time';
 import { VerificationEnum } from '../../enums/verification-code.enum';
 import { passwordManager } from '../../services/passwordMnager';
+import { ErrorCode } from '../../enums/error-code.enum';
 
 const commonDbServices = new CommonDbServices();
 const authHelpers = new AuthHelpers();
@@ -43,7 +45,7 @@ class PasswordServices {
     return forgotPasswordToken;
   }
 
-  public async resetPassword(token: string, newPassword: string) {
+  public async resetPassword(token: string, currentPassword: string, newPassword: string) {
     const verificationCode = await commonDbServices.getVerificationCode(
       token,
       VerificationEnum.PASSWORD_RESET
@@ -55,6 +57,17 @@ class PasswordServices {
     const user = await commonDbServices.getUserById(verificationCode.identifier);
     if (!user) {
       throw ErrorHandler.notFound('User not found for the provided token');
+    }
+    const isCurrentPasswordValid = await passwordManager.verifyPassword(
+      currentPassword,
+      user.password
+    );
+    if (!isCurrentPasswordValid) {
+      throw new AppError({
+        message: 'Invalid current password',
+        statusCode: HTTPSTATUS.UNAUTHORIZED,
+        errorCode: ErrorCode.INVALID_PASSWORD,
+      });
     }
     if (verificationCode.expires < new Date()) {
       throw ErrorHandler.badRequest('Password reset token has expired');

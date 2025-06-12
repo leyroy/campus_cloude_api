@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { HTTPSTATUS } from '../constants/http-status';
+import { HTTPSTATUS, HttpStatusCode } from '../constants/http-status';
 import {
   PrismaClientInitializationError,
   PrismaClientKnownRequestError,
@@ -9,20 +9,27 @@ import {
 import { ErrorCode } from '../enums/error-code.enum';
 
 // Custom error class
+
+interface AppErrorTypes {
+  message?: string;
+  statusCode?: number;
+  errorCode?: string;
+  isOperational?: boolean;
+}
 export class AppError extends Error {
-  public statusCode: number;
+  public statusCode: HttpStatusCode;
   public isOperational: boolean;
   public errorCode: string;
   public timestamp: string;
   public path?: string;
   public method?: string;
 
-  constructor(
-    message: string,
-    statusCode: number = 500,
-    errorCode: string = '',
-    isOperational: boolean = true
-  ) {
+  constructor({
+    message,
+    statusCode = 500,
+    errorCode = ErrorCode.INTERNAL_SERVER_ERROR,
+    isOperational = true,
+  }: AppErrorTypes) {
     super(message);
     this.statusCode = statusCode;
     this.errorCode = errorCode;
@@ -117,48 +124,77 @@ export class ErrorHandler {
       switch (error.code) {
         case 'P2002': // Unique constraint
           const field = error.meta?.target as string[];
-          return new AppError(
-            `${field ? field.join(', ') : 'Field'} already exists`,
-            HTTPSTATUS.CONFLICT
-          );
+          return new AppError({
+            message: `${field ? field.join(', ') : 'Field'} already exists`,
+            statusCode: HTTPSTATUS.CONFLICT,
+            errorCode: ErrorCode.AUTH_EMAIL_ALREADY_EXISTS,
+          });
 
         case 'P2025': // Record not found
-          return new AppError('Record not found', HTTPSTATUS.NOT_FOUND);
+          return new AppError({
+            message: 'Record not found',
+            statusCode: HTTPSTATUS.NOT_FOUND,
+            errorCode: ErrorCode.NOT_FOUND,
+          });
 
         case 'P2003': // Foreign key constraint
-          return new AppError('Invalid reference to related record', HTTPSTATUS.BAD_REQUEST);
+          return new AppError({
+            message: 'Invalid reference to related record',
+            statusCode: HTTPSTATUS.BAD_REQUEST,
+            errorCode: ErrorCode.BAD_REQUEST,
+          });
 
         case 'P2014': // Required relation missing
-          return new AppError('Required relationship is missing', HTTPSTATUS.CONFLICT);
+          return new AppError({
+            message: 'Required relationship is missing',
+            statusCode: HTTPSTATUS.CONFLICT,
+          });
 
         default:
           console.error('Prisma known error:', error);
-          return new AppError('Database operation failed', HTTPSTATUS.BAD_GATEWAY);
+          return new AppError({
+            message: 'Database operation failed',
+            statusCode: HTTPSTATUS.BAD_GATEWAY,
+          });
       }
     }
 
     if (error instanceof PrismaClientValidationError) {
       console.error('Prisma validation error:', error.message);
-      return new AppError('Invalid data format', HTTPSTATUS.BAD_REQUEST);
+      return new AppError({ message: 'Invalid data format', statusCode: HTTPSTATUS.BAD_REQUEST });
     }
 
     if (error instanceof PrismaClientInitializationError) {
       console.error('Prisma initialization error:', error);
-      return new AppError('Database connection failed', HTTPSTATUS.BAD_GATEWAY);
+      return new AppError({
+        message: 'Database connection failed',
+        statusCode: HTTPSTATUS.BAD_GATEWAY,
+      });
     }
 
     if (error instanceof PrismaClientUnknownRequestError) {
       console.error('Prisma unknown error:', error);
-      return new AppError('Unexpected database error', HTTPSTATUS.BAD_GATEWAY);
+      return new AppError({
+        message: 'Unexpected database error',
+        statusCode: HTTPSTATUS.BAD_GATEWAY,
+      });
     }
 
     // JWT errors
     if (error.name === 'JsonWebTokenError') {
-      return new AppError('Invalid token', HTTPSTATUS.UNAUTHORIZED, ErrorCode.AUTH_INVALID_TOKEN);
+      return new AppError({
+        message: 'Invalid token',
+        statusCode: HTTPSTATUS.UNAUTHORIZED,
+        errorCode: ErrorCode.AUTH_INVALID_TOKEN,
+      });
     }
 
     if (error.name === 'TokenExpiredError') {
-      return new AppError('Token expired', HTTPSTATUS.UNAUTHORIZED, ErrorCode.AUTH_INVALID_TOKEN);
+      return new AppError({
+        message: 'Token expired',
+        statusCode: HTTPSTATUS.UNAUTHORIZED,
+        errorCode: ErrorCode.AUTH_INVALID_TOKEN,
+      });
     }
 
     // // Multer errors
@@ -171,12 +207,12 @@ export class ErrorHandler {
     // }
 
     // Default for unknown errors
-    return new AppError(
-      this.isDevelopment ? error.message : 'Internal server error',
-      500,
-      ErrorCode.INTERNAL_SERVER_ERROR,
-      false
-    );
+    return new AppError({
+      message: this.isDevelopment ? error.message : 'Internal server error',
+      statusCode: HTTPSTATUS.BAD_REQUEST,
+      errorCode: ErrorCode.INTERNAL_SERVER_ERROR,
+      isOperational: false,
+    });
   }
 
   // Log error with context
@@ -252,31 +288,47 @@ export class ErrorHandler {
 
   // Create specific error types
   public static badRequest(message: string = 'Bad Request'): AppError {
-    return new AppError(message, HTTPSTATUS.BAD_REQUEST);
+    return new AppError({ message, statusCode: HTTPSTATUS.BAD_REQUEST });
   }
 
   public static unauthorized(message: string = 'Unauthorized'): AppError {
-    return new AppError(message, HTTPSTATUS.UNAUTHORIZED, ErrorCode.AUTH_UNAUTHORIZED_ACCESS);
+    return new AppError({
+      message,
+      statusCode: HTTPSTATUS.UNAUTHORIZED,
+      errorCode: ErrorCode.AUTH_UNAUTHORIZED_ACCESS,
+    });
   }
 
   public static forbidden(message: string = 'Forbidden'): AppError {
-    return new AppError(message, HTTPSTATUS.FORBIDDEN, ErrorCode.ACCESS_FORBIDDEN);
+    return new AppError({
+      message,
+      statusCode: HTTPSTATUS.FORBIDDEN,
+      errorCode: ErrorCode.ACCESS_FORBIDDEN,
+    });
   }
 
   public static notFound(message: string = 'Resource not found'): AppError {
-    return new AppError(message, HTTPSTATUS.NOT_FOUND, ErrorCode.NOT_FOUND);
+    return new AppError({
+      message,
+      statusCode: HTTPSTATUS.NOT_FOUND,
+      errorCode: ErrorCode.NOT_FOUND,
+    });
   }
 
   public static conflict(message: string = 'Conflict'): AppError {
-    return new AppError(message, HTTPSTATUS.CONFLICT, ErrorCode.CONFLICT);
+    return new AppError({
+      message,
+      statusCode: HTTPSTATUS.CONFLICT,
+      errorCode: ErrorCode.CONFLICT,
+    });
   }
 
   public static internal(message: string = 'Internal Server Error'): AppError {
-    return new AppError(
+    return new AppError({
       message,
-      HTTPSTATUS.INTERNAL_SERVER_ERROR,
-      ErrorCode.INTERNAL_SERVER_ERROR,
-      false
-    );
+      statusCode: HTTPSTATUS.INTERNAL_SERVER_ERROR,
+      errorCode: ErrorCode.INTERNAL_SERVER_ERROR,
+      isOperational: false,
+    });
   }
 }

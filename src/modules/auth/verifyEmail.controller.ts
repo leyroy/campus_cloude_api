@@ -11,7 +11,12 @@ const verifyEmailController = async (req: Request, res: Response, next: NextFunc
     }
     const results = await authService.verifyEmail(code);
     if (!results) throw ErrorHandler.badRequest('Invalid verification code or it has expired');
-    res.status(200).json({ message: 'verifyEmailController is live 🧨' });
+    res
+      .status(200)
+      .json({
+        success: results,
+        message: 'Your email is succefully verified, please log in to your account',
+      });
   } catch (err) {
     next(err);
   }

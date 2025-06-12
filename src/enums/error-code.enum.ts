@@ -2,6 +2,7 @@ const enum ErrorCode {
   //general
   NOT_FOUND = 'NOT_FOUND',
   CONFLICT = 'CONFLICT',
+  BAD_REQUEST = 'BAD_REQUES',
 
   //auth
   AUTH_EMAIL_ALREADY_EXISTS = 'AUTH_EMAIL_ALREADY_EXISTS',
@@ -16,6 +17,7 @@ const enum ErrorCode {
   // Access Control Errors
   ACCESS_FORBIDDEN = 'ACCESS_FORBIDDEN',
   ACCESS_UNAUTHORIZED = 'ACCESS_UNAUTHORIZED',
+  INVALID_PASSWORD = 'INVALID_PASSWORD',
 
   // Validation and Resource Errors
   VALIDATION_ERROR = 'VALIDATION_ERROR',
