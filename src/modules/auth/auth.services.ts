@@ -131,11 +131,11 @@ export class AuthService {
   public async refreshToken(token: string) {
     const { error, payload } = verifyJwtToken(token);
     if (error || !payload) {
-      throw new AppError(
-        error || 'Invalid refresh token',
-        HTTPSTATUS.BAD_REQUEST,
-        ErrorCode.AUTH_REFRESH_TOKEN_NOT_FOUND
-      );
+      throw new AppError({
+        message: error || 'Invalid refresh token',
+        statusCode: HTTPSTATUS.BAD_REQUEST,
+        errorCode: ErrorCode.AUTH_REFRESH_TOKEN_NOT_FOUND,
+      });
     }
     const sessionWithUser = await authHelpers.getSessionById(payload.sessionId);
     if (!sessionWithUser) {

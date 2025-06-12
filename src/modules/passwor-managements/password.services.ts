@@ -1,11 +1,14 @@
 import { VerificationType } from '@prisma/client';
-import { ErrorHandler } from '../../middlewares/errorHandler';
+import { AppError, ErrorHandler } from '../../middlewares/errorHandler';
 import { CommonDbServices } from '../../utils/db/commonDbServices';
 import { AuthHelpers } from '../auth/helpers';
 import { PasswordHelper } from './passwordHelper';
 import { calculateExpirationDate, threeMinutesAgo } from '../../utils/date-time';
 import { VerificationEnum } from '../../enums/verification-code.enum';
 import { passwordManager } from '../../services/passwordMnager';
+import { CangePasswordDto } from '../../types/types';
+import { HTTPSTATUS } from '../../constants/http-status';
+import { ErrorCode } from '../../enums/error-code.enum';
 
 const commonDbServices = new CommonDbServices();
 const authHelpers = new AuthHelpers();
@@ -60,12 +63,42 @@ class PasswordServices {
       throw ErrorHandler.badRequest('Password reset token has expired');
     }
     const hashedPassword = await passwordManager.hashPassword(newPassword);
+    const isSamePassword = passwordManager.verifyPassword(newPassword, user.password);
+    if (!isSamePassword) {
+      throw ErrorHandler.badRequest('New password cannot be the same as the old password');
+    }
     const updatedUser = await this.passwordHelper.updateUserPassword(user.id, hashedPassword);
     if (!updatedUser) {
       throw ErrorHandler.internal('Failed to update user password');
     }
     await commonDbServices.deleteVerificationCode(verificationCode.id);
     return { message: 'Password has been successfully reset' };
+  }
+
+  public async changePassword({ userId, oldPassword, newPassword }: CangePasswordDto) {
+    const user = await commonDbServices.getUserById(userId);
+    if (!user) {
+      throw ErrorHandler.notFound('User not found');
+    }
+
+    const isOldPasswordValid = passwordManager.verifyPassword(oldPassword, user.password);
+    const isSamePassword = passwordManager.verifyPassword(newPassword, user.password);
+    if (!isOldPasswordValid) {
+      throw new AppError({
+        message: 'Invalid old password',
+        statusCode: HTTPSTATUS.UNAUTHORIZED,
+        errorCode: ErrorCode.INVALID_PASSWORD,
+      });
+    }
+    const hashedNewPassword = await passwordManager.hashPassword(newPassword);
+    if (isSamePassword) {
+      throw ErrorHandler.badRequest('New password cannot be the same as the old password');
+    }
+    const updatedUser = await this.passwordHelper.updateUserPassword(user.id, hashedNewPassword);
+    if (!updatedUser) {
+      throw ErrorHandler.internal('Failed to update user password');
+    }
+    return { message: 'Password has been successfully changed' };
   }
 }
 

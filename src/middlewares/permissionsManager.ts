@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import { CustomRequest, PERMISSION } from '../types/shared/types';
 import { ErrorHandler } from './errorHandler';
 import { commonDbService } from '../utils/db/commonDbServices';
 import { hasPermission, HasPermission } from '../utils/hasPermissions';
+import { CustomRequest, PERMISSION } from '../types/types';
 
 const permissionHandler = ({ resource, action }: PERMISSION) => {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -19,12 +19,10 @@ const permissionHandler = ({ resource, action }: PERMISSION) => {
       const hasPemissionPayload = {
         userId: user.userId,
         resource: resource,
-        action
+        action,
       } as HasPermission;
       if (!(await hasPermission(hasPemissionPayload))) {
-        throw ErrorHandler.forbidden(
-          `You're not allowed to ${action} ${resource}`
-        );
+        throw ErrorHandler.forbidden(`You're not allowed to ${action} ${resource}`);
       }
       next();
     } catch (error) {

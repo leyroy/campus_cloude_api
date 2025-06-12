@@ -1,44 +1,28 @@
 import prisma from '../../../config/prisma.config';
-import { AppError, ErrorHandler } from '../../../middlewares/errorHandler';
-import { CreateReturns } from '../../../types/shared/types';
+import { ErrorHandler } from '../../../middlewares/errorHandler';
 import { UserDto } from '../../../types/zodschemers/user';
 import { passwordManager } from '../../../services/passwordMnager';
-import { handlePrismaError } from '../../../utils/prismaErrorHandler';
+import { CreateReturns } from '../../../types/types';
 
-export const createUserHelper = async (
-  userData: UserDto
-): Promise<CreateReturns> => {
+export const createUserHelper = async (userData: UserDto): Promise<CreateReturns> => {
   try {
     // TODO: Implement user creation logic
     const existingUser = await prisma.user.findUnique({
-      where: { email: userData.email }
+      where: { email: userData.email },
     });
 
     if (existingUser) {
-      throw ErrorHandler.conflict(
-        `User with email ${userData.email} already exists`
-      );
+      throw ErrorHandler.conflict(`User with email ${userData.email} already exists`);
     }
-    const hashedPassword = await passwordManager.hashPassword(
-      userData.password
-    );
+    const hashedPassword = await passwordManager.hashPassword(userData.password);
     await prisma.user.create({
-      data: { ...userData, password: hashedPassword }
+      data: { ...userData, password: hashedPassword },
     });
     return {
       success: true,
-      message: 'User created successfully'
+      message: 'User created successfully',
     };
   } catch (error: unknown) {
-    if (error instanceof AppError) {
-      throw error; // Re-throw known errors
-    }
-    handlePrismaError(error);
-    if (error instanceof Error) {
-      console.error('Error creating user:', error);
-      throw ErrorHandler.internal('Internal server error');
-    }
-    console.error('Error creating user:', error);
-    throw ErrorHandler.internal();
+    throw error; // Re-throw known errors
   }
 };

@@ -9,6 +9,6 @@ import passwordRoutes from '../modules/passwor-managements/password.routes';
 appRouter.use('/users', userRouter);
 appRouter.use('/roles', roleRouter);
 appRouter.use('/auth', authRouter);
-appRouter.use('/auth/password', passwordRoutes);
+appRouter.use('/password', passwordRoutes);
 
 export default appRouter;

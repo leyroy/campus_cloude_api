@@ -1,7 +1,5 @@
-import { Role } from "@prisma/client";
-import prisma from "../../../config/prisma.config";
-import { AppError, ErrorHandler } from "../../../middlewares/errorHandler";
-import { handlePrismaError } from "../../../utils/prismaErrorHandler";
+import { Role } from '@prisma/client';
+import prisma from '../../../config/prisma.config';
 
 export const createRole = async (data: Role) => {
   try {
@@ -10,13 +8,9 @@ export const createRole = async (data: Role) => {
     });
     return {
       success: true,
-      message: "Role created successfully",
+      message: 'Role created successfully',
     };
   } catch (error) {
-    if (error instanceof AppError) {
-      throw error; 
-    }
-    handlePrismaError(error);
-    throw ErrorHandler.forbidden("Failed to create role");
+    throw error;
   }
-}
+};

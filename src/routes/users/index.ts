@@ -1,9 +1,9 @@
 import express from 'express';
 import createUserController from '../../modules/users/controllers/create';
 import { validatePayload } from '../../middlewares/validate-payload';
-import { TABELS_NAMES_ENUM } from '../../types/shared/types';
 import { getUsersController } from '../../modules/users/controllers/getUser.controller';
 import { ErrorHandler } from '../../middlewares/errorHandler';
+import { TABELS_NAMES_ENUM } from '../../types/types';
 
 const usersRouter = express.Router();
 const errorHandler = new ErrorHandler();

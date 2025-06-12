@@ -2,11 +2,11 @@ import express from 'express';
 import { ErrorHandler } from '../../middlewares/errorHandler';
 import { createRoleController } from '../../modules/roles/controllers/createRole';
 import { validatePayload } from '../../middlewares/validate-payload';
-import { Action, Resource, TABELS_NAMES_ENUM } from '../../types/shared/types';
 import { addRolePermissions } from '../../modules/roles/rolePermissions/addRolePermissions';
 import { assignRoleToUserController } from '../../modules/roles/rolePermissions/assignRoleToUser';
 import { authenticateToken } from '../../middlewares/authenticateToken';
 import permissionHandler from '../../middlewares/permissionsManager';
+import { Action, Resource, TABELS_NAMES_ENUM } from '../../types/types';
 
 const roleRouter = express.Router();
 const errorHandler = new ErrorHandler();

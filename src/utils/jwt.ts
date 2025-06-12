@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { ENV_CONSTANTS } from '../constants/env_constants';
 import { ErrorHandler } from '../middlewares/errorHandler';
-import { TokenTypes } from '../types/shared/types';
+import { TokenTypes } from '../types/types';
 
 export function generateTokens({ userId, sessionId }: TokenTypes) {
   const payload = {

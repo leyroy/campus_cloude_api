@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { CustomRequest } from '../../types/shared/types';
 import { commonDbService } from '../../utils/db/commonDbServices';
 import { clearAuthenticationCookies } from '../../utils/cookie';
+import { CustomRequest } from '../../types/types';
 
 export async function logoutController(req: Request, res: Response) {
   const user = (req as CustomRequest).user;
