@@ -4,7 +4,7 @@ const appRouter = express.Router();
 import userRouter from './users';
 import roleRouter from './role/routes';
 import authRouter from './auth';
-import passwordRoutes from '../modules/passwor-managements/password.routes';
+import passwordRoutes from '../modules/password-managements/password.routes';
 
 appRouter.use('/users', userRouter);
 appRouter.use('/roles', roleRouter);
