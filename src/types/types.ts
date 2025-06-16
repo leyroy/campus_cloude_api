@@ -27,6 +27,7 @@ export enum TABELS_NAMES_ENUM {
   ROLE_PERMISSION = 'RolePermission',
   NOTIFICATION = 'Notification',
   TIMETABLE = 'Timetable',
+  SCHOOL_PROFILE = 'SchoolProfile',
 }
 
 export interface CustomRequest extends Request {

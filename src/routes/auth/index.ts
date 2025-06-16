@@ -6,7 +6,9 @@ import { authenticateToken } from '../../middlewares/authenticateToken';
 import signUpController from '../../modules/auth/signupcontroller';
 import verifyEmailController from '../../modules/auth/verifyEmail.controller';
 import zodValidator from '../../middlewares/zodValidator';
-import { RegisterSchema } from '../../validators/auth.validator';
+import { RegisterSchema } from '../../modules/auth/auth.validator';
+import { validatePayload } from '../../middlewares/validate-payload';
+import { TABELS_NAMES_ENUM } from '../../types/types';
 
 const authRouter = epress.Router();
 
@@ -42,7 +44,8 @@ const authRouter = epress.Router();
 const errorHandler = new ErrorHandler();
 authRouter.post(
   '/signup',
-  errorHandler.catchAsync(zodValidator(RegisterSchema)),
+  validatePayload(TABELS_NAMES_ENUM.USERS),
+  zodValidator(RegisterSchema),
   errorHandler.catchAsync(signUpController)
 );
 

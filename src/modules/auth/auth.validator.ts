@@ -8,7 +8,6 @@ export const RegisterSchema = z
   .object({
     firstName: z.string().trim().min(1, { message: 'First name is required' }).max(255),
     lastName: z.string().trim().min(1, { message: 'Last name is required' }).max(255),
-    schoolName: z.string().trim().min(1, { message: 'School name is required' }).max(255),
     email: emailSchema,
     phone: z.string().trim().min(1, { message: 'Phone number is required' }).max(15),
     password: passwordSchema,

@@ -29,12 +29,14 @@ export class AuthHelpers {
   public async createOwner({ userId }: { userId: string }) {
     return await prisma.owner.create({
       data: {
-        userId,
+        schooId: userId,
+        educationBackground: '',
+        currentPosition: '',
+        professionalExperience: '',
+        previousPositions: '',
+        yearsInEducation: 4,
       },
     });
-  }
-  public async LinkSchoolToOwner({ schoolId, ownerId }: { schoolId: string; ownerId: string }) {
-    return await prisma.ownersSchool.create({ data: { schoolId, ownerId } });
   }
 
   public async createSession(session: CreateSessionDto) {

@@ -115,12 +115,6 @@ export class CommonDbServices {
     });
   }
 
-  public async createSchool(data: Pick<School, 'name'>) {
-    return await prisma.school.create({
-      data,
-    });
-  }
-
   public async getVerificationCode(code: string, type: VerificationEnum) {
     return await prisma.verificationToken.findUnique({
       where: {
