@@ -1,5 +1,12 @@
-import { permissions } from "../constants/sead";
-import prisma from "../config/prisma.config";
+import { permissions, plans } from '../constants/sead';
+import prisma from '../config/prisma.config';
+import { BillingCycle } from '@prisma/client';
+
+//clean up the database before seeding
+async function cleanDatabase() {
+  await prisma.permission.deleteMany({});
+  await prisma.plan.deleteMany({});
+}
 
 async function seedPermissions() {
   for (const perm of permissions) {
@@ -13,12 +20,45 @@ async function seedPermissions() {
       },
     });
   }
-  console.log("✅ Permissions seeded successfully!");
+  console.log('✅ Permissions seeded successfully!');
+}
+async function seedPlans() {
+  for (const plan of plans) {
+    const created = await prisma.plan.create({
+      data: {
+        name: plan.name,
+        price: plan.price,
+        billingCycle: plan.billingCycle as BillingCycle,
+        isActive: plan.isActive,
+        features: {
+          create: plan.features.map((f) => ({
+            name: f.name,
+            description: f.description,
+            isEnabled: f.isEnabled,
+            metadata: f.metadata,
+          })),
+        },
+        limits: {
+          create: { ...plan.limits },
+        },
+      },
+    });
+
+    console.log(`✅ Seeded plan: ${created.name}`);
+  }
+
+  console.log('🔥 All plans seeded!');
 }
 
-seedPermissions()
+async function main() {
+  await cleanDatabase();
+  console.log('🧹 Database cleaned successfully!');
+  return Promise.all([seedPermissions(), seedPlans()]);
+}
+
+main()
   .catch((e) => {
-    console.error("❌ Error seeding permissions", e);
+    console.error('❌ Error seeding permissions', e);
     process.exit(1);
   })
   .finally(() => {

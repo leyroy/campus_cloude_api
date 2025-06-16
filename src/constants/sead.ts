@@ -82,3 +82,186 @@ export const permissions = [
   { resource: 'report', action: 'view' },
   { resource: 'report', action: 'export' },
 ];
+
+export const plans = [
+  {
+    name: 'Starter',
+    price: 0,
+    billingCycle: 'MONTHLY',
+    isActive: true,
+    features: [
+      {
+        name: 'Student Management',
+        description: 'Add and manage students',
+        isEnabled: true,
+        metadata: {
+          canPromote: false,
+          maxParentsPerStudent: 1,
+        },
+      },
+      {
+        name: 'Basic Quizzes',
+        description: 'Create up to 20 quizzes',
+        isEnabled: true,
+        metadata: {
+          maxQuestions: 10,
+          autoGrading: false,
+          allowMediaQuestions: false,
+        },
+      },
+      {
+        name: 'Basic Notifications',
+        description: 'Limited SMS/email alerts',
+        isEnabled: true,
+        metadata: {
+          channels: ['email'],
+          maxRecipients: 100,
+        },
+      },
+      {
+        name: 'Timetable Builder',
+        description: 'Manual timetable setup',
+        isEnabled: false,
+        metadata: {
+          autoGenerate: false,
+          allowConflicts: false,
+        },
+      },
+    ],
+    limits: {
+      maxStudents: 200,
+      maxTeachers: 10,
+      maxClasses: 20,
+      maxDepartments: 5,
+      maxSubjects: 40,
+      maxQuizzes: 20,
+      maxNotifications: 100,
+      maxFileUploadsMb: 200,
+      maxTimetables: 5,
+    },
+  },
+  {
+    name: 'Pro',
+    price: 2999,
+    billingCycle: 'MONTHLY',
+    isActive: true,
+    features: [
+      {
+        name: 'Student Management',
+        description: 'Full control over student records',
+        isEnabled: true,
+        metadata: {
+          canPromote: true,
+          maxParentsPerStudent: 3,
+        },
+      },
+      {
+        name: 'Advanced Quizzes',
+        description: 'Auto-marking + unlimited questions',
+        isEnabled: true,
+        metadata: {
+          maxQuestions: 100,
+          autoGrading: true,
+          allowMediaQuestions: true,
+        },
+      },
+      {
+        name: 'Smart Notifications',
+        description: 'Send alerts to students, parents, staff',
+        isEnabled: true,
+        metadata: {
+          channels: ['email', 'sms'],
+          maxRecipients: 1000,
+          supportCustomTemplate: true,
+        },
+      },
+      {
+        name: 'Timetable Builder',
+        description: 'Automated timetable generation',
+        isEnabled: true,
+        metadata: {
+          autoGenerate: true,
+          allowConflicts: false,
+        },
+      },
+    ],
+    limits: {
+      maxStudents: 1000,
+      maxTeachers: 50,
+      maxClasses: 80,
+      maxDepartments: 10,
+      maxSubjects: 150,
+      maxQuizzes: 300,
+      maxNotifications: 1000,
+      maxFileUploadsMb: 1024,
+      maxTimetables: 20,
+    },
+  },
+  {
+    name: 'Enterprise',
+    price: 8999,
+    billingCycle: 'MONTHLY',
+    isActive: true,
+    features: [
+      {
+        name: 'Student Management',
+        description: 'Unlimited student handling',
+        isEnabled: true,
+        metadata: {
+          canPromote: true,
+          maxParentsPerStudent: 5,
+        },
+      },
+      {
+        name: 'Quiz + LMS',
+        description: 'Quizzes, lessons, progress tracking',
+        isEnabled: true,
+        metadata: {
+          maxQuestions: 200,
+          autoGrading: true,
+          allowMediaQuestions: true,
+        },
+      },
+      {
+        name: 'Custom Notifications',
+        description: 'Email, SMS, push + automation',
+        isEnabled: true,
+        metadata: {
+          channels: ['email', 'sms', 'push'],
+          maxRecipients: 10000,
+          supportCustomTemplate: true,
+        },
+      },
+      {
+        name: 'Advanced Timetable AI',
+        description: 'Auto-generate optimized schedules',
+        isEnabled: true,
+        metadata: {
+          autoGenerate: true,
+          allowConflicts: true,
+        },
+      },
+      {
+        name: 'Analytics & Reports',
+        description: 'Full school insights dashboard',
+        isEnabled: true,
+        metadata: {
+          includePerformance: true,
+          trackAttendance: true,
+          exportOptions: ['pdf', 'excel'],
+        },
+      },
+    ],
+    limits: {
+      maxStudents: 10000,
+      maxTeachers: 500,
+      maxClasses: 300,
+      maxDepartments: 50,
+      maxSubjects: 500,
+      maxQuizzes: 2000,
+      maxNotifications: 10000,
+      maxFileUploadsMb: 10000,
+      maxTimetables: 100,
+    },
+  },
+];

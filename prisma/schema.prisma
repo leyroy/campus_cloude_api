@@ -3,9 +3,9 @@ generator client {
 }
 
 generator jsonSchema {
-  provider = "prisma-json-schema-generator"
-  output = "../src/prisma/schemas"
-   keepRelationScalarFields = "false"
+  provider                 = "prisma-json-schema-generator"
+  output                   = "../src/prisma/schemas"
+  keepRelationScalarFields = "false"
 }
 
 datasource db {
@@ -31,31 +31,30 @@ model User {
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
   address         Address?        @relation(fields: [addressId], references: [id])
-  school          School?         @relation(fields: [schoolId], references: [id])
   userRoles       UserRole[]
   assignedRoles   UserRole[]      @relation("AssignedByRelation")
   rolesCreated    Role[]          @relation("UserCreatedRoles")
-  Document        Document[]
-  SchoolProfile   SchoolProfile[]
-
-  Session Session[]
+  document        Document[]
+  schoolProfile   SchoolProfile[]
+  Session         Session[]
+  School          School?
 }
 
 model School {
-  id        String        @id @default(cuid())
-  name      String
-  isActive  Boolean       @default(false)
-  status    AccountStatus @default(ACTIVE)
-  addressId String?
-  address   Address?      @relation(fields: [addressId], references: [id])
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
-
-  users         User[]
-  OwnersSchool  OwnersSchool[]
+  id            String          @id @default(cuid())
+  name          String
+  isActive      Boolean         @default(false)
+  status        AccountStatus   @default(ACTIVE)
+  userId        String          @unique
+  addressId     String?
+  address       Address?        @relation(fields: [addressId], references: [id])
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
   Plan          Plan[]
-  Document      Document[]
-  SchoolProfile SchoolProfile[]
+  user          User            @relation(fields: [userId], references: [id])
+  document      Document[]
+  schoolProfile SchoolProfile[]
+  owner         Owner[]
 }
 
 model VerificationToken {
@@ -64,7 +63,7 @@ model VerificationToken {
   token      String           @unique
   expires    DateTime
   type       VerificationType
-  createdAt DateTime @default(now())
+  createdAt  DateTime         @default(now())
 
   @@index([identifier])
 }
@@ -97,12 +96,6 @@ model SchoolProfile {
   establishedAt DateTime?
   motto         String
   colors        String? // e.g. "#ff0000,#ffffff"
-  website       String?
-  facebook      String?
-  twitter       String?
-  linkedin      String?
-  instagram     String?
-  youtube       String?
   principalName String
   principalBio  String
   founderName   String
@@ -116,27 +109,67 @@ model SchoolProfile {
 }
 
 model Plan {
-  id           String   @id @default(uuid())
-  name         String
-  code         String   @unique
-  description  String?
-  price        Float
-  currency     String   @default("USD")
-  billingCycle String   @default("MONTHLY")
-  features     Json
-  isActive     Boolean  @default(true)
-  createdAt    DateTime @default(now())
-  schools      School[]
+  id            String         @id @default(uuid())
+  name          String
+  price         Int // in cents (e.g. ₵29.99 -> 2999)
+  billingCycle  BillingCycle
+  isActive      Boolean        @default(true)
+  features      PlanFeature[]
+  limits        PlanLimits?
+  subscriptions Subscription[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  School        School?        @relation(fields: [schoolId], references: [id])
+  schoolId      String?
+}
+
+model PlanFeature {
+  id          String  @id @default(uuid())
+  name        String
+  description String
+  isEnabled   Boolean
+  metadata    Json?
+  planId      String
+  plan        Plan    @relation(fields: [planId], references: [id])
+}
+
+model PlanLimits {
+  id     String @id @default(uuid())
+  planId String @unique
+  plan   Plan   @relation(fields: [planId], references: [id])
+
+  maxStudents      Int
+  maxTeachers      Int
+  maxClasses       Int
+  maxDepartments   Int
+  maxSubjects      Int
+  maxQuizzes       Int
+  maxNotifications Int
+  maxFileUploadsMb Int
+  maxTimetables    Int
+}
+
+model Subscription {
+  id                 String             @id @default(uuid())
+  schoolId           String
+  planId             String
+  status             SubscriptionStatus
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
+  cancelAtPeriodEnd  Boolean            @default(false)
+  trialEnd           DateTime?
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  plan               Plan               @relation(fields: [planId], references: [id])
 }
 
 model Address {
   id         String   @id @default(cuid())
   street     String
   city       String
-  state      String
-  zipCode    String
-  country    String
+  region     String
   postalCode String
+  country    String
   User       User[]
   school     School[]
   createdAt  DateTime @default(now())
@@ -144,42 +177,28 @@ model Address {
 }
 
 model Owner {
-  id                     String         @id @default(cuid())
-  createdAt              DateTime       @default(now())
-  updatedAt              DateTime       @updatedAt
-  preferredContactMethod String         @default("EMAIL")
-  preferredContactTime   String         @default("MORNING")
-  educationBackground    String?
-  userId                 String
-  isActive               Boolean        @default(false)
-  professionalExperience String?
-  currentPosition        String?
-  previousPositions      String?
-  yearsInEducation       Int?
-  OwnersSchool           OwnersSchool[]
+  id                     String   @id @default(cuid())
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+  preferredContactMethod String   @default("EMAIL")
+  preferredContactTime   String   @default("MORNING")
+  educationBackground    String
+  schooId                String
+  isActive               Boolean  @default(false)
+  professionalExperience String
+  currentPosition        String
+  previousPositions      String
+  yearsInEducation       Int
+  school                 School   @relation(fields: [schooId], references: [id])
 }
 
 // bridge table for many-to-many relationship between User and School
-model OwnersSchool {
-  ownerId   String
-  schoolId  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  owner     Owner    @relation(fields: [ownerId], references: [id])
-  school    School   @relation(fields: [schoolId], references: [id])
-
-  @@id([ownerId, schoolId])
-}
-
-//Permissions model
 model Permission {
-  id          String  @id @default(uuid())
-  name        String  @unique
-  resource    String
-  action      String
-  description String?
-
-  // Role-Permission bridge
+  id              String           @id @default(uuid())
+  name            String           @unique
+  resource        String
+  action          String
+  description     String?
   rolePermissions RolePermission[]
 }
 
@@ -191,15 +210,12 @@ model Role {
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   isActive        Boolean          @default(true)
-  // Creator of this role
   createdById     String
   createdBy       User             @relation("UserCreatedRoles", fields: [createdById], references: [id], onDelete: Cascade)
-  // Relations
   rolePermissions RolePermission[]
   userRoles       UserRole[]
 }
 
-// ✅ RolePermission bridge (many-to-many between Role & Permission)
 model RolePermission {
   id           String     @id @default(uuid())
   roleId       String
@@ -210,7 +226,6 @@ model RolePermission {
   @@unique([roleId, permissionId])
 }
 
-// ✅ UserRole bridge (many-to-many between User & Role with metadata)
 model UserRole {
   id           String   @id @default(uuid())
   userId       String
@@ -225,19 +240,17 @@ model UserRole {
 }
 
 model Document {
-  id       String     @id @default(cuid())
-  url      String
-  fileType FileType
-  purpose  DocPurpose
-
-  // Polymorphic-style linking
-  schoolId String? // optional
-  userId   String? // optional
-  campusId String? // optional
-
-  uploadedBy User?    @relation(fields: [userId], references: [id])
-  school     School?  @relation(fields: [schoolId], references: [id])
-  createdAt  DateTime @default(now())
+  id         String     @id @default(cuid())
+  url        String
+  fileType   FileType
+  isAcitve   Boolean    @default(true)
+  purpose    DocPurpose
+  schoolId   String?
+  userId     String?
+  campusId   String?
+  uploadedBy User?      @relation(fields: [userId], references: [id])
+  school     School?    @relation(fields: [schoolId], references: [id])
+  createdAt  DateTime   @default(now())
 }
 
 enum FileType {
@@ -285,4 +298,16 @@ enum VerificationType {
   CHANGE_PHONE
   ACCOUNT_ACTIVATION
   ACCOUNT_DELETION
+}
+
+enum BillingCycle {
+  MONTHLY
+  YEARLY
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  INACTIVE
+  CANCELLED
+  PAST_DUE
 }

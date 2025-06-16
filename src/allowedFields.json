@@ -38,7 +38,8 @@
       "schoolId",
       "addressId",
       "createdAt",
-      "updatedAt"
+      "updatedAt",
+      "School"
     ]
   },
   {
@@ -48,6 +49,7 @@
       "name",
       "isActive",
       "status",
+      "userId",
       "addressId",
       "createdAt",
       "updatedAt"
@@ -91,12 +93,6 @@
       "establishedAt",
       "motto",
       "colors",
-      "website",
-      "facebook",
-      "twitter",
-      "linkedin",
-      "instagram",
-      "youtube",
       "principalName",
       "principalBio",
       "founderName",
@@ -113,14 +109,55 @@
     "fields": [
       "id",
       "name",
-      "code",
-      "description",
       "price",
-      "currency",
       "billingCycle",
-      "features",
       "isActive",
-      "createdAt"
+      "limits",
+      "createdAt",
+      "updatedAt",
+      "schoolId"
+    ]
+  },
+  {
+    "modelName": "PlanFeature",
+    "fields": [
+      "id",
+      "name",
+      "description",
+      "isEnabled",
+      "metadata",
+      "planId"
+    ]
+  },
+  {
+    "modelName": "PlanLimits",
+    "fields": [
+      "id",
+      "planId",
+      "maxStudents",
+      "maxTeachers",
+      "maxClasses",
+      "maxDepartments",
+      "maxSubjects",
+      "maxQuizzes",
+      "maxNotifications",
+      "maxFileUploadsMb",
+      "maxTimetables"
+    ]
+  },
+  {
+    "modelName": "Subscription",
+    "fields": [
+      "id",
+      "schoolId",
+      "planId",
+      "status",
+      "currentPeriodStart",
+      "currentPeriodEnd",
+      "cancelAtPeriodEnd",
+      "trialEnd",
+      "createdAt",
+      "updatedAt"
     ]
   },
   {
@@ -129,10 +166,9 @@
       "id",
       "street",
       "city",
-      "state",
-      "zipCode",
-      "country",
+      "region",
       "postalCode",
+      "country",
       "createdAt",
       "updatedAt"
     ]
@@ -146,25 +182,12 @@
       "preferredContactMethod",
       "preferredContactTime",
       "educationBackground",
-      "userId",
+      "schooId",
       "isActive",
       "professionalExperience",
       "currentPosition",
       "previousPositions",
       "yearsInEducation"
-    ]
-  },
-  {
-    "modelName": "",
-    "fields": []
-  },
-  {
-    "modelName": "OwnersSchool",
-    "fields": [
-      "ownerId",
-      "schoolId",
-      "createdAt",
-      "updatedAt"
     ]
   },
   {
@@ -198,20 +221,12 @@
     ]
   },
   {
-    "modelName": "",
-    "fields": []
-  },
-  {
     "modelName": "RolePermission",
     "fields": [
       "id",
       "roleId",
       "permissionId"
     ]
-  },
-  {
-    "modelName": "",
-    "fields": []
   },
   {
     "modelName": "UserRole",
@@ -229,6 +244,7 @@
       "id",
       "url",
       "fileType",
+      "isAcitve",
       "purpose",
       "schoolId",
       "userId",
@@ -291,6 +307,22 @@
       "CHANGE_PHONE",
       "ACCOUNT_ACTIVATION",
       "ACCOUNT_DELETION"
+    ]
+  },
+  {
+    "modelName": "BillingCycle",
+    "fields": [
+      "MONTHLY",
+      "YEARLY"
+    ]
+  },
+  {
+    "modelName": "SubscriptionStatus",
+    "fields": [
+      "ACTIVE",
+      "INACTIVE",
+      "CANCELLED",
+      "PAST_DUE"
     ]
   }
 ]

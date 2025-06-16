@@ -14,7 +14,7 @@ import {
 import { commonDbService } from '../../utils/db/commonDbServices';
 import { generateTokens, verifyJwtToken } from '../../utils/jwt';
 import { generateUniqueCode } from '../../utils/uuid';
-import { CreateUserDto, LoginDto } from '../../validators/auth.validator';
+import { CreateUserDto, LoginDto } from './auth.validator';
 import { AuthHelpers } from './helpers';
 import { CreateSessionDto } from './types';
 
@@ -27,17 +27,12 @@ interface LoginPayload extends LoginDto {
 
 export class AuthService {
   public async registerUser(data: CreateUserDto) {
-    const { schoolName, ...user } = data;
+    const { confirmPassword, ...user } = data;
     const hashedPassword = await passwordManager.hashPassword(user.password);
     const newUser = await commonDbService.createUser({
       ...user,
+      confirmPassword: confirmPassword,
       password: hashedPassword,
-    });
-    const owner = await authHelpers.createOwner({ userId: newUser.id });
-    const school = await commonDbService.createSchool({ name: schoolName });
-    await authHelpers.LinkSchoolToOwner({
-      schoolId: school.id,
-      ownerId: owner.id,
     });
     const verificationCode = await authHelpers.createVerificationCode({
       userId: newUser.id,
@@ -55,7 +50,6 @@ export class AuthService {
         'User registered successfully and verification code was sent to your email, pleas kindly verify your account',
       data: {
         ...user,
-        schoolName,
       },
     };
   }
@@ -66,7 +60,7 @@ export class AuthService {
       phone,
     });
     if (!isUserExit) {
-      throw ErrorHandler.notFound('User not found');
+      throw ErrorHandler.notFound('Invalid credentials');
     }
     const isValidPassword = await passwordManager.verifyPassword(password, isUserExit.password);
     if (!isValidPassword) {
@@ -84,7 +78,6 @@ export class AuthService {
         expires: fortyFiveMinutesFromNow(),
       });
       const verifyUrl = `${ENV_CONSTANTS.BASE_PATH}/verify-email?token=${verificationCode.token}`;
-
       return {
         refreshToken: '',
         accessToken: '',
