@@ -72,6 +72,7 @@ export const permissions = [
   { resource: 'user', action: 'update' },
   { resource: 'user', action: 'delete' },
   { resource: 'user', action: 'reset_password' },
+  { resource: 'user', action: 'assign_role' },
 
   { resource: 'auth', action: 'login' },
   { resource: 'auth', action: 'logout' },

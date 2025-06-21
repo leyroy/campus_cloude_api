@@ -1,9 +1,9 @@
 import express from 'express';
 import { ErrorHandler } from '../../middlewares/errorHandler';
-import { createRoleController } from '../../modules/roles/controllers/createRole';
+import { createRoleController } from './controllers/createRole';
 import { validatePayload } from '../../middlewares/validate-payload';
-import { addRolePermissions } from '../../modules/roles/rolePermissions/addRolePermissions';
-import { assignRoleToUserController } from '../../modules/roles/rolePermissions/assignRoleToUser';
+import { addRolePermissions } from './rolePermissions/addRolePermissions';
+import { assignRoleToUserController } from './rolePermissions/assignRoleToUser';
 import { authenticateToken } from '../../middlewares/authenticateToken';
 import permissionHandler from '../../middlewares/permissionsManager';
 import { Action, Resource, TABELS_NAMES_ENUM } from '../../types/types';
@@ -44,7 +44,7 @@ roleRouter.use(authenticateToken);
 
 roleRouter.post(
   '/',
-  permissionHandler({ action: Action.CREATE, resource: Resource.ROLE }),
+  // permissionHandler({ action: Action.CREATE, resource: Resource.ROLE }),
   validatePayload(TABELS_NAMES_ENUM.ROLE),
   errorHandler.catchAsync(createRoleController)
 );
@@ -79,6 +79,7 @@ roleRouter.post(
  */
 roleRouter.put(
   '/add-permissions',
+  permissionHandler({ action: Action.ASSIGN_TO_ROLE, resource: Resource.PERMISSION }),
   validatePayload(TABELS_NAMES_ENUM.ROLE_PERMISSION),
   errorHandler.catchAsync(addRolePermissions)
 );
@@ -120,6 +121,7 @@ roleRouter.put(
  */
 roleRouter.put(
   '/assign-role-to-user',
+  permissionHandler({ action: Action.ASSIGN_ROLE, resource: Resource.USER }),
   validatePayload(TABELS_NAMES_ENUM.USER_ROLE),
   errorHandler.catchAsync(assignRoleToUserController)
 );

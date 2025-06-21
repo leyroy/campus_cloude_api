@@ -1,18 +1,20 @@
-import { Owner } from '@prisma/client';
+import { Owner, School } from '@prisma/client';
 import prisma from '../../../config/prisma.config';
 import { CreateAddressDto, CreateOwnerDto, CreateSchoolProfileDto } from '../types';
 
 export class SchoolHepers {
-  public async createSchool(name: string, userId: string) {
+  public async createSchool(data: {
+    name: string;
+    userId: string;
+    description: string;
+    level: number;
+  }) {
     const school = await prisma.school.create({
       data: {
-        name,
-        createdBy: {
-          connect: { id: userId },
-        },
-        updatedBy: {
-          connect: { id: userId },
-        },
+        name: data.name,
+        description: data.description || `Welcome to ${data.name}`,
+        updatedById: data.userId,
+        level: data.level,
       },
     });
     return school;
@@ -26,14 +28,24 @@ export class SchoolHepers {
       },
     });
   }
-  public async createSchoolProfile(data: CreateSchoolProfileDto, schoolId: string, userId: string) {
+  public async createSchoolProfile(
+    data: CreateSchoolProfileDto,
+    schoolId: string,
+    userId: string
+  ) {
     return prisma.schoolProfile.create({
       data: {
         ...data,
         schoolId: schoolId,
-        updatedBy: {
-          connect: { id: userId },
-        },
+        updatedById: userId,
+        description: data.description,
+        founderBio: data.founderBio,
+        founderName: data.founderName,
+        licenseNumber: data.licenseNumber,
+        principalBio: data.principalBio,
+        principalName: data.principalName,
+        slogan: data.slogan,
+        adminNote: data.adminNote,
       },
     });
   }
@@ -47,10 +59,15 @@ export class SchoolHepers {
       },
     });
   }
-  public async updateSchool(schoolId: string, data: Partial<Owner>) {
-    return prisma.owner.update({
+  public async updateSchool(schoolId: string, data: Partial<School>) {
+    return prisma.school.update({
       where: { id: schoolId },
       data,
+    });
+  }
+  public async deleteSchool(schoolId: string) {
+    await prisma.school.delete({
+      where: { id: schoolId },
     });
   }
 }

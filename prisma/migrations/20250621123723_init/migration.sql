@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "School" ADD COLUMN     "isDeleted" BOOLEAN NOT NULL DEFAULT false,
+ALTER COLUMN "status" SET DEFAULT 'PENDING';

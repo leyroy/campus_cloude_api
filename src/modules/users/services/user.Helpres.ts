@@ -5,7 +5,8 @@ export class UserHelpers {
     return prisma.user.findUnique({
       where: { id: userId },
       include: {
-        School: {
+        school: {
+          where: { isDeleted: false, isActive: true, status: 'ACTIVE' },
           include: {
             schoolProfile: {
               include: {

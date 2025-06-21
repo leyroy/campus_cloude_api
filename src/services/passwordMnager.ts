@@ -18,24 +18,19 @@ export class PasswordService {
     requireUppercase: true,
     requireLowercase: true,
     requireNumbers: true,
-    requireSpecialChars: true
+    requireSpecialChars: true,
   };
-
   private config: Required<PasswordConfig>;
-
   constructor(config?: PasswordConfig) {
     this.config = { ...PasswordService.DEFAULT_CONFIG, ...config };
   }
-
   // Hash a plain text password using bcrypt
   async hashPassword(plainPassword: string): Promise<string> {
     try {
       // Validate password strength first
       this.validatePasswordStrength(plainPassword);
-
       // Hash with bcrypt
       const hashedPassword = await bcrypt.hash(plainPassword, this.config.saltRounds);
-      console.log(plainPassword, hashedPassword);
       return hashedPassword;
     } catch (error) {
       if (error instanceof Error) {
@@ -44,16 +39,13 @@ export class PasswordService {
       throw ErrorHandler.internal('Password hashing failed');
     }
   }
-
   // Verify a plain text password against a hashed password
   verifyPassword(plainPassword: string, hashedPassword: string) {
     try {
       if (!plainPassword || !hashedPassword) {
-        console.log('Verifying password:', plainPassword, hashedPassword);
         return false;
       }
       const isMatch = bcrypt.compareSync(plainPassword, hashedPassword);
-      console.log('Password match result:', isMatch);
       return isMatch;
     } catch (error) {
       console.error('Password verification error:', error);
@@ -81,7 +73,10 @@ export class PasswordService {
       errors.push('Password must contain at least one number');
     }
 
-    if (this.config.requireSpecialChars && !/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password)) {
+    if (
+      this.config.requireSpecialChars &&
+      !/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password)
+    ) {
       errors.push('Password must contain at least one special character');
     }
 
@@ -89,7 +84,6 @@ export class PasswordService {
       throw new Error(errors.join(', '));
     }
   }
-
   //Generate a password reset token
   generateResetToken(): {
     token: string;
@@ -99,15 +93,12 @@ export class PasswordService {
     const token = crypto.randomBytes(32).toString('hex');
     const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
-
     return { token, hashedToken, expiresAt };
   }
-
   // Hash a reset token for storage
   hashResetToken(token: string): string {
     return crypto.createHash('sha256').update(token).digest('hex');
   }
-
   // Check if password needs rehashing (if salt rounds changed)
   needsRehash(hashedPassword: string): boolean {
     try {
@@ -117,12 +108,10 @@ export class PasswordService {
       return true; // If we can't determine rounds, rehash to be safe
     }
   }
-
   // Get password strength score (0-4)
   getPasswordStrength(password: string): { score: number; feedback: string[] } {
     let score = 0;
     const feedback: string[] = [];
-
     // Length check
     if (password.length >= 8) score++;
     else feedback.push('Use at least 8 characters');
@@ -156,7 +145,7 @@ export class PasswordService {
 
     return {
       score: Math.min(4, score),
-      feedback: feedback.slice(0, 3) // Limit feedback to top 3 issues
+      feedback: feedback.slice(0, 3), // Limit feedback to top 3 issues
     };
   }
 }
