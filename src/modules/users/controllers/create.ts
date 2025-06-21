@@ -7,7 +7,6 @@ const errorHnadler = new ErrorHandler();
 export const createUserController = errorHnadler.catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const data = req.body;
-    console.log('Received data:', data);
     const user = UserSchema.safeParse(data);
 
     if (!user.success) {

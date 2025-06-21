@@ -15,7 +15,7 @@ class UserServices {
         .map((role) => role.role.rolePermissions)
         .flat()
         .map((permission) => permission.permission),
-      school: user?.School,
+      school: user?.school,
     };
     if (!user) {
       throw ErrorHandler.notFound('User not found');

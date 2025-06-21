@@ -53,6 +53,12 @@
           "type": "string",
           "format": "date-time"
         },
+        "schoolId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "addressId": {
           "type": [
             "string",
@@ -97,12 +103,6 @@
             "$ref": "#/definitions/Document"
           }
         },
-        "schoolProfile": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/SchoolProfile"
-          }
-        },
         "session": {
           "type": "array",
           "items": {
@@ -110,22 +110,6 @@
           }
         },
         "school": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/School"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "updatedSchools": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/School"
-          }
-        },
-        "schools": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/School"
@@ -146,9 +130,17 @@
           "type": "boolean",
           "default": false
         },
+        "level": {
+          "type": "integer",
+          "default": 0
+        },
+        "isDeleted": {
+          "type": "boolean",
+          "default": false
+        },
         "status": {
           "type": "string",
-          "default": "ACTIVE",
+          "default": "PENDING",
           "enum": [
             "ACTIVE",
             "INACTIVE",
@@ -158,21 +150,12 @@
             "DELETED"
           ]
         },
+        "updatedById": {
+          "type": "string"
+        },
         "createdAt": {
           "type": "string",
           "format": "date-time"
-        },
-        "updatedBy": {
-          "$ref": "#/definitions/User"
-        },
-        "createdBy": {
-          "$ref": "#/definitions/User"
-        },
-        "document": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Document"
-          }
         },
         "schoolProfile": {
           "type": "array",
@@ -186,16 +169,19 @@
             "$ref": "#/definitions/Owner"
           }
         },
-        "plan": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Plan"
-          }
+        "description": {
+          "type": "string"
         },
-        "user": {
+        "members": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/User"
+          }
+        },
+        "subscriptions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Subscription"
           }
         }
       }
@@ -277,6 +263,9 @@
         "id": {
           "type": "string"
         },
+        "updatedById": {
+          "type": "string"
+        },
         "school": {
           "$ref": "#/definitions/School"
         },
@@ -321,37 +310,13 @@
           "type": "string"
         },
         "founderBio": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "licenseNumber": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "adminNote": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "updatedById": {
           "type": "string"
         },
-        "updatedBy": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/User"
-          }
+        "licenseNumber": {
+          "type": "string"
         },
-        "schoolAddress": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Address"
-          }
+        "adminNote": {
+          "type": "string"
         },
         "createdAt": {
           "type": "string",
@@ -360,6 +325,18 @@
         "updatedAt": {
           "type": "string",
           "format": "date-time"
+        },
+        "document": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Document"
+          }
+        },
+        "schoolAddress": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Address"
+          }
         }
       }
     },
@@ -415,16 +392,6 @@
         "updatedAt": {
           "type": "string",
           "format": "date-time"
-        },
-        "School": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/School"
-            },
-            {
-              "type": "null"
-            }
-          ]
         }
       }
     },
@@ -502,9 +469,6 @@
         "id": {
           "type": "string"
         },
-        "schoolId": {
-          "type": "string"
-        },
         "status": {
           "type": "string",
           "enum": [
@@ -540,6 +504,9 @@
         "updatedAt": {
           "type": "string",
           "format": "date-time"
+        },
+        "school": {
+          "$ref": "#/definitions/School"
         },
         "plan": {
           "$ref": "#/definitions/Plan"
@@ -774,7 +741,7 @@
             "OTHER"
           ]
         },
-        "isAcitve": {
+        "isActive": {
           "type": "boolean",
           "default": true
         },
@@ -808,7 +775,7 @@
         "school": {
           "anyOf": [
             {
-              "$ref": "#/definitions/School"
+              "$ref": "#/definitions/SchoolProfile"
             },
             {
               "type": "null"

@@ -1,12 +1,12 @@
 import epress from 'express';
-import loginController from '../../modules/auth/loginController';
-import { logoutController } from '../../modules/auth/logout.controller';
+import loginController from './loginController';
+import { logoutController } from './logout.controller';
 import { ErrorHandler } from '../../middlewares/errorHandler';
 import { authenticateToken } from '../../middlewares/authenticateToken';
-import signUpController from '../../modules/auth/signupcontroller';
-import verifyEmailController from '../../modules/auth/verifyEmail.controller';
+import signUpController from './signupcontroller';
+import verifyEmailController from './verifyEmail.controller';
 import zodValidator from '../../middlewares/zodValidator';
-import { RegisterSchema } from '../../modules/auth/auth.validator';
+import { RegisterSchema } from './auth.validator';
 import { validatePayload } from '../../middlewares/validate-payload';
 import { TABELS_NAMES_ENUM } from '../../types/types';
 

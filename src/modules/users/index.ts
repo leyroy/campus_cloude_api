@@ -1,7 +1,7 @@
 import express from 'express';
-import createUserController from '../../modules/users/controllers/create';
+import createUserController from './controllers/create';
 import { validatePayload } from '../../middlewares/validate-payload';
-import { getUsersController } from '../../modules/users/controllers/getUser.controller';
+import { getUsersController } from './controllers/getUsers.controller';
 import { ErrorHandler } from '../../middlewares/errorHandler';
 import { TABELS_NAMES_ENUM } from '../../types/types';
 

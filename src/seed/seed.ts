@@ -4,8 +4,13 @@ import { BillingCycle } from '@prisma/client';
 
 //clean up the database before seeding
 async function cleanDatabase() {
-  await prisma.permission.deleteMany({});
+  console.log('🧹 Cleaning up the database...');
+  await prisma.user.deleteMany({});
+  await prisma.school.deleteMany({});
+  await prisma.planFeature.deleteMany({});
   await prisma.plan.deleteMany({});
+  await prisma.role.deleteMany({});
+  await prisma.permission.deleteMany({});
 }
 
 async function seedPermissions() {
