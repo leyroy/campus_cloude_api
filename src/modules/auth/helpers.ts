@@ -29,7 +29,7 @@ export class AuthHelpers {
   public async createOwner({ userId }: { userId: string }) {
     return await prisma.owner.create({
       data: {
-        schooId: userId,
+        schoolId: userId,
         educationBackground: '',
         currentPosition: '',
         professionalExperience: '',

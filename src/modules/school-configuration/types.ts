@@ -28,5 +28,26 @@ const ownerSchema = z.object({
   professionalExperience: z.string(),
   currentPosition: z.string(),
   previousPositions: z.string(),
-  yearsInEducation: z.number().min(0).optional(),
+  yearsInEducation: z.number().min(1, { message: 'Years in education must be at least 1' }),
 });
+
+const addressSchema = z.object({
+  street: z.string().min(1, { message: 'Street address is required' }),
+  city: z.string().min(1, { message: 'City is required' }),
+  region: z.string().min(1, { message: 'Region is required' }),
+  postalCode: z.string().regex(/^[A-Z]{2,3}-\d{3,4}-?\d{0,4}?$/, {
+    message: 'Postal code must be in format GA-123-4567',
+  }),
+  country: z.string().default('Ghana'),
+});
+
+export const SchoolConfigurationSchema = z.object({
+  schoolProfile: schoolProfileSchema,
+  owner: ownerSchema,
+  address: addressSchema,
+  schoolAddress: addressSchema,
+});
+export type CreateOwnerDto = z.infer<typeof ownerSchema>;
+export type CreateAddressDto = z.infer<typeof addressSchema>;
+export type CreateSchoolProfileDto = z.infer<typeof schoolProfileSchema>;
+export type CreateSchoolConfigurationDto = z.infer<typeof SchoolConfigurationSchema>;

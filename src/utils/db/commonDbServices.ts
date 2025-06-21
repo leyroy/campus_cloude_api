@@ -1,6 +1,7 @@
-import { School } from '@prisma/client';
+import { Address, School } from '@prisma/client';
 import prisma from '../../config/prisma.config';
 import { VerificationEnum } from '../../enums/verification-code.enum';
+import { CreateAddressDto } from '../../modules/school-configuration/types';
 
 export class CommonDbServices {
   public userWithRole: boolean;
@@ -136,6 +137,9 @@ export class CommonDbServices {
     return await prisma.session.delete({
       where: { id },
     });
+  }
+  public async createAddress(data: CreateAddressDto, modelId: string) {
+    return await prisma.address.create({ data: { ...data, modelId: modelId } });
   }
 }
 

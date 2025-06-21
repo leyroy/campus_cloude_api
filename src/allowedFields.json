@@ -38,8 +38,7 @@
       "schoolId",
       "addressId",
       "createdAt",
-      "updatedAt",
-      "School"
+      "updatedAt"
     ]
   },
   {
@@ -50,9 +49,7 @@
       "isActive",
       "status",
       "userId",
-      "addressId",
-      "createdAt",
-      "updatedAt"
+      "createdAt"
     ]
   },
   {
@@ -169,6 +166,7 @@
       "region",
       "postalCode",
       "country",
+      "modelId",
       "createdAt",
       "updatedAt"
     ]
@@ -182,7 +180,7 @@
       "preferredContactMethod",
       "preferredContactTime",
       "educationBackground",
-      "schooId",
+      "schoolId",
       "isActive",
       "professionalExperience",
       "currentPosition",
