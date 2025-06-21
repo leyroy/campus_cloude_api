@@ -53,7 +53,7 @@
           "type": "string",
           "format": "date-time"
         },
-        "schoolId": {
+        "addressId": {
           "type": [
             "string",
             "null"
@@ -68,14 +68,10 @@
           "format": "date-time"
         },
         "address": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Address"
-            },
-            {
-              "type": "null"
-            }
-          ]
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Address"
+          }
         },
         "userRoles": {
           "type": "array",
@@ -107,13 +103,13 @@
             "$ref": "#/definitions/SchoolProfile"
           }
         },
-        "Session": {
+        "session": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Session"
           }
         },
-        "School": {
+        "school": {
           "anyOf": [
             {
               "$ref": "#/definitions/School"
@@ -122,6 +118,18 @@
               "type": "null"
             }
           ]
+        },
+        "updatedSchools": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/School"
+          }
+        },
+        "schools": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/School"
+          }
         }
       }
     },
@@ -150,31 +158,14 @@
             "DELETED"
           ]
         },
-        "address": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Address"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
         "createdAt": {
           "type": "string",
           "format": "date-time"
         },
-        "updatedAt": {
-          "type": "string",
-          "format": "date-time"
+        "updatedBy": {
+          "$ref": "#/definitions/User"
         },
-        "Plan": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Plan"
-          }
-        },
-        "user": {
+        "createdBy": {
           "$ref": "#/definitions/User"
         },
         "document": {
@@ -193,6 +184,18 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/Owner"
+          }
+        },
+        "plan": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Plan"
+          }
+        },
+        "user": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
           }
         }
       }
@@ -342,6 +345,12 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/User"
+          }
+        },
+        "schoolAddress": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Address"
           }
         },
         "createdAt": {
@@ -558,17 +567,25 @@
         "country": {
           "type": "string"
         },
-        "User": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/User"
-          }
+        "schoolProfile": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/SchoolProfile"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
-        "school": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/School"
-          }
+        "user": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "createdAt": {
           "type": "string",

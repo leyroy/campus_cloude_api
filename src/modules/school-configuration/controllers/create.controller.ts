@@ -1,11 +1,29 @@
-import { SchoolProfile } from '@prisma/client';
 import { Request, Response, NextFunction } from 'express';
 import { CustomRequest } from '../../../types/types';
+import { CreateSchoolConfigurationDto } from '../types';
+import { ErrorHandler } from '../../../middlewares/errorHandler';
+import schoolServices from '../services/schoolServices';
 
-const configureSchoole = async (req: Request, res: Response, next: NextFunction) => {
-  const data = req.body as SchoolProfile;
-  const userId = (req as CustomRequest)?.user.userId;
-  res.status(200).json({ message: 'createSchoole controller is live 🧨' });
+const configureSchool = async (req: Request, res: Response, next: NextFunction) => {
+  const { schoolProfile, owner, address, schoolAddress } = req.body as CreateSchoolConfigurationDto;
+  const { userId } = (req as CustomRequest)?.user;
+  if (!userId) {
+    throw ErrorHandler.unauthorized('User not authenticated');
+  }
+  const result = await schoolServices.createSchoolProfile(
+    {
+      schoolProfile,
+      owner,
+      address,
+      schoolAddress,
+    },
+    userId
+  );
+
+  if (!result) {
+    throw ErrorHandler.internal('Failed to create school configuration');
+  }
+  res.status(200).json(result);
 };
 
-export default configureSchoole;
+export default configureSchool;
