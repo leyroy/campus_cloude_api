@@ -48,11 +48,17 @@ model School {
   status        AccountStatus   @default(PENDING)
   updatedById   String
   createdAt     DateTime        @default(now())
+  description   String
   schoolProfile SchoolProfile[]
   owner         Owner[]
-  description   String
   members       User[]
   subscriptions Subscription[]
+  department    Department[]
+  subject       Subject[]
+  student       Student[]
+  AcademicYear  AcademicYear[]
+  Course        Course[]
+  Class         Class[]
 }
 
 model VerificationToken {
@@ -64,6 +70,115 @@ model VerificationToken {
   createdAt  DateTime         @default(now())
 
   @@index([identifier])
+}
+
+model Department {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  updatedById String
+  schoolId    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  // Relations
+  school      School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  Course      Course[]
+}
+
+model Subject {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  updatedById String
+  schoolId    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  semisterId  String
+  // Relations
+  school      School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  semister    Semister @relation(fields: [semisterId], references: [id], onDelete: Cascade)
+  course      Course[]
+}
+
+model AcademicYear {
+  id          String     @id @default(cuid())
+  name        String
+  startDate   DateTime
+  endDate     DateTime
+  isActive    Boolean    @default(false)
+  updatedById String
+  schoolId    String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  // Relations
+  school      School     @relation(fields: [schoolId], references: [id])
+  semister    Semister[]
+}
+
+model Semister {
+  id             String       @id @default(cuid())
+  name           String
+  startDate      DateTime
+  endDate        DateTime
+  isActive       Boolean      @default(false)
+  updatedById    String
+  academicYearId String
+  schoolId       String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  // Relations
+  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id], onDelete: Cascade)
+  subject        Subject[]
+}
+
+model Course {
+  id           String     @id @default(cuid())
+  name         String
+  description  String?
+  updatedById  String
+  departmentId String
+  subjectId    String
+  schoolId     String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  // Relations
+  school       School     @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  subject      Subject    @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  Class        Class[]
+}
+
+model Class {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  gradeLevel  Int
+  updatedById String
+  courseId    String?
+  schoolId    String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  // Relations
+  school      School    @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  course      Course?   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  student     Student[]
+}
+
+model Student {
+  id        String        @id @default(cuid())
+  firstName String
+  lastName  String
+  email     String        @unique
+  phone     String
+  isActive  Boolean       @default(false)
+  status    AccountStatus @default(PENDING)
+  schoolId  String
+  classId   String
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  // Relations
+  school    School        @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  class     Class         @relation(fields: [classId], references: [id], onDelete: Cascade)
 }
 
 model Session {

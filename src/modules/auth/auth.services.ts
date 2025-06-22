@@ -62,7 +62,10 @@ export class AuthService {
     if (!isUserExit) {
       throw ErrorHandler.notFound('Invalid credentials');
     }
-    const isValidPassword = await passwordManager.verifyPassword(password, isUserExit.password);
+    const isValidPassword = await passwordManager.verifyPassword(
+      password,
+      isUserExit.password
+    );
     if (!isValidPassword) {
       throw ErrorHandler.unauthorized('Invalid credentials');
     }
@@ -98,6 +101,7 @@ export class AuthService {
     const { accessToken, refreshToken } = generateTokens({
       userId: isUserExit.id,
       sessionId: session.id,
+      schoolId: isUserExit.schoolId as string,
     });
     return {
       accessToken,
@@ -105,6 +109,7 @@ export class AuthService {
       refreshToken,
     };
   }
+
   public async verifyEmail(code: string) {
     const verificationToken = await authHelpers.getVerificationCode(
       code,

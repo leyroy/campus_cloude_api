@@ -26,6 +26,11 @@ const enum ErrorCode {
   // System Errors
   INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR',
   VERIFICATION_ERROR = 'VERIFICATION_ERROR',
+
+  //file upload
+  FILE_UPLOAD_ERROR = 'FILE_UPLOAD_ERROR',
+  FILE_NOT_FOUND = 'FILE_NOT_FOUND',
+  FILE_TOO_LARGE = 'FILE_TOO_LARGE',
 }
 
 export { ErrorCode };

@@ -10,6 +10,7 @@ export enum TABELS_NAMES_ENUM {
   SCHOOL = 'School',
   OWNER = 'Owner',
   STUDENT = 'Student',
+  DEPARTMENT = 'Department',
   TEACHER = 'Teacher',
   CLASS = 'Class',
   SUBJECT = 'Subject',
@@ -46,6 +47,7 @@ export enum Resource {
   ROLE = 'role',
   PERMISSION = 'permission',
   USER = 'user',
+  DEPARTMENT = 'department',
   AUTH = 'auth',
   REPORT = 'report',
 }
@@ -82,6 +84,7 @@ export type PERMISSION = {
 export type TokenTypes = {
   userId: string;
   sessionId: string;
+  schoolId?: string;
 };
 export type CangePasswordDto = {
   oldPassword: string;
