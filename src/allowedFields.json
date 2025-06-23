@@ -67,6 +67,104 @@
     ]
   },
   {
+    "modelName": "Department",
+    "fields": [
+      "id",
+      "name",
+      "description",
+      "updatedById",
+      "schoolId",
+      "createdAt",
+      "updatedAt"
+    ]
+  },
+  {
+    "modelName": "Subject",
+    "fields": [
+      "id",
+      "name",
+      "description",
+      "updatedById",
+      "schoolId",
+      "createdAt",
+      "updatedAt",
+      "semisterId"
+    ]
+  },
+  {
+    "modelName": "AcademicYear",
+    "fields": [
+      "id",
+      "name",
+      "startDate",
+      "endDate",
+      "isActive",
+      "updatedById",
+      "schoolId",
+      "createdAt",
+      "updatedAt"
+    ]
+  },
+  {
+    "modelName": "Semister",
+    "fields": [
+      "id",
+      "name",
+      "startDate",
+      "endDate",
+      "isActive",
+      "updatedById",
+      "academicYearId",
+      "schoolId",
+      "createdAt",
+      "updatedAt"
+    ]
+  },
+  {
+    "modelName": "Course",
+    "fields": [
+      "id",
+      "name",
+      "description",
+      "updatedById",
+      "departmentId",
+      "subjectId",
+      "schoolId",
+      "createdAt",
+      "updatedAt"
+    ]
+  },
+  {
+    "modelName": "Class",
+    "fields": [
+      "id",
+      "name",
+      "description",
+      "gradeLevel",
+      "updatedById",
+      "courseId",
+      "schoolId",
+      "createdAt",
+      "updatedAt"
+    ]
+  },
+  {
+    "modelName": "Student",
+    "fields": [
+      "id",
+      "firstName",
+      "lastName",
+      "email",
+      "phone",
+      "isActive",
+      "status",
+      "schoolId",
+      "classId",
+      "createdAt",
+      "updatedAt"
+    ]
+  },
+  {
     "modelName": "Session",
     "fields": [
       "id",

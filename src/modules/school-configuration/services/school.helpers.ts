@@ -1,8 +1,8 @@
-import { Owner, School } from '@prisma/client';
+import { School } from '@prisma/client';
 import prisma from '../../../config/prisma.config';
 import { CreateAddressDto, CreateOwnerDto, CreateSchoolProfileDto } from '../types';
 
-export class SchoolHepers {
+export class SchoolHelpers {
   public async createSchool(data: {
     name: string;
     userId: string;
@@ -72,4 +72,4 @@ export class SchoolHepers {
   }
 }
 
-export const schoolHelpers = new SchoolHepers();
+export const schoolHelpers = new SchoolHelpers();

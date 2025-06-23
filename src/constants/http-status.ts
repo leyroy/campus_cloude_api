@@ -19,7 +19,8 @@ const httpConfig = () => ({
   NOT_IMPLEMENTED: 501,
   BAD_GATEWAY: 502,
   SERVICE_UNAVAILABLE: 503,
-  GATEWAY_TIMEOUT: 504
+  GATEWAY_TIMEOUT: 504,
+  FILE_TOO_LARGE: 413,
 });
 
 export const HTTPSTATUS = httpConfig();

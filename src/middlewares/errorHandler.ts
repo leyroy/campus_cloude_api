@@ -88,13 +88,21 @@ export class ErrorHandler {
   private logger: Logger;
   private isDevelopment: boolean;
 
-  constructor(logger?: Logger, isDevelopment: boolean = process.env.NODE_ENV === 'development') {
+  constructor(
+    logger?: Logger,
+    isDevelopment: boolean = process.env.NODE_ENV === 'development'
+  ) {
     this.logger = logger || new ConsoleLogger();
     this.isDevelopment = isDevelopment;
   }
 
   // Express error middleware
-  public handleError = (error: Error, req: Request, res: Response, next: NextFunction): void => {
+  public handleError = (
+    error: Error,
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): void => {
     let appError: AppError;
 
     // Convert known errors to AppError
@@ -161,7 +169,10 @@ export class ErrorHandler {
 
     if (error instanceof PrismaClientValidationError) {
       console.error('Prisma validation error:', error.message);
-      return new AppError({ message: 'Invalid data format', statusCode: HTTPSTATUS.BAD_REQUEST });
+      return new AppError({
+        message: 'Invalid data format',
+        statusCode: HTTPSTATUS.BAD_REQUEST,
+      });
     }
 
     if (error instanceof PrismaClientInitializationError) {
@@ -197,14 +208,22 @@ export class ErrorHandler {
       });
     }
 
-    // // Multer errors
-    // if (error.name === "MulterError") {
-    //   const multerError = error as any;
-    //   if (multerError.code === "LIMIT_FILE_SIZE") {
-    //     return new AppError("File too large", 413);
-    //   }
-    //   return new AppError("File upload error", 400);
-    // }
+    // Multer errors
+    if (error.name === 'MulterError') {
+      const multerError = error as any;
+      if (multerError.code === 'LIMIT_FILE_SIZE') {
+        return new AppError({
+          message: 'File is too large',
+          errorCode: ErrorCode.FILE_TOO_LARGE,
+          statusCode: HTTPSTATUS.FILE_TOO_LARGE,
+        });
+      }
+      return new AppError({
+        message: 'File upload error',
+        statusCode: HTTPSTATUS.BAD_REQUEST,
+        errorCode: ErrorCode.FILE_UPLOAD_ERROR,
+      });
+    }
 
     // Default for unknown errors
     return new AppError({

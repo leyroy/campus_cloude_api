@@ -1,4 +1,4 @@
-import { schoolHelpers, SchoolHepers } from './school.helpers';
+import { schoolHelpers, SchoolHelpers } from './school.helpers';
 import { CreateSchoolConfigurationDto } from '../types';
 import { commonDbService, CommonDbServices } from '../../../utils/db/commonDbServices';
 import { ErrorHandler } from '../../../middlewares/errorHandler';
@@ -6,9 +6,9 @@ import { School } from '@prisma/client';
 import { TABELS_NAMES_ENUM } from '../../../types/types';
 
 class SchoolServices {
-  private schoolHelpers: SchoolHepers;
+  private schoolHelpers: SchoolHelpers;
   private commonDbServices: CommonDbServices;
-  constructor(schoolHelpers: SchoolHepers, commonDbServices: CommonDbServices) {
+  constructor(schoolHelpers: SchoolHelpers, commonDbServices: CommonDbServices) {
     this.schoolHelpers = schoolHelpers;
     this.commonDbServices = commonDbServices;
   }

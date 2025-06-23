@@ -28,6 +28,12 @@ export const permissions = [
   { resource: 'subject', action: 'update' },
   { resource: 'subject', action: 'delete' },
 
+  // DEPARTMENT
+  { resource: 'department', action: 'create' },
+  { resource: 'department', action: 'view' },
+  { resource: 'department', action: 'update' },
+  { resource: 'department', action: 'delete' },
+
   // RESULT
   { resource: 'result', action: 'create' },
   { resource: 'result', action: 'view' },
