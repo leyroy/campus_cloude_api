@@ -85,10 +85,11 @@
       "name",
       "description",
       "updatedById",
+      "courseId",
       "schoolId",
       "createdAt",
       "updatedAt",
-      "semisterId"
+      "semesterId"
     ]
   },
   {
@@ -106,7 +107,7 @@
     ]
   },
   {
-    "modelName": "Semister",
+    "modelName": "Semester",
     "fields": [
       "id",
       "name",
@@ -128,7 +129,6 @@
       "description",
       "updatedById",
       "departmentId",
-      "subjectId",
       "schoolId",
       "createdAt",
       "updatedAt"

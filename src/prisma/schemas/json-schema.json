@@ -219,6 +219,12 @@
           "items": {
             "$ref": "#/definitions/Class"
           }
+        },
+        "Semester": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Semester"
+          }
         }
       }
     },
@@ -286,7 +292,7 @@
         "school": {
           "$ref": "#/definitions/School"
         },
-        "Course": {
+        "courses": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Course"
@@ -320,17 +326,21 @@
           "type": "string",
           "format": "date-time"
         },
+        "course": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Course"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "school": {
           "$ref": "#/definitions/School"
         },
-        "semister": {
-          "$ref": "#/definitions/Semister"
-        },
-        "course": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Course"
-          }
+        "semester": {
+          "$ref": "#/definitions/Semester"
         }
       }
     },
@@ -369,15 +379,21 @@
         "school": {
           "$ref": "#/definitions/School"
         },
-        "semister": {
+        "semesters": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Semister"
+            "$ref": "#/definitions/Semester"
+          }
+        },
+        "classes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Class"
           }
         }
       }
     },
-    "Semister": {
+    "Semester": {
       "type": "object",
       "properties": {
         "id": {
@@ -401,9 +417,6 @@
         "updatedById": {
           "type": "string"
         },
-        "schoolId": {
-          "type": "string"
-        },
         "createdAt": {
           "type": "string",
           "format": "date-time"
@@ -415,7 +428,10 @@
         "academicYear": {
           "$ref": "#/definitions/AcademicYear"
         },
-        "subject": {
+        "school": {
+          "$ref": "#/definitions/School"
+        },
+        "subjects": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Subject"
@@ -452,16 +468,19 @@
         "school": {
           "$ref": "#/definitions/School"
         },
-        "subject": {
-          "$ref": "#/definitions/Subject"
-        },
         "department": {
           "$ref": "#/definitions/Department"
         },
-        "Class": {
+        "classes": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Class"
+          }
+        },
+        "subjects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Subject"
           }
         }
       }
@@ -512,6 +531,12 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/Student"
+          }
+        },
+        "AcademicYear": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AcademicYear"
           }
         }
       }
@@ -1154,8 +1179,8 @@
     "academicYear": {
       "$ref": "#/definitions/AcademicYear"
     },
-    "semister": {
-      "$ref": "#/definitions/Semister"
+    "semester": {
+      "$ref": "#/definitions/Semester"
     },
     "course": {
       "$ref": "#/definitions/Course"
