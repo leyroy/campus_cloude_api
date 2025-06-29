@@ -18,8 +18,6 @@ class ClassService {
       data: newClass,
     };
   }
-
-  // Class implementation goes here
 }
 
 export const classService = new ClassService(new ClassHelpers());

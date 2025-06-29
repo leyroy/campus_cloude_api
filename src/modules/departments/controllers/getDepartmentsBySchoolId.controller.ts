@@ -15,7 +15,7 @@ const getDepartmentBySchoolId = async (req: Request, res: Response) => {
     });
   }
   const result = await departmentServices.getDepartmentsBySchoolId(schoolId);
-  res.status(200).json({ ...result });
+  res.status(HTTPSTATUS.OK).json({ ...result });
 };
 
 export default getDepartmentBySchoolId;
