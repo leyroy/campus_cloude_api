@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { CustomRequest } from '../../../types/types';
 import { ErrorHandler } from '../../../middlewares/errorHandler';
 import schoolServices from '../services/schoolServices';
+import { HTTPSTATUS } from '../../../constants/http-status';
 
 const deleteSchool = async (req: Request, res: Response, next: NextFunction) => {
   // 🎯 Handle deleteSchool logic here neger 😎
@@ -15,7 +16,7 @@ const deleteSchool = async (req: Request, res: Response, next: NextFunction) => 
     throw ErrorHandler.notFound();
   }
   await schoolServices.deleteSchool(schoolId);
-  res.status(200).json({ message: 'deleteSchool controller is live 🧨' });
+  res.status(HTTPSTATUS.OK).json({ message: 'deleteSchool controller is live 🧨' });
 };
 
 export default deleteSchool;

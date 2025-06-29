@@ -3,6 +3,7 @@ import { passwordServices } from './password.services';
 import { ErrorHandler } from '../../middlewares/errorHandler';
 import { sendEmail } from '../../mailers/mailer';
 import { passwordResetTemplate } from '../../mailers/templates/template';
+import { HTTPSTATUS } from '../../constants/http-status';
 
 const forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -19,7 +20,9 @@ const forgotPassword = async (req: Request, res: Response, next: NextFunction) =
       to: email,
       ...passwordResetTemplate(resetLink),
     });
-    res.status(200).json({ success: true, message: 'Password reset email sent successfully' });
+    res
+      .status(HTTPSTATUS.OK)
+      .json({ success: true, message: 'Password reset email sent successfully' });
   } catch (err) {
     next(err);
   }

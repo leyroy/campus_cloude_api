@@ -22,7 +22,7 @@ const createDepartmentController = async (req: Request, res: Response) => {
     schoolId,
     updatedById: userId,
   });
-  res.status(200).json(result);
+  res.status(HTTPSTATUS.OK).json(result);
 };
 
 export default createDepartmentController;
