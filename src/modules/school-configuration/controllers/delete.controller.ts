@@ -10,13 +10,13 @@ const deleteSchool = async (req: Request, res: Response, next: NextFunction) => 
   const { schoolId } = req.params as { schoolId: string };
   if (!userid) {
     //TODO: invoke alert and notification here
-    throw ErrorHandler.unauthorized('You are not log in to delete school');
+    throw ErrorHandler.unauthorized('Unauthorize action');
   }
   if (!schoolId) {
     throw ErrorHandler.notFound();
   }
-  await schoolServices.deleteSchool(schoolId);
-  res.status(HTTPSTATUS.OK).json({ message: 'deleteSchool controller is live 🧨' });
+  const result = await schoolServices.deleteSchool(schoolId);
+  res.status(HTTPSTATUS.OK).json(result);
 };
 
 export default deleteSchool;
