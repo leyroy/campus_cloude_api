@@ -11,7 +11,7 @@ const createDepartmentController = async (req: Request, res: Response) => {
   const { userId, schoolId } = (req as CustomRequest).user;
   if (!schoolId || !userId) {
     throw new AppError({
-      message: 'User or school information is missing',
+      message: 'Unauthorized action',
       statusCode: HTTPSTATUS.UNAUTHORIZED,
       errorCode: ErrorCode.AUTH_TOKEN_NOT_FOUND,
     });
