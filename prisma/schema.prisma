@@ -65,8 +65,9 @@ model School {
   course        Course[]
   class         Class[]
 
-  terms         Term[]
   gradingSystem GradingSystem[]
+
+  Term Term[]
 }
 
 model VerificationToken {
@@ -139,24 +140,24 @@ model AcademicYear {
 }
 
 model Term {
-  id        String   @id @default(cuid())
-  number    Int // 1, 2, 3
-  name      String // "First Term", "Second Term", "Third Term"
-  startDate DateTime
-  endDate   DateTime
-  isCurrent Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  id             String       @id @default(cuid())
+  number         Int // 1, 2, 3
+  name           String // "First Term", "Second Term", "Third Term"
+  startDate      DateTime
+  endDate        DateTime
+  isCurrent      Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
   academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
   academicYearId String
+  school         School       @relation(fields: [schoolId], references: [id])
+  schoolId       String
 
   // Relations
   assessments       Assessment[]
   reportCards       ReportCard[]
   attendanceRecords AttendanceRecord[]
   Subject           Subject[]
-  School            School[]
 
   @@unique([academicYearId, number])
   @@map("terms")

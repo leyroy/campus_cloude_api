@@ -29,6 +29,7 @@ export enum TABELS_NAMES_ENUM {
   NOTIFICATION = 'Notification',
   TIMETABLE = 'Timetable',
   SCHOOL_PROFILE = 'SchoolProfile',
+  TERM = 'Term',
 }
 
 export interface CustomRequest extends Request {

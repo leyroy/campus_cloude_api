@@ -89,7 +89,7 @@
       "schoolId",
       "createdAt",
       "updatedAt",
-      "semesterId"
+      "termId"
     ]
   },
   {
@@ -107,18 +107,18 @@
     ]
   },
   {
-    "modelName": "Semester",
+    "modelName": "Term",
     "fields": [
       "id",
+      "number",
       "name",
       "startDate",
       "endDate",
-      "isActive",
-      "updatedById",
-      "academicYearId",
-      "schoolId",
+      "isCurrent",
       "createdAt",
-      "updatedAt"
+      "updatedAt",
+      "academicYearId",
+      "schoolId"
     ]
   },
   {
@@ -132,6 +132,134 @@
       "schoolId",
       "createdAt",
       "updatedAt"
+    ]
+  },
+  {
+    "modelName": "",
+    "fields": []
+  },
+  {
+    "modelName": "GradingSystem",
+    "fields": [
+      "id",
+      "name",
+      "type",
+      "level",
+      "isActive",
+      "createdAt",
+      "updatedAt",
+      "schoolId"
+    ]
+  },
+  {
+    "modelName": "GradeScale",
+    "fields": [
+      "id",
+      "grade",
+      "minScore",
+      "maxScore",
+      "points",
+      "description",
+      "order",
+      "gradingSystemId"
+    ]
+  },
+  {
+    "modelName": "",
+    "fields": []
+  },
+  {
+    "modelName": "Assessment",
+    "fields": [
+      "id",
+      "title",
+      "type",
+      "weight",
+      "totalMarks",
+      "instructions",
+      "dueDate",
+      "createdAt",
+      "updatedAt",
+      "classSubjectId",
+      "subjectId",
+      "termId",
+      "academicYearId",
+      "createdById",
+      "teacherId",
+      "gradingSystemId"
+    ]
+  },
+  {
+    "modelName": "",
+    "fields": []
+  },
+  {
+    "modelName": "ReportCard",
+    "fields": [
+      "id",
+      "overallGrade",
+      "overallPercentage",
+      "position",
+      "totalStudents",
+      "attendance",
+      "conduct",
+      "teacherRemarks",
+      "headTeacherRemarks",
+      "promoted",
+      "nextClass",
+      "createdAt",
+      "updatedAt",
+      "studentId",
+      "termId"
+    ]
+  },
+  {
+    "modelName": "Grade",
+    "fields": [
+      "id",
+      "score",
+      "grade",
+      "percentage",
+      "points",
+      "remarks",
+      "gradedAt",
+      "createdAt",
+      "updatedAt",
+      "studentId",
+      "assessmentId",
+      "subjectId",
+      "gradedById"
+    ]
+  },
+  {
+    "modelName": "Teacher",
+    "fields": [
+      "id",
+      "employeeNumber",
+      "qualification",
+      "specialization",
+      "experience",
+      "hireDate",
+      "status",
+      "createdAt",
+      "updatedAt",
+      "userId",
+      "departmentId"
+    ]
+  },
+  {
+    "modelName": "",
+    "fields": []
+  },
+  {
+    "modelName": "ClassSubject",
+    "fields": [
+      "id",
+      "createdAt",
+      "updatedAt",
+      "classId",
+      "subjectId",
+      "teacherId"
     ]
   },
   {
@@ -162,6 +290,38 @@
       "classId",
       "createdAt",
       "updatedAt"
+    ]
+  },
+  {
+    "modelName": "AttendanceRecord",
+    "fields": [
+      "id",
+      "date",
+      "status",
+      "remarks",
+      "recordedAt",
+      "studentId",
+      "classId",
+      "termId",
+      "recordedById"
+    ]
+  },
+  {
+    "modelName": "",
+    "fields": []
+  },
+  {
+    "modelName": "DisciplinaryRecord",
+    "fields": [
+      "id",
+      "incident",
+      "action",
+      "date",
+      "severity",
+      "resolved",
+      "createdAt",
+      "updatedAt",
+      "studentId"
     ]
   },
   {
@@ -422,6 +582,81 @@
       "INACTIVE",
       "CANCELLED",
       "PAST_DUE"
+    ]
+  },
+  {
+    "modelName": "DisciplinarySeverity",
+    "fields": [
+      "MINOR",
+      "MODERATE",
+      "SERIOUS",
+      "SEVERE"
+    ]
+  },
+  {
+    "modelName": "AttendanceStatus",
+    "fields": [
+      "PRESENT",
+      "ABSENT",
+      "LATE",
+      "EXCUSED",
+      "SICK"
+    ]
+  },
+  {
+    "modelName": "AssessmentType",
+    "fields": [
+      "OBSERVATION",
+      "ACTIVITY_BASED",
+      "PORTFOLIO",
+      "CLASS_EXERCISE",
+      "HOMEWORK",
+      "PROJECT",
+      "MID_TERM_EXAM",
+      "END_OF_TERM_EXAM",
+      "QUIZ",
+      "ASSIGNMENT",
+      "PRACTICAL",
+      "CONTINUOUS_ASSESSMENT",
+      "MOCK_EXAM",
+      "EXTERNAL_EXAM"
+    ]
+  },
+  {
+    "modelName": "TeacherStatus",
+    "fields": [
+      "ACTIVE",
+      "ON_LEAVE",
+      "TERMINATED",
+      "RETIRED"
+    ]
+  },
+  {
+    "modelName": "GradingType",
+    "fields": [
+      "DESCRIPTIVE",
+      "PERCENTAGE",
+      "LETTER_GRADE",
+      "POINTS"
+    ]
+  },
+  {
+    "modelName": "EducationLevel",
+    "fields": [
+      "KG1",
+      "KG2",
+      "PRIMARY_1",
+      "PRIMARY_2",
+      "PRIMARY_3",
+      "PRIMARY_4",
+      "PRIMARY_5",
+      "PRIMARY_6",
+      "JHS_1",
+      "JHS_2",
+      "JHS_3",
+      "SHS_1",
+      "SHS_2",
+      "SHS_3"
     ]
   }
 ]
