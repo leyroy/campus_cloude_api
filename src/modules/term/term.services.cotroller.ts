@@ -29,7 +29,7 @@ class TermControllersServices {
     const { schoolId, userId } = (req as CustomRequest).user;
     const termData = req.body as CreateTermType;
     const { id } = req.params;
-    if (!schoolId || !userId || id) {
+    if (!schoolId || !userId || !id) {
       throw ErrorHandler.unauthorized();
     }
     const updatedTerm = await this.termServices.updateTerm({ id, data: termData });
@@ -41,7 +41,7 @@ class TermControllersServices {
   public delete = async (req: Request, res: Response) => {
     const { schoolId, userId } = (req as CustomRequest).user;
     const { id } = req.params;
-    if (!schoolId || !userId || id) {
+    if (!schoolId || !userId || !id) {
       throw ErrorHandler.unauthorized();
     }
     const deletedTerm = await this.termServices.deleteTerm(id);
@@ -49,11 +49,11 @@ class TermControllersServices {
       ...deletedTerm,
     });
   };
-  //TODO:
+  //
   public getTermBySchoolId = async (req: Request, res: Response) => {
     const { schoolId, userId } = (req as CustomRequest).user;
     const { id } = req.params;
-    if (!schoolId || !userId || id) {
+    if (!schoolId || !userId || !id) {
       throw ErrorHandler.unauthorized();
     }
     const term = await this.termServices.getTermBySchoolId(id, schoolId);
@@ -65,7 +65,7 @@ class TermControllersServices {
   public getAllTermsBySchoolId = async (req: Request, res: Response) => {
     const { schoolId, userId } = (req as CustomRequest).user;
     const { id } = req.params;
-    if (!schoolId || !userId || id) {
+    if (!schoolId || !userId || !id) {
       throw ErrorHandler.unauthorized();
     }
     const terms = await this.termServices.getAllTermsBySchoolId(id, schoolId);

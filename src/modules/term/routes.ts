@@ -18,7 +18,7 @@ termRoutes.post(
   catchAsync(termControllers.create)
 );
 termRoutes.put(
-  `/updaate/:id`,
+  `/update/:id`,
   validatePayload(TABELS_NAMES_ENUM.TERM),
   zodValidator(CreateTermSchema),
   catchAsync(termControllers.update)
