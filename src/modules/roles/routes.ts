@@ -10,7 +10,7 @@ import { Action, Resource, TABELS_NAMES_ENUM } from '../../types/types';
 
 const roleRouter = express.Router();
 const errorHandler = new ErrorHandler();
-roleRouter.use(authenticateToken);
+roleRouter.use(errorHandler.catchAsync(authenticateToken));
 
 /**
  * @swagger

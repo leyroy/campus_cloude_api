@@ -65,8 +65,9 @@ model School {
   course        Course[]
   class         Class[]
 
-  terms         Term[]
   gradingSystem GradingSystem[]
+
+  Term Term[]
 }
 
 model VerificationToken {
@@ -139,24 +140,24 @@ model AcademicYear {
 }
 
 model Term {
-  id        String   @id @default(cuid())
-  number    Int // 1, 2, 3
-  name      String // "First Term", "Second Term", "Third Term"
-  startDate DateTime
-  endDate   DateTime
-  isCurrent Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  id             String       @id @default(cuid())
+  number         Int // 1, 2, 3
+  name           String // "First Term", "Second Term", "Third Term"
+  startDate      DateTime
+  endDate        DateTime
+  isCurrent      Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
   academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
   academicYearId String
+  school         School       @relation(fields: [schoolId], references: [id])
+  schoolId       String
 
   // Relations
   assessments       Assessment[]
   reportCards       ReportCard[]
   attendanceRecords AttendanceRecord[]
   Subject           Subject[]
-  School            School[]
 
   @@unique([academicYearId, number])
   @@map("terms")
@@ -216,6 +217,7 @@ model GradeScale {
   @@map("grade_scales")
 }
 
+// TODO: learn more about this assessment table
 model Assessment {
   id           String         @id @default(cuid())
   title        String
@@ -276,16 +278,15 @@ model ReportCard {
 }
 
 model Grade {
-  id         String   @id @default(cuid())
-  score      Float? // Raw score
-  grade      String? // Computed grade (A1, Excellent, etc.)
-  percentage Float? // Percentage score
-  points     Float? // Points for GPA
-  remarks    String? // Teacher's comments
-  gradedAt   DateTime @default(now())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
+  id           String     @id @default(cuid())
+  score        Float? // Raw score
+  grade        String? // Computed grade (A1, Excellent, etc.)
+  percentage   Float? // Percentage score
+  points       Float? // Points for GPA
+  remarks      String? // Teacher's comments
+  gradedAt     DateTime   @default(now())
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
   student      Student    @relation(fields: [studentId], references: [id])
   studentId    String
   assessment   Assessment @relation(fields: [assessmentId], references: [id])
@@ -309,11 +310,10 @@ model Teacher {
   status         TeacherStatus @default(ACTIVE)
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
-
-  user         User        @relation(fields: [userId], references: [id])
-  userId       String      @unique
-  department   Department? @relation(fields: [departmentId], references: [id])
-  departmentId String?
+  user           User          @relation(fields: [userId], references: [id])
+  userId         String        @unique
+  department     Department?   @relation(fields: [departmentId], references: [id])
+  departmentId   String?
 
   // Relations
   classSubjects      ClassSubject[]
@@ -322,6 +322,8 @@ model Teacher {
   @@map("teachers")
 }
 
+// subject can belong to multiple class
+//class can have meny subject
 model ClassSubject {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())

@@ -114,6 +114,30 @@
           "items": {
             "$ref": "#/definitions/School"
           }
+        },
+        "attendanceRecord": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AttendanceRecord"
+          }
+        },
+        "teacher": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Teacher"
+          }
+        },
+        "grade": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Grade"
+          }
+        },
+        "assessment": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Assessment"
+          }
         }
       }
     },
@@ -178,7 +202,7 @@
             "$ref": "#/definitions/User"
           }
         },
-        "subscriptions": {
+        "subscription": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Subscription"
@@ -202,28 +226,34 @@
             "$ref": "#/definitions/Student"
           }
         },
-        "AcademicYear": {
+        "academicYear": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/AcademicYear"
           }
         },
-        "Course": {
+        "course": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Course"
           }
         },
-        "Class": {
+        "class": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Class"
           }
         },
-        "Semester": {
+        "gradingSystem": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Semester"
+            "$ref": "#/definitions/GradingSystem"
+          }
+        },
+        "Term": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Term"
           }
         }
       }
@@ -297,6 +327,12 @@
           "items": {
             "$ref": "#/definitions/Course"
           }
+        },
+        "teachers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Teacher"
+          }
         }
       }
     },
@@ -339,8 +375,26 @@
         "school": {
           "$ref": "#/definitions/School"
         },
-        "semester": {
-          "$ref": "#/definitions/Semester"
+        "term": {
+          "$ref": "#/definitions/Term"
+        },
+        "classSubject": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ClassSubject"
+          }
+        },
+        "grade": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Grade"
+          }
+        },
+        "assessments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Assessment"
+          }
         }
       }
     },
@@ -379,10 +433,10 @@
         "school": {
           "$ref": "#/definitions/School"
         },
-        "semesters": {
+        "term": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Semester"
+            "$ref": "#/definitions/Term"
           }
         },
         "classes": {
@@ -390,14 +444,23 @@
           "items": {
             "$ref": "#/definitions/Class"
           }
+        },
+        "Assessment": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Assessment"
+          }
         }
       }
     },
-    "Semester": {
+    "Term": {
       "type": "object",
       "properties": {
         "id": {
           "type": "string"
+        },
+        "number": {
+          "type": "integer"
         },
         "name": {
           "type": "string"
@@ -410,12 +473,9 @@
           "type": "string",
           "format": "date-time"
         },
-        "isActive": {
+        "isCurrent": {
           "type": "boolean",
           "default": false
-        },
-        "updatedById": {
-          "type": "string"
         },
         "createdAt": {
           "type": "string",
@@ -431,7 +491,25 @@
         "school": {
           "$ref": "#/definitions/School"
         },
-        "subjects": {
+        "assessments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Assessment"
+          }
+        },
+        "reportCards": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ReportCard"
+          }
+        },
+        "attendanceRecords": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AttendanceRecord"
+          }
+        },
+        "Subject": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Subject"
@@ -485,6 +563,446 @@
         }
       }
     },
+    "GradingSystem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "DESCRIPTIVE",
+            "PERCENTAGE",
+            "LETTER_GRADE",
+            "POINTS"
+          ]
+        },
+        "level": {
+          "type": "string",
+          "enum": [
+            "KG1",
+            "KG2",
+            "PRIMARY_1",
+            "PRIMARY_2",
+            "PRIMARY_3",
+            "PRIMARY_4",
+            "PRIMARY_5",
+            "PRIMARY_6",
+            "JHS_1",
+            "JHS_2",
+            "JHS_3",
+            "SHS_1",
+            "SHS_2",
+            "SHS_3"
+          ]
+        },
+        "isActive": {
+          "type": "boolean",
+          "default": true
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "school": {
+          "$ref": "#/definitions/School"
+        },
+        "gradeScales": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GradeScale"
+          }
+        },
+        "assessments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Assessment"
+          }
+        }
+      }
+    },
+    "GradeScale": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "grade": {
+          "type": "string"
+        },
+        "minScore": {
+          "type": "number"
+        },
+        "maxScore": {
+          "type": "number"
+        },
+        "points": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "order": {
+          "type": "integer"
+        },
+        "gradingSystem": {
+          "$ref": "#/definitions/GradingSystem"
+        }
+      }
+    },
+    "Assessment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "OBSERVATION",
+            "ACTIVITY_BASED",
+            "PORTFOLIO",
+            "CLASS_EXERCISE",
+            "HOMEWORK",
+            "PROJECT",
+            "MID_TERM_EXAM",
+            "END_OF_TERM_EXAM",
+            "QUIZ",
+            "ASSIGNMENT",
+            "PRACTICAL",
+            "CONTINUOUS_ASSESSMENT",
+            "MOCK_EXAM",
+            "EXTERNAL_EXAM"
+          ]
+        },
+        "weight": {
+          "type": "number"
+        },
+        "totalMarks": {
+          "type": "number"
+        },
+        "instructions": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "dueDate": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "classSubject": {
+          "$ref": "#/definitions/ClassSubject"
+        },
+        "subject": {
+          "$ref": "#/definitions/Subject"
+        },
+        "term": {
+          "$ref": "#/definitions/Term"
+        },
+        "academicYear": {
+          "$ref": "#/definitions/AcademicYear"
+        },
+        "createdBy": {
+          "$ref": "#/definitions/User"
+        },
+        "teacher": {
+          "$ref": "#/definitions/Teacher"
+        },
+        "gradingSystem": {
+          "$ref": "#/definitions/GradingSystem"
+        },
+        "grades": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Grade"
+          }
+        }
+      }
+    },
+    "ReportCard": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "overallGrade": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "overallPercentage": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "position": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "totalStudents": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "attendance": {
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
+        },
+        "conduct": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "teacherRemarks": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "headTeacherRemarks": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "promoted": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "nextClass": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "student": {
+          "$ref": "#/definitions/Student"
+        },
+        "term": {
+          "$ref": "#/definitions/Term"
+        }
+      }
+    },
+    "Grade": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "score": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "grade": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "percentage": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "points": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "remarks": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "gradedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "student": {
+          "$ref": "#/definitions/Student"
+        },
+        "assessment": {
+          "$ref": "#/definitions/Assessment"
+        },
+        "subject": {
+          "$ref": "#/definitions/Subject"
+        },
+        "gradedBy": {
+          "$ref": "#/definitions/User"
+        }
+      }
+    },
+    "Teacher": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "employeeNumber": {
+          "type": "string"
+        },
+        "qualification": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "specialization": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "experience": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "hireDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string",
+          "default": "ACTIVE",
+          "enum": [
+            "ACTIVE",
+            "ON_LEAVE",
+            "TERMINATED",
+            "RETIRED"
+          ]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "user": {
+          "$ref": "#/definitions/User"
+        },
+        "department": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Department"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "classSubjects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ClassSubject"
+          }
+        },
+        "assessmentsCreated": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Assessment"
+          }
+        }
+      }
+    },
+    "ClassSubject": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "class": {
+          "$ref": "#/definitions/Class"
+        },
+        "subject": {
+          "$ref": "#/definitions/Subject"
+        },
+        "teacher": {
+          "$ref": "#/definitions/Teacher"
+        },
+        "assessments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Assessment"
+          }
+        }
+      }
+    },
     "Class": {
       "type": "object",
       "properties": {
@@ -533,10 +1051,22 @@
             "$ref": "#/definitions/Student"
           }
         },
-        "AcademicYear": {
+        "academicYear": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/AcademicYear"
+          }
+        },
+        "attendanceRecord": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AttendanceRecord"
+          }
+        },
+        "classSubject": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ClassSubject"
           }
         }
       }
@@ -588,6 +1118,119 @@
         },
         "class": {
           "$ref": "#/definitions/Class"
+        },
+        "disciplinaryRecord": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DisciplinaryRecord"
+          }
+        },
+        "reportCard": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ReportCard"
+          }
+        },
+        "attendanceRecord": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AttendanceRecord"
+          }
+        },
+        "grade": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Grade"
+          }
+        }
+      }
+    },
+    "AttendanceRecord": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "PRESENT",
+            "ABSENT",
+            "LATE",
+            "EXCUSED",
+            "SICK"
+          ]
+        },
+        "remarks": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "recordedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "student": {
+          "$ref": "#/definitions/Student"
+        },
+        "class": {
+          "$ref": "#/definitions/Class"
+        },
+        "term": {
+          "$ref": "#/definitions/Term"
+        },
+        "recordedBy": {
+          "$ref": "#/definitions/User"
+        }
+      }
+    },
+    "DisciplinaryRecord": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "incident": {
+          "type": "string"
+        },
+        "action": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "MINOR",
+            "MODERATE",
+            "SERIOUS",
+            "SEVERE"
+          ]
+        },
+        "resolved": {
+          "type": "boolean",
+          "default": false
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "student": {
+          "$ref": "#/definitions/Student"
         }
       }
     },
@@ -1179,17 +1822,44 @@
     "academicYear": {
       "$ref": "#/definitions/AcademicYear"
     },
-    "semester": {
-      "$ref": "#/definitions/Semester"
+    "term": {
+      "$ref": "#/definitions/Term"
     },
     "course": {
       "$ref": "#/definitions/Course"
+    },
+    "gradingSystem": {
+      "$ref": "#/definitions/GradingSystem"
+    },
+    "gradeScale": {
+      "$ref": "#/definitions/GradeScale"
+    },
+    "assessment": {
+      "$ref": "#/definitions/Assessment"
+    },
+    "reportCard": {
+      "$ref": "#/definitions/ReportCard"
+    },
+    "grade": {
+      "$ref": "#/definitions/Grade"
+    },
+    "teacher": {
+      "$ref": "#/definitions/Teacher"
+    },
+    "classSubject": {
+      "$ref": "#/definitions/ClassSubject"
     },
     "class": {
       "$ref": "#/definitions/Class"
     },
     "student": {
       "$ref": "#/definitions/Student"
+    },
+    "attendanceRecord": {
+      "$ref": "#/definitions/AttendanceRecord"
+    },
+    "disciplinaryRecord": {
+      "$ref": "#/definitions/DisciplinaryRecord"
     },
     "session": {
       "$ref": "#/definitions/Session"

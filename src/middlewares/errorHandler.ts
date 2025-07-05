@@ -310,7 +310,8 @@ export class ErrorHandler {
     return new AppError({ message, statusCode: HTTPSTATUS.BAD_REQUEST });
   }
 
-  public static unauthorized(message: string = 'Unauthorized'): AppError {
+  public static unauthorized(message: string = 'Unauthorized Action'): AppError {
+    //TODO: implement critical alert
     return new AppError({
       message,
       statusCode: HTTPSTATUS.UNAUTHORIZED,
