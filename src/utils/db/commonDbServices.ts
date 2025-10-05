@@ -1,4 +1,3 @@
-import { Address, School } from '@prisma/client';
 import prisma from '../../config/prisma.config';
 import { VerificationEnum } from '../../enums/verification-code.enum';
 import { CreateAddressDto } from '../../modules/school-configuration/types';
@@ -70,7 +69,13 @@ export class CommonDbServices {
       where: { email },
     });
   }
-  public async getUserByPhoneOrEmail({ phone, email }: { phone?: string; email?: string }) {
+  public async getUserByPhoneOrEmail({
+    phone,
+    email,
+  }: {
+    phone?: string;
+    email?: string;
+  }) {
     return await prisma.user.findFirst({
       where: { phone, email: email },
     });
@@ -139,7 +144,11 @@ export class CommonDbServices {
       where: { id },
     });
   }
-  public async createAddress(data: CreateAddressDto, id: string, modelType: TABELS_NAMES_ENUM) {
+  public async createAddress(
+    data: CreateAddressDto,
+    id: string,
+    modelType: TABELS_NAMES_ENUM
+  ) {
     const type = modelType === TABELS_NAMES_ENUM.SCHOOL_PROFILE ? 'schoolId' : 'userId';
     return await prisma.address.create({ data: { ...data, [type]: id } });
   }

@@ -7,13 +7,13 @@ export class UserHelpers {
       include: {
         school: {
           where: { isDeleted: false, isActive: true, status: 'ACTIVE' },
-          include: {
-            schoolProfile: {
-              include: {
-                schoolAddress: true,
-              },
-            },
-          },
+          // include: {
+          //   schoolProfile: {
+          //     include: {
+          //       schoolAddress: true,
+          //     },
+          //   },
+          // },
         },
         userRoles: {
           include: {
