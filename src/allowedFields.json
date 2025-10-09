@@ -62,6 +62,7 @@
       "identifier",
       "token",
       "expires",
+      "code",
       "type",
       "createdAt"
     ]

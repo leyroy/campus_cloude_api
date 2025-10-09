@@ -75,6 +75,7 @@ model VerificationToken {
   identifier String
   token      String           @unique
   expires    DateTime
+  code       String?
   type       VerificationType
   createdAt  DateTime         @default(now())
 

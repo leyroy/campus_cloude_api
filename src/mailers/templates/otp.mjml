@@ -1,0 +1,24 @@
+<mjml>
+  <mj-body background-color="#f4f4f4">
+    <mj-section background-color="#ffffff" border-radius="8px" padding="20px">
+      <mj-column>
+        <mj-text align="center" color="#2563EB" font-size="24px" font-weight="bold"
+          >Squeezy</mj-text
+        >
+        <mj-divider border-color="#2563EB" />
+        <mj-text align="center" font-size="18px" color="#333333">Your OTP Code</mj-text>
+        <mj-text
+          align="center"
+          font-size="30px"
+          color="#2563EB"
+          font-weight="bold"
+          letter-spacing="8px"
+          >${otp}</mj-text
+        >
+        <mj-text align="center" color="#999999" font-size="14px"
+          >This code will expire in 10 minutes!</mj-text
+        >
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

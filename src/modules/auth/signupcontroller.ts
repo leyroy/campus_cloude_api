@@ -12,6 +12,7 @@ const signUpController = async (req: Request, res: Response) => {
   }
   res.status(200).json({
     success: true,
+    token: results.token,
     message: 'User registered successfully',
   });
 };

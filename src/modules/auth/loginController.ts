@@ -3,7 +3,7 @@ import { ErrorHandler } from '../../middlewares/errorHandler';
 import { handlePrismaError } from '../../utils/prismaErrorHandler';
 import { loginSchema } from './auth.validator';
 import { AuthService } from './auth.services';
-import { sendEmail } from '../../mailers/mailer';
+import sendEmail from '../../mailers/node-mailer';
 import { HTTPSTATUS } from '../../constants/http-status';
 import { setAuthenticationCookies } from '../../utils/cookie';
 import { verifyEmailTemplate } from '../../mailers/templates/template';
@@ -21,22 +21,26 @@ const loginController = async (req: Request, res: Response, next: NextFunction) 
     throw ErrorHandler.badRequest(`Invalid data: ${isValidData?.error?.message}`);
   }
   try {
-    const { refreshToken, accessToken, isEmailVerified, url } = await authService.loginUser({
-      ...isValidData.data,
-      userAgent,
-      ipAddress,
-    });
+    const { refreshToken, accessToken, isEmailVerified, code } =
+      await authService.loginUser({
+        ...isValidData.data,
+        userAgent,
+        ipAddress,
+      });
 
     if (!isEmailVerified) {
       sendEmail({
-        ...verifyEmailTemplate(url!),
+        value: code || '',
+        template: './src/mailers/templates/otp.mjml',
+        subject: 'Verify your email',
         to: isValidData.data.email,
       });
       return res.status(HTTPSTATUS.OK).json({
         isEmailVerified,
         refreshToken,
         accessToken,
-        message: 'An email has been sent to your account, Please verify your email to continue',
+        message:
+          'An email has been sent to your account, Please verify your email to continue',
       });
     }
     return setAuthenticationCookies({

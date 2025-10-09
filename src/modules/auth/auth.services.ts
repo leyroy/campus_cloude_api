@@ -2,7 +2,7 @@ import { ENV_CONSTANTS } from '../../constants/env_constants';
 import { HTTPSTATUS } from '../../constants/http-status';
 import { ErrorCode } from '../../enums/error-code.enum';
 import { VerificationEnum } from '../../enums/verification-code.enum';
-import { sendEmail } from '../../mailers/mailer';
+import sendEmail from '../../mailers/node-mailer';
 import { verifyEmailTemplate } from '../../mailers/templates/template';
 import { AppError, ErrorHandler } from '../../middlewares/errorHandler';
 import { passwordManager } from '../../services/passwordMnager';
@@ -10,6 +10,7 @@ import {
   calculateExpirationDate,
   fortyFiveMinutesFromNow,
   ONE_DAY_IN_MS,
+  thirtySecondsFromNow,
 } from '../../utils/date-time';
 import { commonDbService } from '../../utils/db/commonDbServices';
 import { generateTokens, verifyJwtToken } from '../../utils/jwt';
@@ -34,6 +35,7 @@ export class AuthService {
       confirmPassword: confirmPassword,
       password: hashedPassword,
     });
+    const { confirmPassword: confirmPassword2, password, ...res } = newUser;
     const verificationCode = await authHelpers.createVerificationCode({
       userId: newUser.id,
       type: VerificationEnum.EMAIL_VERIFICATION,
@@ -41,15 +43,18 @@ export class AuthService {
     });
     const verifyUrl = `${ENV_CONSTANTS.BASE_PATH}/verify-email?token=${verificationCode.token}`;
     sendEmail({
+      value: verificationCode.code as string,
+      template: './src/mailers/templates/otp.mjml',
+      subject: 'Verify your email',
       to: newUser.email,
-      ...verifyEmailTemplate(verifyUrl),
     });
     return {
       success: true,
+      token: verificationCode.token,
       message:
         'User registered successfully and verification code was sent to your email, pleas kindly verify your account',
       data: {
-        ...user,
+        ...res,
       },
     };
   }
@@ -69,7 +74,11 @@ export class AuthService {
     if (!isValidPassword) {
       throw ErrorHandler.unauthorized('Invalid credentials');
     }
-    if (!isUserExit.isActive) {
+    if (
+      !isUserExit.isActive &&
+      isUserExit.isEmailVerified &&
+      isUserExit.isPhoneVerified
+    ) {
       throw ErrorHandler.badRequest(
         `Account: ${isUserExit.email} is not activated, please kindly wait until we activate your account`
       );
@@ -85,6 +94,7 @@ export class AuthService {
         refreshToken: '',
         accessToken: '',
         url: verifyUrl,
+        code: verificationCode.code,
         isEmailVerified: false,
       };
     }
@@ -110,13 +120,17 @@ export class AuthService {
     };
   }
 
-  public async verifyEmail(code: string) {
+  public async verifyEmail(token: string, code: string) {
     const verificationToken = await authHelpers.getVerificationCode(
-      code,
+      token,
       VerificationEnum.EMAIL_VERIFICATION
     );
     if (!verificationToken) {
-      throw ErrorHandler.notFound('Code verification code was not found');
+      throw ErrorHandler.notFound('Verification has expired, Please try logging in');
+    }
+    console.log(verificationToken.code?.split('-').join(''), code);
+    if (verificationToken.code?.split('-').join('') !== code) {
+      throw ErrorHandler.notFound('Incorrect OTP. Please try agin');
     }
     const verifiedUser = await authHelpers.verifyUser(verificationToken.identifier);
     if (!verifiedUser)

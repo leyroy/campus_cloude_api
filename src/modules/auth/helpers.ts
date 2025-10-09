@@ -3,6 +3,7 @@ import prisma from '../../config/prisma.config';
 import { generateUniqueCode } from '../../utils/uuid';
 import { VerificationEnum } from '../../enums/verification-code.enum';
 import { CreateSessionDto } from './types';
+import { generateOtp } from '../../utils/verifiyToken';
 
 type TokenType = {
   userId: string;
@@ -20,6 +21,7 @@ export class AuthHelpers {
       data: {
         token: generateUniqueCode(),
         expires: expires,
+        code: generateOtp(),
         identifier: userId,
         type: type,
       },
@@ -57,7 +59,7 @@ export class AuthHelpers {
         token: code,
         type: type,
         expires: {
-          gte: new Date(),
+          gte: new Date(Date.now()),
         },
       },
     });

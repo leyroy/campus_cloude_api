@@ -85,7 +85,7 @@ authRouter.post(
  *                   example: Login successful
  */
 
-authRouter.post('/', errorHandler.catchAsync(loginController));
+authRouter.post('/login', errorHandler.catchAsync(loginController));
 
 // authRouter.use(errorHandler.catchAsync(authenticateToken));
 
@@ -153,6 +153,6 @@ authRouter.get('/logout', authenticateToken, errorHandler.catchAsync(logoutContr
  *         description: Internal Server Error - An error occurred while processing the request.
  */
 
-authRouter.get('/verify-email', errorHandler.catchAsync(verifyEmailController));
+authRouter.post('/verify-email', errorHandler.catchAsync(verifyEmailController));
 
 export default authRouter;

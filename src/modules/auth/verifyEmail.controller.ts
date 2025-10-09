@@ -6,11 +6,11 @@ import { HTTPSTATUS } from '../../constants/http-status';
 const authService = new AuthService();
 const verifyEmailController = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { token } = req.query as { token?: string };
+    const { token, code } = req.body as { token?: string; code?: string };
     if (!token) {
       throw ErrorHandler.badRequest('Verification Token is required');
     }
-    const results = await authService.verifyEmail(token);
+    const results = await authService.verifyEmail(token, code as string);
     if (!results)
       throw ErrorHandler.badRequest('Invalid verification token or it has expired');
     res.status(HTTPSTATUS.OK).json({

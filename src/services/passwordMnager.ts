@@ -255,4 +255,7 @@ export class PasswordService {
 //   }
 
 //   const hashedPassword = await passwordService.hashPassword(newPassword);
-export const passwordManager = new PasswordService();
+export const passwordManager = new PasswordService({
+  requireNumbers: false,
+  requireSpecialChars: false,
+});
