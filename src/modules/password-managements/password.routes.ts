@@ -8,10 +8,9 @@ import { authenticateToken } from '../../middlewares/authenticateToken';
 const passwordRoutes = Router();
 const errorHandler = new ErrorHandler();
 
-passwordRoutes.use(errorHandler.catchAsync(authenticateToken));
-
-passwordRoutes.get('/forgot-password', errorHandler.catchAsync(forgotPassword));
+passwordRoutes.post('/forgot-password', errorHandler.catchAsync(forgotPassword));
 passwordRoutes.put('/reset-password', errorHandler.catchAsync(resetPassword));
+passwordRoutes.use(errorHandler.catchAsync(authenticateToken));
 passwordRoutes.put('/change-password', errorHandler.catchAsync(changePasswordController));
 
 export default passwordRoutes;

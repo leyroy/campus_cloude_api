@@ -9,6 +9,7 @@ import zodValidator from '../../middlewares/zodValidator';
 import { RegisterSchema } from './auth.validator';
 import { validatePayload } from '../../middlewares/validate-payload';
 import { TABELS_NAMES_ENUM } from '../../types/types';
+import getAuthUserProfile from '../users/controllers/getAuthUserProfile.controller';
 
 const authRouter = epress.Router();
 
@@ -154,5 +155,8 @@ authRouter.get('/logout', authenticateToken, errorHandler.catchAsync(logoutContr
  */
 
 authRouter.post('/verify-email', errorHandler.catchAsync(verifyEmailController));
+
+authRouter.use(errorHandler.catchAsync(authenticateToken));
+authRouter.get('/auth-profile', errorHandler.catchAsync(getAuthUserProfile));
 
 export default authRouter;

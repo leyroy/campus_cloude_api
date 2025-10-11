@@ -28,7 +28,10 @@ const sendEmail = async ({
   template,
 }: MailOptions): Promise<boolean> => {
   const { html: otpHtml } = mjml2html(
-    fs.readFileSync(template, 'utf8').replace('${otp}', value)
+    fs
+      .readFileSync(template, 'utf8')
+      .replace('${otp}', value)
+      .replace(/{{resetUrl}}/g, value)
   );
   try {
     const info = await transporter.sendMail({

@@ -8,7 +8,7 @@ const getAuthUserProfile = async (req: Request, res: Response, next: NextFunctio
   res.status(200).json({
     success: true,
     message: 'User profile retrieved successfully',
-    data: userProfile,
+    user: userProfile,
   });
 };
 

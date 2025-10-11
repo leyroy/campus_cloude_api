@@ -12,6 +12,5 @@ export async function logoutController(req: Request, res: Response) {
   clearAuthenticationCookies(res).status(HTTPSTATUS.OK).json({
     success: true,
     message: 'Logout successful',
-    user,
   });
 }

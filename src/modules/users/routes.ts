@@ -1,12 +1,9 @@
 import { ErrorHandler } from '../../middlewares/errorHandler';
-import { authenticateToken } from '../../middlewares/authenticateToken';
-import getAuthUserProfile from './controllers/getAuthUserProfile.controller';
 import { Router } from 'express';
 import createUserController from './controllers/create';
 import { validatePayload } from '../../middlewares/validate-payload';
 import { getUsersController } from './controllers/getUsers.controller';
 import { Action, Resource, TABELS_NAMES_ENUM } from '../../types/types';
-import { hasPermission } from '../../utils/hasPermissions';
 import permissionHandler from '../../middlewares/permissionsManager';
 
 const usersRouter = Router();
@@ -90,13 +87,6 @@ usersRouter.post(
   catchAsync(permissionHandler({ resource: Resource.SCHOOL, action: Action.DELETE })),
   validatePayload(TABELS_NAMES_ENUM.USERS),
   catchAsync(createUserController)
-);
-
-usersRouter.use(catchAsync(authenticateToken));
-usersRouter.get(
-  '/profile',
-  catchAsync(permissionHandler({ resource: Resource.USER, action: Action.VIEW })),
-  catchAsync(getAuthUserProfile)
 );
 
 export default usersRouter;

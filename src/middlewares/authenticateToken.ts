@@ -6,10 +6,13 @@ import { HTTPSTATUS } from '../constants/http-status';
 import { ErrorCode } from '../enums/error-code.enum';
 import { CustomRequest, TokenTypes } from '../types/types';
 
-export const authenticateToken = async (req: Request, res: Response, next: NextFunction) => {
+export const authenticateToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const { accessToken: token } = req.cookies;
-
+    const { campus_cloud_accessToken: token } = req.cookies;
     if (!token) {
       throw new AppError({
         message: 'No token provided',
@@ -19,7 +22,6 @@ export const authenticateToken = async (req: Request, res: Response, next: NextF
     }
     // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as TokenTypes;
-    console.log(decoded);
     // Check if user still exists and is active
     const user = await prisma.user.findUnique({ where: { id: decoded.userId } });
 
@@ -30,11 +32,11 @@ export const authenticateToken = async (req: Request, res: Response, next: NextF
         errorCode: ErrorCode.AUTH_USER_NOT_FOUND,
       });
     }
-    if (!user?.isActive) {
-      throw ErrorHandler.unauthorized(
-        'Your account is not activated, kindly wait untill we verify your account'
-      );
-    }
+    // if (!user?.isActive) {
+    //   throw ErrorHandler.unauthorized(
+    //     'Your account is not activated, kindly wait untill we verify your account'
+    //   );
+    // }
     if (!user.isEmailVerified) {
       throw ErrorHandler.badRequest('Please kindly verify your account');
     }
