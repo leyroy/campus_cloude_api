@@ -127,9 +127,6 @@ export class CommonDbServices {
       where: {
         token: code,
         type,
-        expires: {
-          gte: new Date(),
-        },
       },
     });
   }

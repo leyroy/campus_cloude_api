@@ -21,7 +21,9 @@ class PasswordServices {
   public async forgotPassword(email: string) {
     const user = await commonDbServices.getUserByEmail(email);
     if (!user) {
-      throw ErrorHandler.notFound(`No account was found with the provided email: ${email}`);
+      throw ErrorHandler.notFound(
+        `No account was found with the provided email: ${email}`
+      );
     }
 
     //check mail rate limit is 2 emails per 3 or 10 min
@@ -51,23 +53,31 @@ class PasswordServices {
       token,
       VerificationEnum.PASSWORD_RESET
     );
+
     if (!verificationCode) {
-      throw ErrorHandler.notFound('Invalid or expired password reset token');
+      throw ErrorHandler.notFound('Invalid password reset token');
+    }
+
+    if (verificationCode.expires < new Date()) {
+      throw ErrorHandler.badRequest('Password reset token has expired');
     }
 
     const user = await commonDbServices.getUserById(verificationCode.identifier);
     if (!user) {
       throw ErrorHandler.notFound('User not found for the provided token');
     }
-    if (verificationCode.expires < new Date()) {
-      throw ErrorHandler.badRequest('Password reset token has expired');
-    }
+
     const hashedPassword = await passwordManager.hashPassword(newPassword);
     const isSamePassword = passwordManager.verifyPassword(newPassword, user.password);
-    if (!isSamePassword) {
-      throw ErrorHandler.badRequest('New password cannot be the same as the old password');
+    if (isSamePassword) {
+      throw ErrorHandler.badRequest(
+        'New password cannot be the same as the old password'
+      );
     }
-    const updatedUser = await this.passwordHelper.updateUserPassword(user.id, hashedPassword);
+    const updatedUser = await this.passwordHelper.updateUserPassword(
+      user.id,
+      hashedPassword
+    );
     if (!updatedUser) {
       throw ErrorHandler.internal('Failed to update user password');
     }
@@ -92,9 +102,14 @@ class PasswordServices {
     }
     const hashedNewPassword = await passwordManager.hashPassword(newPassword);
     if (isSamePassword) {
-      throw ErrorHandler.badRequest('New password cannot be the same as the old password');
+      throw ErrorHandler.badRequest(
+        'New password cannot be the same as the old password'
+      );
     }
-    const updatedUser = await this.passwordHelper.updateUserPassword(user.id, hashedNewPassword);
+    const updatedUser = await this.passwordHelper.updateUserPassword(
+      user.id,
+      hashedNewPassword
+    );
     if (!updatedUser) {
       throw ErrorHandler.internal('Failed to update user password');
     }
