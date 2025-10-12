@@ -158,6 +158,37 @@
           "type": "integer",
           "default": 0
         },
+        "educationLevel": {
+          "type": "array",
+          "enum": [
+            "KG1",
+            "KG2",
+            "PRIMARY_1",
+            "PRIMARY_2",
+            "PRIMARY_3",
+            "PRIMARY_4",
+            "PRIMARY_5",
+            "PRIMARY_6",
+            "JHS_1",
+            "JHS_2",
+            "JHS_3",
+            "SHS_1",
+            "SHS_2",
+            "SHS_3"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "default": "PUBLIC",
+          "enum": [
+            "PUBLIC",
+            "PRIVATE",
+            "CHARTER",
+            "MAGNET",
+            "RELIGIOUS",
+            "INTERNATIONAL"
+          ]
+        },
         "isDeleted": {
           "type": "boolean",
           "default": false

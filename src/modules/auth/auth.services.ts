@@ -41,7 +41,6 @@ export class AuthService {
       type: VerificationEnum.EMAIL_VERIFICATION,
       expires: fortyFiveMinutesFromNow(),
     });
-    const verifyUrl = `${ENV_CONSTANTS.BASE_PATH}/verify-email?token=${verificationCode.token}`;
     sendEmail({
       value: verificationCode.code as string,
       template: './src/mailers/templates/otp.mjml',
@@ -128,7 +127,6 @@ export class AuthService {
     if (!verificationToken) {
       throw ErrorHandler.notFound('Verification has expired, Please try logging in');
     }
-    console.log(verificationToken.code?.split('-').join(''), code);
     if (verificationToken.code?.split('-').join('') !== code) {
       throw ErrorHandler.notFound('Incorrect OTP. Please try agin');
     }

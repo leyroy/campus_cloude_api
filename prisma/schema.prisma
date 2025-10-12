@@ -45,25 +45,27 @@ model User {
 }
 
 model School {
-  id            String          @id @default(cuid())
-  name          String
-  isActive      Boolean         @default(false)
-  level         Int             @default(0)
-  isDeleted     Boolean         @default(false)
-  status        AccountStatus   @default(PENDING)
-  updatedById   String
-  createdAt     DateTime        @default(now())
-  description   String
-  schoolProfile SchoolProfile[]
-  owner         Owner[]
-  members       User[]
-  subscription  Subscription[]
-  department    Department[]
-  subject       Subject[]
-  student       Student[]
-  academicYear  AcademicYear[]
-  course        Course[]
-  class         Class[]
+  id             String           @id @default(cuid())
+  name           String
+  isActive       Boolean          @default(false)
+  level          Int              @default(0)
+  educationLevel EducationLevel[] @default([PRIMARY_1, PRIMARY_2, PRIMARY_3, PRIMARY_4, PRIMARY_5, PRIMARY_6])
+  type           SchooleType      @default(PUBLIC)
+  isDeleted      Boolean          @default(false)
+  status         AccountStatus    @default(PENDING)
+  updatedById    String
+  createdAt      DateTime         @default(now())
+  description    String
+  schoolProfile  SchoolProfile[]
+  owner          Owner[]
+  members        User[]
+  subscription   Subscription[]
+  department     Department[]
+  subject        Subject[]
+  student        Student[]
+  academicYear   AcademicYear[]
+  course         Course[]
+  class          Class[]
 
   gradingSystem GradingSystem[]
 
@@ -712,6 +714,15 @@ enum GradingType {
   PERCENTAGE // 0-100% (Primary)
   LETTER_GRADE // A1-F9 (JHS/SHS)
   POINTS // GPA system
+}
+
+enum SchooleType {
+  PUBLIC
+  PRIVATE
+  CHARTER
+  MAGNET
+  RELIGIOUS
+  INTERNATIONAL
 }
 
 enum EducationLevel {

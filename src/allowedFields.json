@@ -48,6 +48,7 @@
       "name",
       "isActive",
       "level",
+      "type",
       "isDeleted",
       "status",
       "updatedById",
@@ -639,6 +640,17 @@
       "PERCENTAGE",
       "LETTER_GRADE",
       "POINTS"
+    ]
+  },
+  {
+    "modelName": "SchooleType",
+    "fields": [
+      "PUBLIC",
+      "PRIVATE",
+      "CHARTER",
+      "MAGNET",
+      "RELIGIOUS",
+      "INTERNATIONAL"
     ]
   },
   {
