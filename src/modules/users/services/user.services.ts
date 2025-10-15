@@ -11,10 +11,6 @@ class UserServices {
     const { password, ...userWithoutPassword } = user || {};
     const formatedUser = {
       ...userWithoutPassword,
-      role: user?.userRoles
-        .map((role) => role.role.rolePermissions)
-        .flat()
-        .map((permission) => permission.permission),
       school: user?.school,
     };
     if (!user) {
@@ -23,5 +19,10 @@ class UserServices {
     return formatedUser;
   }
 }
+
+// role: user?.userRoles
+//   .map((role) => role.role.rolePermissions)
+//   .flat()
+//   .map((permission) => permission.permission),
 
 export const userServices = new UserServices(new UserHelpers());

@@ -17,7 +17,7 @@ const { catchAsync } = new ErrorHandler();
 schoolRouter.use(catchAsync(authenticateToken));
 
 schoolRouter.post(
-  '/',
+  '/configure',
   zodValidator(SchoolConfigurationSchema),
   catchAsync(permissionHandler({ action: Action.CREATE, resource: Resource.SCHOOL })),
   catchAsync(configureSchool)

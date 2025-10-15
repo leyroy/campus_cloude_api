@@ -7,25 +7,8 @@ export class UserHelpers {
       include: {
         school: {
           where: { isDeleted: false, isActive: true, status: 'ACTIVE' },
-          // include: {
-          //   schoolProfile: {
-          //     include: {
-          //       schoolAddress: true,
-          //     },
-          //   },
-          // },
-        },
-        userRoles: {
           include: {
-            role: {
-              include: {
-                rolePermissions: {
-                  include: {
-                    permission: true,
-                  },
-                },
-              },
-            },
+            owner: true,
           },
         },
       },

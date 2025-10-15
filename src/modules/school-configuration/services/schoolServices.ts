@@ -46,7 +46,9 @@ class SchoolServices {
       message: 'School created successfully, please wait for admin approval',
     };
   }
-
+  public async getSchoolByUserID() {
+    console.log('this one should be working ');
+  }
   public async updateSchoolInfo(schoolId: string, data: Partial<School>) {
     const updatedSchool = await this.schoolHelpers.updateSchool(schoolId, data);
     if (!updatedSchool) {

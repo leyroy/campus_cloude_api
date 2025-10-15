@@ -49,6 +49,19 @@ export class SchoolHelpers {
       },
     });
   }
+  public getSchoolByUserId = async (userId: string) => {
+    const school = await prisma.school.findFirst({
+      where: {
+        User: {
+          some: { id: userId },
+        },
+      },
+      include: {
+        owner: true,
+      },
+    });
+    return school;
+  };
   public async createSchoolAddress(data: CreateAddressDto, schoolId: string) {
     return prisma.address.create({
       data: {

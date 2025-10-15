@@ -53,12 +53,6 @@
           "type": "string",
           "format": "date-time"
         },
-        "schoolId": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
         "addressId": {
           "type": [
             "string",
@@ -110,10 +104,14 @@
           }
         },
         "school": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/School"
-          }
+          "anyOf": [
+            {
+              "$ref": "#/definitions/School"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "attendanceRecord": {
           "type": "array",
@@ -227,12 +225,6 @@
             "$ref": "#/definitions/Owner"
           }
         },
-        "members": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/User"
-          }
-        },
         "subscription": {
           "type": "array",
           "items": {
@@ -285,6 +277,12 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/Term"
+          }
+        },
+        "User": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
           }
         }
       }

@@ -12,6 +12,6 @@ appRouter.use('/auth', authRouter);
 appRouter.use('/users', userRouter);
 appRouter.use('/roles', roleRouter);
 appRouter.use('/password', passwordRoutes);
-appRouter.use('/school-config', schoolRouter);
+appRouter.use('/school', schoolRouter);
 
 export default appRouter;
