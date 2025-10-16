@@ -13,30 +13,37 @@ class SchoolServices {
     this.commonDbServices = commonDbServices;
   }
   public async createSchoolProfile(data: CreateSchoolConfigurationDto, userId: string) {
-    const { schoolProfile, owner, address, schoolAddress } = data;
+    const {
+      schoolProfile: { name, ...schoolProfileData },
+      owner,
+      schoolAddress,
+    } = data;
     const user = await this.commonDbServices.getUserById(userId);
     if (!user) {
       throw ErrorHandler.notFound('User not found');
     }
-    const schoolName = schoolProfile.name || `${user.firstName} ${user.lastName} School`;
+    const schoolName = name || `${user.firstName} ${user.lastName} School`;
     const newSchool = await this.schoolHelpers.createSchool({
       name: schoolName,
       userId,
-      description: schoolProfile.description,
-      level: schoolProfile.level,
+      description: schoolProfileData.description,
+      level: 3,
     });
     if (!newSchool) {
       throw ErrorHandler.internal('Failed to create school');
     }
     const [createdOwner, createdProfile, createdAddress] = await Promise.all([
-      this.schoolHelpers.createSchoolOwner(owner, newSchool.id),
-      this.schoolHelpers.createSchoolProfile(schoolProfile, newSchool.id, userId),
-      this.commonDbServices.createAddress(
+      await this.schoolHelpers.createSchoolOwner(owner, newSchool.id),
+      await this.schoolHelpers.createSchoolProfile(
+        schoolProfileData,
+        newSchool.id,
+        userId
+      ),
+      await this.commonDbServices.createAddress(
         schoolAddress,
         newSchool.id,
         TABELS_NAMES_ENUM.SCHOOL_PROFILE
       ),
-      this.commonDbServices.createAddress(address, user.id, TABELS_NAMES_ENUM.USERS),
     ]);
     if (!createdOwner || !createdProfile || !createdAddress) {
       throw ErrorHandler.internal('Error occured. Failed to configure school');

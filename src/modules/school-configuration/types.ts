@@ -8,24 +8,25 @@ const schoolProfileSchema = z.object({
     .max(255)
     .nullable()
     .transform((val) => val?.trim() || null),
-  about: z.string().max(1000).min(1, { message: 'About is required' }),
-  level: z.number().min(1, { message: 'School level is required' }),
   description: z.string().max(1000).min(1, { message: 'Description is required' }),
   contactEmail: z.string().email().min(1, { message: 'Contact email is required' }),
   contactPhone: z.string().max(20).min(1, { message: 'Contact phone is required' }),
   motto: z.string().max(255).min(1, { message: 'Motto is required' }),
-  colors: z
-    .string()
-    .max(255)
-    .transform((value) => (value === '' ? null : value.trim()))
-    .nullable(),
-  principalName: z.string().max(255).min(1, { message: 'Principal name is required' }),
-  principalBio: z.string().max(1000).min(1, { message: 'Principal bio is required' }),
   founderName: z.string().max(255).min(1, { message: 'Founder name is required' }),
-  founderBio: z.string().max(1000).min(1, { message: 'Founder bio is required' }),
   licenseNumber: z.string().max(100).min(1, { message: 'License number is required' }),
   adminNote: z.string().max(1000).min(1, { message: 'Admin note is required' }),
 });
+
+export type schoolProfileData = {
+  slogan: string;
+  description: string;
+  contactEmail: string;
+  contactPhone: string;
+  motto: string;
+  founderName: string;
+  licenseNumber: string;
+  adminNote: string;
+};
 
 const ownerSchema = z.object({
   preferredContactMethod: z.string().default('EMAIL'),
@@ -53,9 +54,9 @@ const addressSchema = z.object({
 export const SchoolConfigurationSchema = z.object({
   schoolProfile: schoolProfileSchema,
   owner: ownerSchema,
-  address: addressSchema,
   schoolAddress: addressSchema,
 });
+
 export type CreateOwnerDto = z.infer<typeof ownerSchema>;
 export type CreateAddressDto = z.infer<typeof addressSchema>;
 export type CreateSchoolProfileDto = z.infer<typeof schoolProfileSchema>;

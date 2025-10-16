@@ -1,6 +1,6 @@
 import { School } from '@prisma/client';
 import prisma from '../../../config/prisma.config';
-import { CreateAddressDto, CreateOwnerDto, CreateSchoolProfileDto } from '../types';
+import { CreateAddressDto, CreateOwnerDto, schoolProfileData } from '../types';
 
 export class SchoolHelpers {
   public async createSchool(data: {
@@ -29,7 +29,7 @@ export class SchoolHelpers {
     });
   }
   public async createSchoolProfile(
-    data: CreateSchoolProfileDto,
+    data: schoolProfileData,
     schoolId: string,
     userId: string
   ) {
@@ -37,13 +37,14 @@ export class SchoolHelpers {
       data: {
         ...data,
         schoolId: schoolId,
+        about: 'Some jobs ',
+        principalBio: '',
+        principalName: '',
         updatedById: userId,
         description: data.description,
-        founderBio: data.founderBio,
+        founderBio: 'Some information',
         founderName: data.founderName,
         licenseNumber: data.licenseNumber,
-        principalBio: data.principalBio,
-        principalName: data.principalName,
         slogan: data.slogan,
         adminNote: data.adminNote,
       },

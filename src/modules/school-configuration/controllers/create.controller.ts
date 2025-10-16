@@ -6,7 +6,7 @@ import schoolServices from '../services/schoolServices';
 import { HTTPSTATUS } from '../../../constants/http-status';
 
 const configureSchool = async (req: Request, res: Response, next: NextFunction) => {
-  const { schoolProfile, owner, address, schoolAddress } =
+  const { schoolProfile, owner, schoolAddress } =
     req.body as CreateSchoolConfigurationDto;
   const { userId } = (req as CustomRequest)?.user;
   if (!userId) {
@@ -16,7 +16,6 @@ const configureSchool = async (req: Request, res: Response, next: NextFunction) 
     {
       schoolProfile,
       owner,
-      address,
       schoolAddress,
     },
     userId
