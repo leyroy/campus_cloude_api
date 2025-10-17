@@ -24,7 +24,10 @@ const configureSchool = async (req: Request, res: Response, next: NextFunction) 
   if (!result) {
     throw ErrorHandler.internal('Failed to create school configuration');
   }
-  res.status(HTTPSTATUS.CREATED).json(result);
+  res.status(HTTPSTATUS.CREATED).json({
+    success: true,
+    message: result.message,
+  });
 };
 
 export default configureSchool;

@@ -1,6 +1,11 @@
 import { School } from '@prisma/client';
 import prisma from '../../../config/prisma.config';
-import { CreateAddressDto, CreateOwnerDto, schoolProfileData } from '../types';
+import {
+  CreateAddressDto,
+  CreateOwnerDto,
+  CreateSchoolConfigurationDto,
+  schoolProfileData,
+} from '../types';
 
 export class SchoolHelpers {
   public async createSchool(data: {
@@ -50,15 +55,66 @@ export class SchoolHelpers {
       },
     });
   }
+  public async configureSchoole(data: CreateSchoolConfigurationDto, userId: string) {
+    const {
+      schoolProfile: { name, ...schoolProfileData },
+      owner,
+      schoolAddress,
+    } = data;
+    return await prisma.$transaction(async (tx) => {
+      const newSchool = await tx.school.create({
+        data: {
+          name: name || '',
+          updatedById: userId,
+          description: schoolProfileData.description,
+          level: 3,
+        },
+      });
+      await tx.user.update({
+        where: { id: userId },
+        data: { schoolId: newSchool.id },
+      });
+      const newOwner = await tx.owner.create({
+        data: { ...owner, schoolId: newSchool.id },
+      });
+
+      const profile = await tx.schoolProfile.create({
+        data: {
+          ...schoolProfileData,
+          schoolId: newSchool.id,
+          about: 'Some jobs ',
+          principalBio: '',
+          principalName: '',
+          updatedById: userId,
+          description: schoolProfileData.description,
+          founderBio: 'Some information',
+          founderName: schoolProfileData.founderName,
+          licenseNumber: schoolProfileData.licenseNumber,
+          slogan: schoolProfileData.slogan,
+          adminNote: schoolProfileData.adminNote,
+        },
+      });
+      console.log(newSchool.id, 'new school id');
+      const address = await tx.address.create({
+        data: {
+          ...schoolAddress,
+          userId: userId,
+        },
+      });
+
+      return { newSchool, newOwner, profile, address };
+    });
+  }
   public getSchoolByUserId = async (userId: string) => {
     const school = await prisma.school.findFirst({
       where: {
-        User: {
+        users: {
           some: { id: userId },
         },
       },
       include: {
         owner: true,
+        users: true,
       },
     });
     return school;

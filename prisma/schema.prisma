@@ -59,16 +59,16 @@ model School {
   owner          Owner[]
   subscription   Subscription[]
   department     Department[]
-  subject        Subject[]
-  student        Student[]
-  academicYear   AcademicYear[]
-  course         Course[]
-  class          Class[]
+  subjects       Subject[]
+  students       Student[]
+  academicYears  AcademicYear[]
+  courses        Course[]
+  classes        Class[]
 
   gradingSystem GradingSystem[]
 
-  Term Term[]
-  User User[]
+  terms Term[]
+  users User[]
 }
 
 model VerificationToken {
@@ -524,7 +524,7 @@ model Address {
   country       String
   userId        String?
   schoolId      String?
-  schoolProfile SchoolProfile? @relation(fields: [schoolId], references: [id])
+  schoolProfile SchoolProfile? @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   user          User?          @relation(fields: [userId], references: [id])
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt

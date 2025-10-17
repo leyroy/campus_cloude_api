@@ -13,39 +13,13 @@ class SchoolServices {
     this.commonDbServices = commonDbServices;
   }
   public async createSchoolProfile(data: CreateSchoolConfigurationDto, userId: string) {
-    const {
-      schoolProfile: { name, ...schoolProfileData },
-      owner,
-      schoolAddress,
-    } = data;
     const user = await this.commonDbServices.getUserById(userId);
     if (!user) {
       throw ErrorHandler.notFound('User not found');
     }
-    const schoolName = name || `${user.firstName} ${user.lastName} School`;
-    const newSchool = await this.schoolHelpers.createSchool({
-      name: schoolName,
-      userId,
-      description: schoolProfileData.description,
-      level: 3,
-    });
-    if (!newSchool) {
-      throw ErrorHandler.internal('Failed to create school');
-    }
-    const [createdOwner, createdProfile, createdAddress] = await Promise.all([
-      await this.schoolHelpers.createSchoolOwner(owner, newSchool.id),
-      await this.schoolHelpers.createSchoolProfile(
-        schoolProfileData,
-        newSchool.id,
-        userId
-      ),
-      await this.commonDbServices.createAddress(
-        schoolAddress,
-        newSchool.id,
-        TABELS_NAMES_ENUM.SCHOOL_PROFILE
-      ),
-    ]);
-    if (!createdOwner || !createdProfile || !createdAddress) {
+
+    const results = await this.schoolHelpers.configureSchoole(data, userId);
+    if (!results) {
       throw ErrorHandler.internal('Error occured. Failed to configure school');
     }
     return {
@@ -53,8 +27,15 @@ class SchoolServices {
       message: 'School created successfully, please wait for admin approval',
     };
   }
-  public async getSchoolByUserID() {
-    console.log('this one should be working ');
+  public async getSchoolByUserID(userId: string) {
+    const school = await this.schoolHelpers.getSchoolByUserId(userId);
+    if (!school) {
+      throw ErrorHandler.notFound('School not found');
+    }
+    return {
+      success: true,
+      data: school,
+    };
   }
   public async updateSchoolInfo(schoolId: string, data: Partial<School>) {
     const updatedSchool = await this.schoolHelpers.updateSchool(schoolId, data);

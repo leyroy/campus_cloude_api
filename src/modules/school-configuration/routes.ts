@@ -9,6 +9,7 @@ import updateSchool from './controllers/update.controller';
 import { validatePayload } from '../../middlewares/validate-payload';
 import { Action, Resource, TABELS_NAMES_ENUM } from '../../types/types';
 import permissionHandler from '../../middlewares/permissionsManager';
+import getSchoolByUserId from './controllers/getSchoolByUserId.controller';
 const schoolRouter = Router();
 
 const { catchAsync } = new ErrorHandler();
@@ -27,6 +28,12 @@ schoolRouter.put(
   validatePayload(TABELS_NAMES_ENUM.SCHOOL),
   catchAsync(permissionHandler({ action: Action.UPDATE, resource: Resource.SCHOOL })),
   catchAsync(updateSchool)
+);
+schoolRouter.get(
+  '/current',
+  validatePayload(TABELS_NAMES_ENUM.SCHOOL),
+  // catchAsync(permissionHandler({ action: Action.VIEW, resource: Resource.SCHOOL })),
+  catchAsync(getSchoolByUserId)
 );
 schoolRouter.delete(
   '/:schoolId',

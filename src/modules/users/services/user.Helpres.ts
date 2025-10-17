@@ -6,7 +6,7 @@ export class UserHelpers {
       where: { id: userId },
       include: {
         school: {
-          where: { isDeleted: false, isActive: true, status: 'ACTIVE' },
+          // where: { isDeleted: false, isActive: true, status: 'ACTIVE' },
           include: {
             owner: true,
           },

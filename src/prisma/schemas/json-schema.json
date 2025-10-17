@@ -237,31 +237,31 @@
             "$ref": "#/definitions/Department"
           }
         },
-        "subject": {
+        "subjects": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Subject"
           }
         },
-        "student": {
+        "students": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Student"
           }
         },
-        "academicYear": {
+        "academicYears": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/AcademicYear"
           }
         },
-        "course": {
+        "courses": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Course"
           }
         },
-        "class": {
+        "classes": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Class"
@@ -273,13 +273,13 @@
             "$ref": "#/definitions/GradingSystem"
           }
         },
-        "Term": {
+        "terms": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Term"
           }
         },
-        "User": {
+        "users": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/User"
