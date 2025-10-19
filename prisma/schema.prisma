@@ -34,7 +34,6 @@ model User {
   userRoles        UserRole[]
   assignedRoles    UserRole[]         @relation("AssignedByRelation")
   rolesCreated     Role[]             @relation("UserCreatedRoles")
-  document         Document[]
   session          Session[]
   school           School?            @relation(fields: [schoolId], references: [id])
   attendanceRecord AttendanceRecord[]
@@ -438,10 +437,10 @@ model Session {
 }
 
 model SchoolProfile {
-  id            String     @id @default(cuid())
-  schoolId      String     @unique
+  id            String    @id @default(cuid())
+  schoolId      String    @unique
   updatedById   String
-  school        School     @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  school        School    @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   slogan        String
   about         String
   description   String
@@ -456,9 +455,8 @@ model SchoolProfile {
   founderBio    String
   licenseNumber String
   adminNote     String
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
-  document      Document[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
   schoolAddress Address[]
 }
 
@@ -594,17 +592,14 @@ model UserRole {
 }
 
 model Document {
-  id              String         @id @default(cuid())
-  url             String
-  fileType        FileType
-  isActive        Boolean        @default(true)
-  purpose         DocPurpose
-  schoolProfileId String?
-  userId          String?
-  campusId        String?
-  uploadedBy      User?          @relation(fields: [userId], references: [id])
-  school          SchoolProfile? @relation(fields: [schoolProfileId], references: [id])
-  createdAt       DateTime       @default(now())
+  id          String     @id @default(cuid())
+  url         String
+  fileType    FileType
+  isActive    Boolean    @default(true)
+  documentKey String
+  mudelId     String
+  purpose     DocPurpose
+  createdAt   DateTime   @default(now())
 }
 
 enum FileType {
@@ -613,6 +608,7 @@ enum FileType {
   DOCX
   XLSX
   PPTX
+  VIDEO
   TEXT
   CSV
   ZIP

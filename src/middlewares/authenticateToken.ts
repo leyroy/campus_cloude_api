@@ -32,11 +32,6 @@ export const authenticateToken = async (
         errorCode: ErrorCode.AUTH_USER_NOT_FOUND,
       });
     }
-    // if (!user?.isActive) {
-    //   throw ErrorHandler.unauthorized(
-    //     'Your account is not activated, kindly wait untill we verify your account'
-    //   );
-    // }
     if (!user.isEmailVerified) {
       throw ErrorHandler.badRequest('Please kindly verify your account');
     }

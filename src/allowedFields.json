@@ -506,10 +506,9 @@
       "url",
       "fileType",
       "isActive",
+      "documentKey",
+      "mudelId",
       "purpose",
-      "schoolProfileId",
-      "userId",
-      "campusId",
       "createdAt"
     ]
   },
@@ -521,6 +520,7 @@
       "DOCX",
       "XLSX",
       "PPTX",
+      "VIDEO",
       "TEXT",
       "CSV",
       "ZIP",

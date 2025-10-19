@@ -10,6 +10,7 @@ import { Action, Resource, TABELS_NAMES_ENUM } from '../../types/types';
 import getRolesController from './controllers/getRoles.controller';
 import getRoleByRoleIdController from './controllers/getRoleByRoleId.controller';
 import getPermissionsController from './controllers/getPermissions.controller';
+import toggleRoleController from './controllers/toggleRole.controller';
 
 const roleRouter = express.Router();
 const errorHandler = new ErrorHandler();
@@ -47,7 +48,7 @@ roleRouter.use(errorHandler.catchAsync(authenticateToken));
 
 roleRouter.post(
   '/create',
-  // permissionHandler({ action: Action.CREATE, resource: Resource.ROLE }),
+  permissionHandler({ action: Action.CREATE, resource: Resource.ROLE }),
   validatePayload(TABELS_NAMES_ENUM.ROLE),
   errorHandler.catchAsync(createRoleController)
 );
@@ -83,7 +84,7 @@ roleRouter.post(
 roleRouter.put(
   '/add-permissions',
   //TODO:  eneble this middleware after testing
-  // permissionHandler({ action: Action.ASSIGN_TO_ROLE, resource: Resource.PERMISSION }),
+  permissionHandler({ action: Action.ASSIGN_TO_ROLE, resource: Resource.PERMISSION }),
   errorHandler.catchAsync(addRolePermissions)
 );
 
@@ -129,6 +130,11 @@ roleRouter.put(
   errorHandler.catchAsync(assignRoleToUserController)
 );
 
+roleRouter.patch(
+  '/toggle-status/:roleId',
+  permissionHandler({ action: Action.UPDATE, resource: Resource.ROLE }),
+  errorHandler.catchAsync(toggleRoleController)
+);
 roleRouter.get('/get-roles', errorHandler.catchAsync(getRolesController));
 roleRouter.get('/get-role/:roleId', errorHandler.catchAsync(getRoleByRoleIdController));
 roleRouter.get('/get-permissions', errorHandler.catchAsync(getPermissionsController));

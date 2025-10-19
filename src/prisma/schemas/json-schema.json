@@ -91,12 +91,6 @@
             "$ref": "#/definitions/Role"
           }
         },
-        "document": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Document"
-          }
-        },
         "session": {
           "type": "array",
           "items": {
@@ -1374,12 +1368,6 @@
           "type": "string",
           "format": "date-time"
         },
-        "document": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Document"
-          }
-        },
         "schoolAddress": {
           "type": "array",
           "items": {
@@ -1783,6 +1771,7 @@
             "DOCX",
             "XLSX",
             "PPTX",
+            "VIDEO",
             "TEXT",
             "CSV",
             "ZIP",
@@ -1793,6 +1782,12 @@
           "type": "boolean",
           "default": true
         },
+        "documentKey": {
+          "type": "string"
+        },
+        "mudelId": {
+          "type": "string"
+        },
         "purpose": {
           "type": "string",
           "enum": [
@@ -1802,32 +1797,6 @@
             "PROOF_OF_ADDRESS",
             "HEADMASTER_ID",
             "GENERAL_UPLOAD"
-          ]
-        },
-        "campusId": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "uploadedBy": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/User"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "school": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/SchoolProfile"
-            },
-            {
-              "type": "null"
-            }
           ]
         },
         "createdAt": {

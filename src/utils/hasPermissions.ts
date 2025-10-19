@@ -1,37 +1,43 @@
-import prisma from "../config/prisma.config";
+import prisma from '../config/prisma.config';
 
 export type HasPermission = {
-  userId: string,
-  resource: string,
-  action: string
-}
-export async function hasPermission({userId,resource,action}:HasPermission): Promise<boolean> {
+  userId: string;
+  resource: string;
+  action: string;
+};
+export async function hasPermission({
+  userId,
+  resource,
+  action,
+}: HasPermission): Promise<boolean> {
   // Get all active roles for the user
   const userRoles = await prisma.userRole.findMany({
     where: {
       userId,
       role: {
-        isActive: true
-      }
+        isActive: true,
+      },
     },
     include: {
       role: {
         include: {
           rolePermissions: {
             include: {
-              permission: true
-            }
-          }
-        }
-      }
-    }
+              permission: true,
+            },
+          },
+        },
+      },
+    },
   });
 
   // Check all permissions across all roles
-  return userRoles.some(userRole =>
-    userRole.role.rolePermissions.some(rolePermission =>
-      rolePermission.permission.resource === resource &&
-      rolePermission.permission.action === action
+  console.log(userRoles, 'this is the user roles');
+  return userRoles.some((userRole) =>
+    userRole.role.rolePermissions.some(
+      (rolePermission) =>
+        rolePermission.permission.resource === resource &&
+        rolePermission.permission.action === action
     )
   );
 }
