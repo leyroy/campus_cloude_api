@@ -1,7 +1,10 @@
 import prisma from '../../../config/prisma.config';
 import { ErrorHandler } from '../../../middlewares/errorHandler';
 
-export const addRolePermissionsHelper = async (roleId: string, permissionIds: string[]) => {
+export const addRolePermissionsHelper = async (
+  roleId: string,
+  permissionIds: string[]
+) => {
   try {
     // Optional: Validate that the IDs actually exist in DB (skip for speed if trusted)
     const validPermissions = await prisma.permission.findMany({
@@ -19,10 +22,14 @@ export const addRolePermissionsHelper = async (roleId: string, permissionIds: st
       roleId,
       permissionId,
     }));
-    console.log('Data to be inserted:', data);
-    await prisma.rolePermission.createMany({
-      data,
-      skipDuplicates: true,
+    //remove exiting pemission if already added in the
+
+    await prisma.$transaction(async (ct) => {
+      await ct.rolePermission.deleteMany({ where: { roleId } });
+      await ct.rolePermission.createMany({
+        data,
+        skipDuplicates: true,
+      });
     });
 
     return { success: true, message: 'Permissions added successfully' };
