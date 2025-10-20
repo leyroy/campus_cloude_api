@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import documentServices from './service';
+import { DocPurpose, FileType } from '@prisma/client';
 
 const uploadDocumentController = async (
   req: Request,
@@ -8,10 +9,16 @@ const uploadDocumentController = async (
 ) => {
   const file = req.file ? req.file.path : null;
   const { moduleId } = req.params as { moduleId: string };
+  const { purpose, fileType } = req.body as { purpose: DocPurpose; fileType: FileType };
   if (!file) {
     return next(new Error('No file uploaded'));
   }
-  const result = await documentServices.uploadDocument(moduleId, file);
+  const result = await documentServices.uploadDocument({
+    moduleId,
+    purpose,
+    fileType,
+    file,
+  });
   console.log(result);
   res.status(200).json({ success: true, message: 'Uploaded successfully' });
 };

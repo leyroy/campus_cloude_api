@@ -31,7 +31,6 @@ schoolRouter.put(
 );
 schoolRouter.get(
   '/current',
-  validatePayload(TABELS_NAMES_ENUM.SCHOOL),
   // catchAsync(permissionHandler({ action: Action.VIEW, resource: Resource.SCHOOL })),
   catchAsync(getSchoolByUserId)
 );

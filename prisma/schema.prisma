@@ -47,7 +47,7 @@ model School {
   name           String
   isActive       Boolean          @default(false)
   level          Int              @default(0)
-  educationLevel EducationLevel[] @default([PRIMARY_1, PRIMARY_2, PRIMARY_3, PRIMARY_4, PRIMARY_5, PRIMARY_6])
+  educationLevel EducationLevel[]
   type           SchooleType      @default(PUBLIC)
   isDeleted      Boolean          @default(false)
   status         AccountStatus    @default(PENDING)
@@ -55,14 +55,16 @@ model School {
   createdAt      DateTime         @default(now())
   description    String
   schoolProfile  SchoolProfile[]
-  owner          Owner[]
   subscription   Subscription[]
+  ownerId        String
   department     Department[]
   subjects       Subject[]
   students       Student[]
   academicYears  AcademicYear[]
   courses        Course[]
   classes        Class[]
+
+  owner Owner @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
   gradingSystem GradingSystem[]
 
@@ -535,13 +537,12 @@ model Owner {
   preferredContactMethod String   @default("EMAIL")
   preferredContactTime   String   @default("MORNING")
   educationBackground    String
-  schoolId               String
   isActive               Boolean  @default(false)
   professionalExperience String
   currentPosition        String
   previousPositions      String
   yearsInEducation       Int
-  school                 School   @relation(fields: [schoolId], references: [id])
+  School                 School[]
 }
 
 // bridge table for many-to-many relationship between User and School
@@ -722,17 +723,6 @@ enum SchooleType {
 
 enum EducationLevel {
   KG1
-  KG2
-  PRIMARY_1
-  PRIMARY_2
-  PRIMARY_3
-  PRIMARY_4
-  PRIMARY_5
-  PRIMARY_6
-  JHS_1
-  JHS_2
-  JHS_3
-  SHS_1
-  SHS_2
-  SHS_3
+  PRIMARY
+  JHS
 }

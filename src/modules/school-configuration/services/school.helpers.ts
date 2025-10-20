@@ -8,27 +8,10 @@ import {
 } from '../types';
 
 export class SchoolHelpers {
-  public async createSchool(data: {
-    name: string;
-    userId: string;
-    description: string;
-    level: number;
-  }) {
-    const school = await prisma.school.create({
-      data: {
-        name: data.name,
-        description: data.description || `Welcome to ${data.name}`,
-        updatedById: data.userId,
-        level: data.level,
-      },
-    });
-    return school;
-  }
   public async createSchoolOwner(data: CreateOwnerDto, schoolId: string) {
     return prisma.owner.create({
       data: {
         ...data,
-        schoolId: schoolId,
         isActive: true,
       },
     });
@@ -62,39 +45,43 @@ export class SchoolHelpers {
       schoolAddress,
     } = data;
     return await prisma.$transaction(async (tx) => {
+      const newOwner = await tx.owner.create({
+        data: { ...owner },
+      });
       const newSchool = await tx.school.create({
         data: {
           name: name || '',
           updatedById: userId,
           description: schoolProfileData.description,
           level: 3,
+          ownerId: newOwner.id,
+          educationLevel: data.schoolProfile.level,
         },
       });
       await tx.user.update({
         where: { id: userId },
         data: { schoolId: newSchool.id },
       });
-      const newOwner = await tx.owner.create({
-        data: { ...owner, schoolId: newSchool.id },
-      });
 
+      const { level, ...res } = schoolProfileData;
       const profile = await tx.schoolProfile.create({
         data: {
-          ...schoolProfileData,
+          ...res,
           schoolId: newSchool.id,
           about: 'Some jobs ',
           principalBio: '',
           principalName: '',
           updatedById: userId,
-          description: schoolProfileData.description,
-          founderBio: 'Some information',
-          founderName: schoolProfileData.founderName,
-          licenseNumber: schoolProfileData.licenseNumber,
-          slogan: schoolProfileData.slogan,
-          adminNote: schoolProfileData.adminNote,
+          contactEmail: res.contactEmail,
+          motto: res.motto,
+          description: res.description,
+          founderBio: res.founderBio,
+          founderName: res.founderName,
+          licenseNumber: res.licenseNumber,
+          slogan: res.slogan,
+          adminNote: res.adminNote,
         },
       });
-      console.log(newSchool.id, 'new school id');
       const address = await tx.address.create({
         data: {
           ...schoolAddress,

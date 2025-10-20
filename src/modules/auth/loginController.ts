@@ -6,7 +6,6 @@ import { AuthService } from './auth.services';
 import sendEmail from '../../mailers/node-mailer';
 import { HTTPSTATUS } from '../../constants/http-status';
 import { setAuthenticationCookies } from '../../utils/cookie';
-import { verifyEmailTemplate } from '../../mailers/templates/template';
 
 const authService = new AuthService();
 
@@ -14,7 +13,7 @@ const loginController = async (req: Request, res: Response, next: NextFunction) 
   const data = req.body;
   const isValidData = loginSchema.safeParse(data);
   const userAgent = req.headers['user-agent'] || '';
-  const ipAddress = req.ip || req.connection.remoteAddress || 'unknown';
+  const ipAddress = req.ip || req.socket.remoteAddress || 'unknown';
 
   if (!isValidData.success || !isValidData.data.email) {
     console.error('Validation failed:', isValidData.error);

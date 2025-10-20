@@ -9,6 +9,7 @@ import prisma from './config/prisma.config';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import specs from './config/swagger.config';
+import { commonDbService } from './utils/db/commonDbServices';
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -33,7 +34,7 @@ app.use('/campcloud/api/v1', appRouter);
 app.get('/', async (req: Request, res: Response) => {
   res.json({ message: 'Welcome to the Express server!' });
 });
-// commonDbService.assignAllPermissionsToSuperAdmin('450181ee-a730-4728-a1df-0b1f8e31f306');
+// commonDbService.assignAllPermissionsToSuperAdmin();
 
 app.use(errorHandler.handleError);
 app.listen(PORT, () => {

@@ -1,16 +1,27 @@
-import { FileType } from '@prisma/client';
+import { DocPurpose, FileType } from '@prisma/client';
 import cloudinary from '../../config/cloudnary.config';
 import prisma from '../../config/prisma.config';
 
+interface CreateDocumentTypes {
+  moduleId: string;
+  purpose: DocPurpose;
+  fileType: FileType;
+  file: string;
+}
 class DocumentServices {
-  public async uploadDocument(moduleId: string, file: string) {
+  public async uploadDocument({
+    moduleId,
+    purpose,
+    fileType,
+    file,
+  }: CreateDocumentTypes) {
     try {
       const result = await cloudinary.uploader.upload(file);
       await prisma.document.create({
         data: {
-          fileType: FileType.IMAGE,
+          fileType: fileType,
           mudelId: moduleId,
-          purpose: 'GENERAL_UPLOAD',
+          purpose: purpose,
           url: result.secure_url,
           documentKey: result.public_id,
         },

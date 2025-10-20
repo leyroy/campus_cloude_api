@@ -154,19 +154,8 @@
           "type": "array",
           "enum": [
             "KG1",
-            "KG2",
-            "PRIMARY_1",
-            "PRIMARY_2",
-            "PRIMARY_3",
-            "PRIMARY_4",
-            "PRIMARY_5",
-            "PRIMARY_6",
-            "JHS_1",
-            "JHS_2",
-            "JHS_3",
-            "SHS_1",
-            "SHS_2",
-            "SHS_3"
+            "PRIMARY",
+            "JHS"
           ]
         },
         "type": {
@@ -213,12 +202,6 @@
             "$ref": "#/definitions/SchoolProfile"
           }
         },
-        "owner": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Owner"
-          }
-        },
         "subscription": {
           "type": "array",
           "items": {
@@ -260,6 +243,9 @@
           "items": {
             "$ref": "#/definitions/Class"
           }
+        },
+        "owner": {
+          "$ref": "#/definitions/Owner"
         },
         "gradingSystem": {
           "type": "array",
@@ -614,19 +600,8 @@
           "type": "string",
           "enum": [
             "KG1",
-            "KG2",
-            "PRIMARY_1",
-            "PRIMARY_2",
-            "PRIMARY_3",
-            "PRIMARY_4",
-            "PRIMARY_5",
-            "PRIMARY_6",
-            "JHS_1",
-            "JHS_2",
-            "JHS_3",
-            "SHS_1",
-            "SHS_2",
-            "SHS_3"
+            "PRIMARY",
+            "JHS"
           ]
         },
         "isActive": {
@@ -1641,8 +1616,11 @@
         "yearsInEducation": {
           "type": "integer"
         },
-        "school": {
-          "$ref": "#/definitions/School"
+        "School": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/School"
+          }
         }
       }
     },

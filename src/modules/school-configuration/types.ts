@@ -1,7 +1,9 @@
+import { EducationLevel } from '@prisma/client';
 import { z } from 'zod';
 
 const schoolProfileSchema = z.object({
   slogan: z.string().max(255),
+  level: z.array(z.nativeEnum(EducationLevel)),
   name: z
     .string()
     .min(1, { message: 'School name is required' })
@@ -9,6 +11,7 @@ const schoolProfileSchema = z.object({
     .nullable()
     .transform((val) => val?.trim() || null),
   description: z.string().max(1000).min(1, { message: 'Description is required' }),
+  founderBio: z.string().max(2000).min(1, { message: 'Founder bio is required' }),
   contactEmail: z.string().email().min(1, { message: 'Contact email is required' }),
   contactPhone: z.string().max(20).min(1, { message: 'Contact phone is required' }),
   motto: z.string().max(255).min(1, { message: 'Motto is required' }),
@@ -26,6 +29,7 @@ export type schoolProfileData = {
   founderName: string;
   licenseNumber: string;
   adminNote: string;
+  level: EducationLevel[];
 };
 
 const ownerSchema = z.object({

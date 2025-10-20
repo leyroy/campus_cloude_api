@@ -10,17 +10,32 @@ export class CommonDbServices {
     this.userWithRole = userWithRole;
   }
 
-  public async assignAllPermissionsToSuperAdmin(roleId: string) {
-    const permissions = await prisma.permission.findMany();
-    const permissionsIds = permissions.map((permission) => permission.id);
-    const saved = await prisma.rolePermission.createMany({
-      data: permissionsIds.map((permissionId) => ({
-        roleId,
-        permissionId,
-      })),
-      skipDuplicates: true,
+  public async assignAllPermissionsToSuperAdmin() {
+    await prisma.$transaction(async (tx) => {
+      const permissions = await tx.permission.findMany();
+      const permissionsIds = permissions.map((permission) => permission.id);
+      const users = await tx.user.findMany();
+      const superAdminUser = users.find(
+        (user) => user.email === 'leyroycontact@gmail.com'
+      );
+
+      const superAdminRole = await tx.role.create({
+        data: {
+          name: 'Super Admin',
+          description:
+            'Has full control over the entire system — manages users, roles, permissions, and all school settings. Oversees every operation and ensures smooth system administration.',
+          createdById: superAdminUser?.id || '',
+        },
+      });
+      const saved = await tx.rolePermission.createMany({
+        data: permissionsIds.map((permissionId) => ({
+          roleId: superAdminRole.id,
+          permissionId,
+        })),
+        skipDuplicates: true,
+      });
+      return saved;
     });
-    return saved;
   }
 
   public async getUsers() {
