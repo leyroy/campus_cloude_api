@@ -23,7 +23,7 @@ export class CommonDbServices {
         data: {
           name: 'Super Admin',
           description:
-            'Has full control over the entire system — manages users, roles, permissions, and all school settings. Oversees every operation and ensures smooth system administration.',
+            'Has full control over the entire system, manages users, roles, permissions, and all school settings. Oversees every operation and ensures smooth system administration.',
           createdById: superAdminUser?.id || '',
         },
       });
@@ -33,6 +33,13 @@ export class CommonDbServices {
           permissionId,
         })),
         skipDuplicates: true,
+      });
+      await tx.userRole.create({
+        data: {
+          userId: superAdminUser?.id || '',
+          assignedById: superAdminUser?.id || '',
+          roleId: superAdminRole.id,
+        },
       });
       return saved;
     });

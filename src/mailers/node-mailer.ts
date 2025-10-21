@@ -4,7 +4,7 @@ import mjml2html from 'mjml';
 import fs from 'fs';
 
 const transporter: Transporter = nodemailer.createTransport({
-  service: 'gmail', // or custom SMTP settings
+  service: 'gmail',
   auth: {
     user: 'leyroycontact@gmail.com',
     pass: 'oayhiobkbnlwcoja',
@@ -30,7 +30,7 @@ const sendEmail = async ({
   const { html: otpHtml } = mjml2html(
     fs
       .readFileSync(template, 'utf8')
-      .replace('${otp}', value)
+      .replace(/{{otp}}/g, value)
       .replace(/{{resetUrl}}/g, value)
   );
   try {

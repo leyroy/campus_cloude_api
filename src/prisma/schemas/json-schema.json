@@ -1081,22 +1081,6 @@
         "id": {
           "type": "string"
         },
-        "firstName": {
-          "type": "string"
-        },
-        "lastName": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "phone": {
-          "type": "string"
-        },
-        "isActive": {
-          "type": "boolean",
-          "default": false
-        },
         "status": {
           "type": "string",
           "default": "PENDING",
@@ -1109,9 +1093,30 @@
             "DELETED"
           ]
         },
+        "studentNumber": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "stuentEmail": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
         "createdAt": {
           "type": "string",
           "format": "date-time"
+        },
+        "indexNumber": {
+          "type": "string"
         },
         "updatedAt": {
           "type": "string",
@@ -1121,7 +1126,14 @@
           "$ref": "#/definitions/School"
         },
         "class": {
-          "$ref": "#/definitions/Class"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Class"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "disciplinaryRecord": {
           "type": "array",
@@ -1146,6 +1158,52 @@
           "items": {
             "$ref": "#/definitions/Grade"
           }
+        },
+        "studentGuardians": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StudentGuardian"
+          }
+        },
+        "studentAccadamicHistory": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StudentAccadamicHistory"
+          }
+        }
+      }
+    },
+    "StudentAccadamicHistory": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "fromClass": {
+          "type": "string"
+        },
+        "toClass": {
+          "type": "string"
+        },
+        "academicYear": {
+          "type": "string"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "student": {
+          "$ref": "#/definitions/Student"
         }
       }
     },
@@ -1271,6 +1329,50 @@
         },
         "user": {
           "$ref": "#/definitions/User"
+        }
+      }
+    },
+    "StudentGuardian": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "relationship": {
+          "type": "string",
+          "enum": [
+            "PARENT",
+            "GUARDIAN",
+            "SIBLING",
+            "RELATIVE",
+            "OTHER"
+          ]
+        },
+        "guardianEmail": {
+          "type": "string"
+        },
+        "guardianPhone": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "student": {
+          "$ref": "#/definitions/Student"
         }
       }
     },
@@ -1837,6 +1939,9 @@
     "student": {
       "$ref": "#/definitions/Student"
     },
+    "studentAccadamicHistory": {
+      "$ref": "#/definitions/StudentAccadamicHistory"
+    },
     "attendanceRecord": {
       "$ref": "#/definitions/AttendanceRecord"
     },
@@ -1845,6 +1950,9 @@
     },
     "session": {
       "$ref": "#/definitions/Session"
+    },
+    "studentGuardian": {
+      "$ref": "#/definitions/StudentGuardian"
     },
     "schoolProfile": {
       "$ref": "#/definitions/SchoolProfile"

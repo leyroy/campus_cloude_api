@@ -1,0 +1,20 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const users_1 = __importDefault(require("../modules/users"));
+const routes_1 = __importDefault(require("../modules/roles/routes"));
+const routes_2 = __importDefault(require("../modules/auth/routes"));
+const password_routes_1 = __importDefault(require("../modules/password-managements/password.routes"));
+const routes_3 = __importDefault(require("../modules/school-configuration/routes"));
+const routes_4 = __importDefault(require("../modules/document/routes"));
+const appRouter = express_1.default.Router();
+appRouter.use('/auth', routes_2.default);
+appRouter.use('/users', users_1.default);
+appRouter.use('/roles', routes_1.default);
+appRouter.use('/password', password_routes_1.default);
+appRouter.use('/school', routes_3.default);
+appRouter.use('/document', routes_4.default);
+exports.default = appRouter;

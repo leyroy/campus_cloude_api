@@ -127,7 +127,7 @@ export class ErrorHandler {
   // Convert various error types to AppError
   private convertToAppError(error: Error): AppError {
     console.log(error);
-    // MongoDB/Mongoose errors
+    // Prisma/Mongoose errors
     if (error instanceof PrismaClientKnownRequestError) {
       switch (error.code) {
         case 'P2002': // Unique constraint

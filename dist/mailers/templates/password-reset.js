@@ -1,0 +1,75 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.passwordResetTemplate = void 0;
+const passwordResetTemplate = (url, brandColor = '#2563EB') => ({
+    subject: 'Reset Your Password',
+    text: `To reset your password, please click the following link: ${url}`,
+    html: `<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Campus Cloude - Reset Password</title>
+</head>
+
+<body
+  style="margin: 0; padding: 0; margin: auto; font-family: Arial, sans-serif; background: #f4f4f7; max-width: 700px; width: 100%; box-sizing: border-box;">
+  <table width="100%" bgcolor="#f4f4f7" cellpadding="0" cellspacing="0" style="padding: 30px 0;">
+    <tr>
+      <td align="center">
+        <table width="100%" max-width="600" bgcolor="#ffffff" cellpadding="40" cellspacing="0"
+          style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+          <!-- Logo -->
+          <tr>
+            <td align="center" style="padding-bottom: 20px;">
+              <img src="https://via.placeholder.com/150x50?text=Campus+Cloude" alt="Campus Cloude Logo"
+                style="display: block; max-width: 150px;" />
+            </td>
+          </tr>
+
+          <!-- Illustration -->
+          <tr>
+            <td align="center" style="padding-bottom: 20px;">
+              <img src="https://cdn-icons-png.flaticon.com/512/2919/2919600.png" alt="Reset Illustration" width="100"
+                height="100" style="display: block;" />
+            </td>
+          </tr>
+
+          <!-- Text -->
+          <tr>
+            <td style="color: #333333; text-align: center;">
+              <h2 style="margin: 0 0 10px;">Reset Your Password</h2>
+              <p style="margin: 0 0 10px; font-size: 16px;">
+                Hey there 👋, we got a request to reset your Campus Cloude account password.
+                If it was you, click the button below. If not, just ignore this message.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Button -->
+          <tr>
+            <td align="center" style="padding: 10px 0;">
+              <a href="${url}" target="_blank"
+                style="background-color: #4A90E2; color: #ffffff; padding: 12px 30px; border-radius: 6px; text-decoration: none; font-size: 16px; display: inline-block;">Reset
+                Password</a>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td align="center" style="font-size: 12px; color: #888888; padding-top: 10px;">
+              If you didn’t request a reset, no worries — your password is still safe.
+              <br /><br />
+              &copy; 2025 Campus Cloude, All rights reserved.
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+
+</html>`,
+});
+exports.passwordResetTemplate = passwordResetTemplate;

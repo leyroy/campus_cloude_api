@@ -5,7 +5,6 @@ import cookieParser from 'cookie-parser';
 // Import routes
 import appRouter from './routes';
 import prisma from './config/prisma.config';
-// import { commonDbService } from './utils/db/commonDbServices';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import specs from './config/swagger.config';
@@ -21,7 +20,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: 'http://localhost:3000',
+    origin: ['https://campus-cloude.vercel.app'],
     credentials: true,
   })
 );

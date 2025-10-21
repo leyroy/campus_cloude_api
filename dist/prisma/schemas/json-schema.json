@@ -1,0 +1,1994 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "User": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "confirmPassword": {
+                    "type": "string"
+                },
+                "isActive": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "status": {
+                    "type": "string",
+                    "default": "ACTIVE",
+                    "enum": [
+                        "ACTIVE",
+                        "INACTIVE",
+                        "SUSPENDED",
+                        "REJECTED",
+                        "PENDING",
+                        "DELETED"
+                    ]
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "isPhoneVerified": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "isEmailVerified": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "lastLogedIn": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "addressId": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "address": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Address"
+                    }
+                },
+                "userRoles": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/UserRole"
+                    }
+                },
+                "assignedRoles": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/UserRole"
+                    }
+                },
+                "rolesCreated": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Role"
+                    }
+                },
+                "session": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Session"
+                    }
+                },
+                "school": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/School"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "attendanceRecord": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/AttendanceRecord"
+                    }
+                },
+                "teacher": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Teacher"
+                    }
+                },
+                "grade": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Grade"
+                    }
+                },
+                "assessment": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Assessment"
+                    }
+                }
+            }
+        },
+        "School": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "isActive": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "level": {
+                    "type": "integer",
+                    "default": 0
+                },
+                "educationLevel": {
+                    "type": "array",
+                    "enum": [
+                        "KG1",
+                        "PRIMARY",
+                        "JHS"
+                    ]
+                },
+                "type": {
+                    "type": "string",
+                    "default": "PUBLIC",
+                    "enum": [
+                        "PUBLIC",
+                        "PRIVATE",
+                        "CHARTER",
+                        "MAGNET",
+                        "RELIGIOUS",
+                        "INTERNATIONAL"
+                    ]
+                },
+                "isDeleted": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "status": {
+                    "type": "string",
+                    "default": "PENDING",
+                    "enum": [
+                        "ACTIVE",
+                        "INACTIVE",
+                        "SUSPENDED",
+                        "REJECTED",
+                        "PENDING",
+                        "DELETED"
+                    ]
+                },
+                "updatedById": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "schoolProfile": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/SchoolProfile"
+                    }
+                },
+                "subscription": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Subscription"
+                    }
+                },
+                "department": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Department"
+                    }
+                },
+                "subjects": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Subject"
+                    }
+                },
+                "students": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Student"
+                    }
+                },
+                "academicYears": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/AcademicYear"
+                    }
+                },
+                "courses": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Course"
+                    }
+                },
+                "classes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Class"
+                    }
+                },
+                "owner": {
+                    "$ref": "#/definitions/Owner"
+                },
+                "gradingSystem": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/GradingSystem"
+                    }
+                },
+                "terms": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Term"
+                    }
+                },
+                "users": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/User"
+                    }
+                }
+            }
+        },
+        "VerificationToken": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "identifier": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                },
+                "expires": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "code": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "EMAIL_VERIFICATION",
+                        "PASSWORD_RESET",
+                        "PHONE_VERIFICATION",
+                        "TWO_FACTOR_AUTHENTICATION",
+                        "CHANGE_EMAIL",
+                        "CHANGE_PHONE",
+                        "ACCOUNT_ACTIVATION",
+                        "ACCOUNT_DELETION"
+                    ]
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
+        "Department": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "updatedById": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "school": {
+                    "$ref": "#/definitions/School"
+                },
+                "courses": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Course"
+                    }
+                },
+                "teachers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Teacher"
+                    }
+                }
+            }
+        },
+        "Subject": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "updatedById": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "course": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Course"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "school": {
+                    "$ref": "#/definitions/School"
+                },
+                "term": {
+                    "$ref": "#/definitions/Term"
+                },
+                "classSubject": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ClassSubject"
+                    }
+                },
+                "grade": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Grade"
+                    }
+                },
+                "assessments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Assessment"
+                    }
+                }
+            }
+        },
+        "AcademicYear": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "startDate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "endDate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "isActive": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "updatedById": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "school": {
+                    "$ref": "#/definitions/School"
+                },
+                "term": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Term"
+                    }
+                },
+                "classes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Class"
+                    }
+                },
+                "Assessment": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Assessment"
+                    }
+                }
+            }
+        },
+        "Term": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "number": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "startDate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "endDate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "isCurrent": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "academicYear": {
+                    "$ref": "#/definitions/AcademicYear"
+                },
+                "school": {
+                    "$ref": "#/definitions/School"
+                },
+                "assessments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Assessment"
+                    }
+                },
+                "reportCards": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ReportCard"
+                    }
+                },
+                "attendanceRecords": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/AttendanceRecord"
+                    }
+                },
+                "Subject": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Subject"
+                    }
+                }
+            }
+        },
+        "Course": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "updatedById": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "school": {
+                    "$ref": "#/definitions/School"
+                },
+                "department": {
+                    "$ref": "#/definitions/Department"
+                },
+                "classes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Class"
+                    }
+                },
+                "subjects": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Subject"
+                    }
+                }
+            }
+        },
+        "GradingSystem": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "DESCRIPTIVE",
+                        "PERCENTAGE",
+                        "LETTER_GRADE",
+                        "POINTS"
+                    ]
+                },
+                "level": {
+                    "type": "string",
+                    "enum": [
+                        "KG1",
+                        "PRIMARY",
+                        "JHS"
+                    ]
+                },
+                "isActive": {
+                    "type": "boolean",
+                    "default": true
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "school": {
+                    "$ref": "#/definitions/School"
+                },
+                "gradeScales": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/GradeScale"
+                    }
+                },
+                "assessments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Assessment"
+                    }
+                }
+            }
+        },
+        "GradeScale": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "grade": {
+                    "type": "string"
+                },
+                "minScore": {
+                    "type": "number"
+                },
+                "maxScore": {
+                    "type": "number"
+                },
+                "points": {
+                    "type": [
+                        "number",
+                        "null"
+                    ]
+                },
+                "description": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "order": {
+                    "type": "integer"
+                },
+                "gradingSystem": {
+                    "$ref": "#/definitions/GradingSystem"
+                }
+            }
+        },
+        "Assessment": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "OBSERVATION",
+                        "ACTIVITY_BASED",
+                        "PORTFOLIO",
+                        "CLASS_EXERCISE",
+                        "HOMEWORK",
+                        "PROJECT",
+                        "MID_TERM_EXAM",
+                        "END_OF_TERM_EXAM",
+                        "QUIZ",
+                        "ASSIGNMENT",
+                        "PRACTICAL",
+                        "CONTINUOUS_ASSESSMENT",
+                        "MOCK_EXAM",
+                        "EXTERNAL_EXAM"
+                    ]
+                },
+                "weight": {
+                    "type": "number"
+                },
+                "totalMarks": {
+                    "type": "number"
+                },
+                "instructions": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "dueDate": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "date-time"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "classSubject": {
+                    "$ref": "#/definitions/ClassSubject"
+                },
+                "subject": {
+                    "$ref": "#/definitions/Subject"
+                },
+                "term": {
+                    "$ref": "#/definitions/Term"
+                },
+                "academicYear": {
+                    "$ref": "#/definitions/AcademicYear"
+                },
+                "createdBy": {
+                    "$ref": "#/definitions/User"
+                },
+                "teacher": {
+                    "$ref": "#/definitions/Teacher"
+                },
+                "gradingSystem": {
+                    "$ref": "#/definitions/GradingSystem"
+                },
+                "grades": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Grade"
+                    }
+                }
+            }
+        },
+        "ReportCard": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "overallGrade": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "overallPercentage": {
+                    "type": [
+                        "number",
+                        "null"
+                    ]
+                },
+                "position": {
+                    "type": [
+                        "integer",
+                        "null"
+                    ]
+                },
+                "totalStudents": {
+                    "type": [
+                        "integer",
+                        "null"
+                    ]
+                },
+                "attendance": {
+                    "type": [
+                        "number",
+                        "string",
+                        "boolean",
+                        "object",
+                        "array",
+                        "null"
+                    ]
+                },
+                "conduct": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "teacherRemarks": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "headTeacherRemarks": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "promoted": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
+                },
+                "nextClass": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "student": {
+                    "$ref": "#/definitions/Student"
+                },
+                "term": {
+                    "$ref": "#/definitions/Term"
+                }
+            }
+        },
+        "Grade": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "score": {
+                    "type": [
+                        "number",
+                        "null"
+                    ]
+                },
+                "grade": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "percentage": {
+                    "type": [
+                        "number",
+                        "null"
+                    ]
+                },
+                "points": {
+                    "type": [
+                        "number",
+                        "null"
+                    ]
+                },
+                "remarks": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "gradedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "student": {
+                    "$ref": "#/definitions/Student"
+                },
+                "assessment": {
+                    "$ref": "#/definitions/Assessment"
+                },
+                "subject": {
+                    "$ref": "#/definitions/Subject"
+                },
+                "gradedBy": {
+                    "$ref": "#/definitions/User"
+                }
+            }
+        },
+        "Teacher": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "employeeNumber": {
+                    "type": "string"
+                },
+                "qualification": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "specialization": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "experience": {
+                    "type": [
+                        "integer",
+                        "null"
+                    ]
+                },
+                "hireDate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "status": {
+                    "type": "string",
+                    "default": "ACTIVE",
+                    "enum": [
+                        "ACTIVE",
+                        "ON_LEAVE",
+                        "TERMINATED",
+                        "RETIRED"
+                    ]
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "user": {
+                    "$ref": "#/definitions/User"
+                },
+                "department": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Department"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "classSubjects": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ClassSubject"
+                    }
+                },
+                "assessmentsCreated": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Assessment"
+                    }
+                }
+            }
+        },
+        "ClassSubject": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "class": {
+                    "$ref": "#/definitions/Class"
+                },
+                "subject": {
+                    "$ref": "#/definitions/Subject"
+                },
+                "teacher": {
+                    "$ref": "#/definitions/Teacher"
+                },
+                "assessments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Assessment"
+                    }
+                }
+            }
+        },
+        "Class": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "gradeLevel": {
+                    "type": "integer"
+                },
+                "updatedById": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "school": {
+                    "$ref": "#/definitions/School"
+                },
+                "course": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Course"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "student": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Student"
+                    }
+                },
+                "academicYear": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/AcademicYear"
+                    }
+                },
+                "attendanceRecord": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/AttendanceRecord"
+                    }
+                },
+                "classSubject": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ClassSubject"
+                    }
+                }
+            }
+        },
+        "Student": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string",
+                    "default": "PENDING",
+                    "enum": [
+                        "ACTIVE",
+                        "INACTIVE",
+                        "SUSPENDED",
+                        "REJECTED",
+                        "PENDING",
+                        "DELETED"
+                    ]
+                },
+                "studentNumber": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "stuentEmail": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "indexNumber": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "school": {
+                    "$ref": "#/definitions/School"
+                },
+                "class": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/Class"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "disciplinaryRecord": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/DisciplinaryRecord"
+                    }
+                },
+                "reportCard": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ReportCard"
+                    }
+                },
+                "attendanceRecord": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/AttendanceRecord"
+                    }
+                },
+                "grade": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Grade"
+                    }
+                },
+                "studentGuardians": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/StudentGuardian"
+                    }
+                },
+                "studentAccadamicHistory": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/StudentAccadamicHistory"
+                    }
+                }
+            }
+        },
+        "StudentAccadamicHistory": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "fromClass": {
+                    "type": "string"
+                },
+                "toClass": {
+                    "type": "string"
+                },
+                "academicYear": {
+                    "type": "string"
+                },
+                "reason": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "student": {
+                    "$ref": "#/definitions/Student"
+                }
+            }
+        },
+        "AttendanceRecord": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "status": {
+                    "type": "string",
+                    "enum": [
+                        "PRESENT",
+                        "ABSENT",
+                        "LATE",
+                        "EXCUSED",
+                        "SICK"
+                    ]
+                },
+                "remarks": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "recordedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "student": {
+                    "$ref": "#/definitions/Student"
+                },
+                "class": {
+                    "$ref": "#/definitions/Class"
+                },
+                "term": {
+                    "$ref": "#/definitions/Term"
+                },
+                "recordedBy": {
+                    "$ref": "#/definitions/User"
+                }
+            }
+        },
+        "DisciplinaryRecord": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "incident": {
+                    "type": "string"
+                },
+                "action": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "date": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "severity": {
+                    "type": "string",
+                    "enum": [
+                        "MINOR",
+                        "MODERATE",
+                        "SERIOUS",
+                        "SEVERE"
+                    ]
+                },
+                "resolved": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "student": {
+                    "$ref": "#/definitions/Student"
+                }
+            }
+        },
+        "Session": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "sessionToken": {
+                    "type": "string"
+                },
+                "expires": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "userAgent": {
+                    "type": "string"
+                },
+                "ipAddress": {
+                    "type": "string"
+                },
+                "isActive": {
+                    "type": "boolean",
+                    "default": true
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "user": {
+                    "$ref": "#/definitions/User"
+                }
+            }
+        },
+        "StudentGuardian": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "relationship": {
+                    "type": "string",
+                    "enum": [
+                        "PARENT",
+                        "GUARDIAN",
+                        "SIBLING",
+                        "RELATIVE",
+                        "OTHER"
+                    ]
+                },
+                "guardianEmail": {
+                    "type": "string"
+                },
+                "guardianPhone": {
+                    "type": "string"
+                },
+                "address": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "student": {
+                    "$ref": "#/definitions/Student"
+                }
+            }
+        },
+        "SchoolProfile": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "updatedById": {
+                    "type": "string"
+                },
+                "school": {
+                    "$ref": "#/definitions/School"
+                },
+                "slogan": {
+                    "type": "string"
+                },
+                "about": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "contactEmail": {
+                    "type": "string"
+                },
+                "contactPhone": {
+                    "type": "string"
+                },
+                "establishedAt": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "date-time"
+                },
+                "motto": {
+                    "type": "string"
+                },
+                "colors": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "principalName": {
+                    "type": "string"
+                },
+                "principalBio": {
+                    "type": "string"
+                },
+                "founderName": {
+                    "type": "string"
+                },
+                "founderBio": {
+                    "type": "string"
+                },
+                "licenseNumber": {
+                    "type": "string"
+                },
+                "adminNote": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "schoolAddress": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Address"
+                    }
+                }
+            }
+        },
+        "Plan": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "integer"
+                },
+                "billingCycle": {
+                    "type": "string",
+                    "enum": [
+                        "MONTHLY",
+                        "YEARLY"
+                    ]
+                },
+                "isActive": {
+                    "type": "boolean",
+                    "default": true
+                },
+                "features": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/PlanFeature"
+                    }
+                },
+                "limits": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/PlanLimits"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "subscriptions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Subscription"
+                    }
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
+        "PlanFeature": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "isEnabled": {
+                    "type": "boolean"
+                },
+                "metadata": {
+                    "type": [
+                        "number",
+                        "string",
+                        "boolean",
+                        "object",
+                        "array",
+                        "null"
+                    ]
+                },
+                "plan": {
+                    "$ref": "#/definitions/Plan"
+                }
+            }
+        },
+        "PlanLimits": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "plan": {
+                    "$ref": "#/definitions/Plan"
+                },
+                "maxStudents": {
+                    "type": "integer"
+                },
+                "maxTeachers": {
+                    "type": "integer"
+                },
+                "maxClasses": {
+                    "type": "integer"
+                },
+                "maxDepartments": {
+                    "type": "integer"
+                },
+                "maxSubjects": {
+                    "type": "integer"
+                },
+                "maxQuizzes": {
+                    "type": "integer"
+                },
+                "maxNotifications": {
+                    "type": "integer"
+                },
+                "maxFileUploadsMb": {
+                    "type": "integer"
+                },
+                "maxTimetables": {
+                    "type": "integer"
+                }
+            }
+        },
+        "Subscription": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string",
+                    "enum": [
+                        "ACTIVE",
+                        "INACTIVE",
+                        "CANCELLED",
+                        "PAST_DUE"
+                    ]
+                },
+                "currentPeriodStart": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "currentPeriodEnd": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "cancelAtPeriodEnd": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "trialEnd": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "format": "date-time"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "school": {
+                    "$ref": "#/definitions/School"
+                },
+                "plan": {
+                    "$ref": "#/definitions/Plan"
+                }
+            }
+        },
+        "Address": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "street": {
+                    "type": "string"
+                },
+                "city": {
+                    "type": "string"
+                },
+                "region": {
+                    "type": "string"
+                },
+                "postalCode": {
+                    "type": "string"
+                },
+                "country": {
+                    "type": "string"
+                },
+                "schoolProfile": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/SchoolProfile"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "user": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/User"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
+        "Owner": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "preferredContactMethod": {
+                    "type": "string",
+                    "default": "EMAIL"
+                },
+                "preferredContactTime": {
+                    "type": "string",
+                    "default": "MORNING"
+                },
+                "educationBackground": {
+                    "type": "string"
+                },
+                "isActive": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "professionalExperience": {
+                    "type": "string"
+                },
+                "currentPosition": {
+                    "type": "string"
+                },
+                "previousPositions": {
+                    "type": "string"
+                },
+                "yearsInEducation": {
+                    "type": "integer"
+                },
+                "School": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/School"
+                    }
+                }
+            }
+        },
+        "Permission": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "resource": {
+                    "type": "string"
+                },
+                "action": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "rolePermissions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/RolePermission"
+                    }
+                }
+            }
+        },
+        "Role": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "isActive": {
+                    "type": "boolean",
+                    "default": true
+                },
+                "createdBy": {
+                    "$ref": "#/definitions/User"
+                },
+                "rolePermissions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/RolePermission"
+                    }
+                },
+                "userRoles": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/UserRole"
+                    }
+                }
+            }
+        },
+        "RolePermission": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "role": {
+                    "$ref": "#/definitions/Role"
+                },
+                "permission": {
+                    "$ref": "#/definitions/Permission"
+                }
+            }
+        },
+        "UserRole": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "assignedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "user": {
+                    "$ref": "#/definitions/User"
+                },
+                "role": {
+                    "$ref": "#/definitions/Role"
+                },
+                "assignedBy": {
+                    "$ref": "#/definitions/User"
+                }
+            }
+        },
+        "Document": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "fileType": {
+                    "type": "string",
+                    "enum": [
+                        "IMAGE",
+                        "PDF",
+                        "DOCX",
+                        "XLSX",
+                        "PPTX",
+                        "VIDEO",
+                        "TEXT",
+                        "CSV",
+                        "ZIP",
+                        "OTHER"
+                    ]
+                },
+                "isActive": {
+                    "type": "boolean",
+                    "default": true
+                },
+                "documentKey": {
+                    "type": "string"
+                },
+                "mudelId": {
+                    "type": "string"
+                },
+                "purpose": {
+                    "type": "string",
+                    "enum": [
+                        "SCHOOL_LOGO",
+                        "SCHOOL_SEAL",
+                        "LICENSE_CERT",
+                        "PROOF_OF_ADDRESS",
+                        "HEADMASTER_ID",
+                        "GENERAL_UPLOAD"
+                    ]
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        }
+    },
+    "type": "object",
+    "properties": {
+        "user": {
+            "$ref": "#/definitions/User"
+        },
+        "school": {
+            "$ref": "#/definitions/School"
+        },
+        "verificationToken": {
+            "$ref": "#/definitions/VerificationToken"
+        },
+        "department": {
+            "$ref": "#/definitions/Department"
+        },
+        "subject": {
+            "$ref": "#/definitions/Subject"
+        },
+        "academicYear": {
+            "$ref": "#/definitions/AcademicYear"
+        },
+        "term": {
+            "$ref": "#/definitions/Term"
+        },
+        "course": {
+            "$ref": "#/definitions/Course"
+        },
+        "gradingSystem": {
+            "$ref": "#/definitions/GradingSystem"
+        },
+        "gradeScale": {
+            "$ref": "#/definitions/GradeScale"
+        },
+        "assessment": {
+            "$ref": "#/definitions/Assessment"
+        },
+        "reportCard": {
+            "$ref": "#/definitions/ReportCard"
+        },
+        "grade": {
+            "$ref": "#/definitions/Grade"
+        },
+        "teacher": {
+            "$ref": "#/definitions/Teacher"
+        },
+        "classSubject": {
+            "$ref": "#/definitions/ClassSubject"
+        },
+        "class": {
+            "$ref": "#/definitions/Class"
+        },
+        "student": {
+            "$ref": "#/definitions/Student"
+        },
+        "studentAccadamicHistory": {
+            "$ref": "#/definitions/StudentAccadamicHistory"
+        },
+        "attendanceRecord": {
+            "$ref": "#/definitions/AttendanceRecord"
+        },
+        "disciplinaryRecord": {
+            "$ref": "#/definitions/DisciplinaryRecord"
+        },
+        "session": {
+            "$ref": "#/definitions/Session"
+        },
+        "studentGuardian": {
+            "$ref": "#/definitions/StudentGuardian"
+        },
+        "schoolProfile": {
+            "$ref": "#/definitions/SchoolProfile"
+        },
+        "plan": {
+            "$ref": "#/definitions/Plan"
+        },
+        "planFeature": {
+            "$ref": "#/definitions/PlanFeature"
+        },
+        "planLimits": {
+            "$ref": "#/definitions/PlanLimits"
+        },
+        "subscription": {
+            "$ref": "#/definitions/Subscription"
+        },
+        "address": {
+            "$ref": "#/definitions/Address"
+        },
+        "owner": {
+            "$ref": "#/definitions/Owner"
+        },
+        "permission": {
+            "$ref": "#/definitions/Permission"
+        },
+        "role": {
+            "$ref": "#/definitions/Role"
+        },
+        "rolePermission": {
+            "$ref": "#/definitions/RolePermission"
+        },
+        "userRole": {
+            "$ref": "#/definitions/UserRole"
+        },
+        "document": {
+            "$ref": "#/definitions/Document"
+        }
+    }
+}

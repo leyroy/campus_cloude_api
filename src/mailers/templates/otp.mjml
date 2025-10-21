@@ -1,23 +1,107 @@
 <mjml>
-  <mj-body background-color="#f4f4f4">
-    <mj-section background-color="#ffffff" border-radius="8px" padding="20px">
-      <mj-column>
-        <mj-text align="center" color="#2563EB" font-size="24px" font-weight="bold"
-          >Squeezy</mj-text
-        >
-        <mj-divider border-color="#2563EB" />
-        <mj-text align="center" font-size="18px" color="#333333">Your OTP Code</mj-text>
+  <mj-head>
+    <mj-attributes>
+      <mj-all font-family="Helvetica, Arial, sans-serif" />
+      <mj-text color="#555555" font-size="16px" />
+      <mj-button
+        background-color="#2563EB"
+        color="#ffffff"
+        border-radius="50px"
+        inner-padding="8px 24px"
+        font-weight="500" />
+    </mj-attributes>
+
+    <mj-style>
+      .preheader { display: none !important; visibility: hidden; opacity: 0; color:
+      transparent; height: 0; width: 0; }
+    </mj-style>
+  </mj-head>
+
+  <mj-body background-color="#f4f6f8" width="600px">
+    <mj-section padding="24px 4px">
+      <mj-column background-color="#ffffff" border-radius="8px">
+        <!-- Header / Brand -->
+        <!-- TODO: get campus cloude logo -->
+        <mj-image
+          src="https://tse4.mm.bing.net/th/id/OIP._x4isRSUU6t2zDSzl2hK8gHaEJ?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3"
+          alt="Campus Cloude logo"
+          width="48px"
+          border-radius="50px"
+          height="48px"
+          align="center"
+          padding="0 0 12px 0" />
         <mj-text
           align="center"
-          font-size="30px"
+          font-size="20px"
+          font-weight="700"
+          padding="4px 0 18px 0"
+          color="#2563EB">
+          Campus Cloude
+        </mj-text>
+
+        <!-- Title -->
+        <mj-text
+          align="center"
+          font-size="18px"
+          font-weight="800"
+          color="#333333"
+          padding="0 0 12px 0">
+          Your One-Time Password (OTP)
+        </mj-text>
+
+        <!-- Message -->
+        <mj-text align="center" color="#666666" font-size="15px" padding="0 0 20px 0">
+          Use the code below to complete your sign in or verify your action. This code
+          will expire in <strong>10 minutes</strong>.
+        </mj-text>
+
+        <!-- OTP Code -->
+        <mj-text
+          align="center"
+          font-size="20px"
+          font-weight="600"
           color="#2563EB"
-          font-weight="bold"
-          letter-spacing="8px"
-          >${otp}</mj-text
-        >
-        <mj-text align="center" color="#999999" font-size="14px"
-          >This code will expire in 10 minutes!</mj-text
-        >
+          padding="8px 0 20px 0"
+          letter-spacing="6px">
+          {{otp}}
+        </mj-text>
+
+        <!-- Security note -->
+        <mj-text
+          align="center"
+          color="#888888"
+          font-size="13px"
+          padding="18px 10px 6px 10px">
+          Do not share this code with anyone. Campus Cloude will never ask you for your
+          OTP via phone or email.
+        </mj-text>
+
+        <mj-divider border-color="#eeeeee" padding="10px 0" />
+
+        <!-- Support -->
+        <mj-text color="#666666" font-size="13px">
+          Need help? Reply to this email or contact
+          <a
+            href="mailto:leyroyContact@gmail.com"
+            style="color: inherit; text-decoration: underline"
+            >leyroyContact@gmail.com</a
+          >.
+        </mj-text>
+
+        <!-- Footer -->
+        <mj-text color="#999999" font-size="12px" align="center" padding="20px 0 0 0">
+          © 2025 Campus Cloude. All rights reserved.<br />
+          1234 Street Rd, Suite 1234, Kumasi, Ashanti Region, 12345
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <!-- Spacer -->
+    <mj-section padding="24px 4px">
+      <mj-column>
+        <mj-text color="#999999" font-size="12px" align="center">
+          If you didn’t request this code, you can ignore this email.
+        </mj-text>
       </mj-column>
     </mj-section>
   </mj-body>

@@ -32,7 +32,6 @@ export async function hasPermission({
   });
 
   // Check all permissions across all roles
-  console.log(userRoles, 'this is the user roles');
   return userRoles.some((userRole) =>
     userRole.role.rolePermissions.some(
       (rolePermission) =>

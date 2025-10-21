@@ -53,7 +53,8 @@
       "status",
       "updatedById",
       "createdAt",
-      "description"
+      "description",
+      "ownerId"
     ]
   },
   {
@@ -282,14 +283,27 @@
     "modelName": "Student",
     "fields": [
       "id",
-      "firstName",
-      "lastName",
-      "email",
-      "phone",
-      "isActive",
       "status",
       "schoolId",
+      "studentNumber",
+      "stuentEmail",
+      "firstName",
+      "lastName",
       "classId",
+      "createdAt",
+      "indexNumber",
+      "updatedAt"
+    ]
+  },
+  {
+    "modelName": "StudentAccadamicHistory",
+    "fields": [
+      "id",
+      "studentId",
+      "fromClass",
+      "toClass",
+      "academicYear",
+      "reason",
       "createdAt",
       "updatedAt"
     ]
@@ -336,6 +350,21 @@
       "userAgent",
       "ipAddress",
       "isActive",
+      "createdAt",
+      "updatedAt"
+    ]
+  },
+  {
+    "modelName": "StudentGuardian",
+    "fields": [
+      "id",
+      "firstName",
+      "lastName",
+      "relationship",
+      "guardianEmail",
+      "guardianPhone",
+      "address",
+      "studentId",
       "createdAt",
       "updatedAt"
     ]
@@ -443,7 +472,6 @@
       "preferredContactMethod",
       "preferredContactTime",
       "educationBackground",
-      "schoolId",
       "isActive",
       "professionalExperience",
       "currentPosition",
@@ -524,6 +552,16 @@
       "TEXT",
       "CSV",
       "ZIP",
+      "OTHER"
+    ]
+  },
+  {
+    "modelName": "RelationshipType",
+    "fields": [
+      "PARENT",
+      "GUARDIAN",
+      "SIBLING",
+      "RELATIVE",
       "OTHER"
     ]
   },
@@ -657,19 +695,8 @@
     "modelName": "EducationLevel",
     "fields": [
       "KG1",
-      "KG2",
-      "PRIMARY_1",
-      "PRIMARY_2",
-      "PRIMARY_3",
-      "PRIMARY_4",
-      "PRIMARY_5",
-      "PRIMARY_6",
-      "JHS_1",
-      "JHS_2",
-      "JHS_3",
-      "SHS_1",
-      "SHS_2",
-      "SHS_3"
+      "PRIMARY",
+      "JHS"
     ]
   }
 ]
