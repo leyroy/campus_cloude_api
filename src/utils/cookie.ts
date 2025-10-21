@@ -12,9 +12,8 @@ export const REFRESH_PATH = `${ENV_CONSTANTS.BASE_PATH}/auth/refresh`;
 
 const defaults: CookieOptions = {
   httpOnly: true,
-  secure: false, // backend on HTTP
-  sameSite: 'lax', // okay for localhost same-origin
-  path: '/',
+  secure: ENV_CONSTANTS.NODE_ENV === 'production' ? true : false,
+  sameSite: ENV_CONSTANTS.NODE_ENV === 'production' ? 'strict' : 'lax',
 };
 
 export const getRefreshTokenCookieOptions = (): CookieOptions => {

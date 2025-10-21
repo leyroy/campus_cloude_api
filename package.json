@@ -11,7 +11,7 @@
     "extra:fields": "ts-node src/extractFields.ts",
     "generate": "npx prisma generate",
     "seed": "ts-node --transpile-only src/seed/seed.ts",
-    "build": "tsc"
+    "build": "prisma generate && tsc"
   },
   "prisma": {
     "seed": "ts-node --transpile-only src/seed/seed.ts"

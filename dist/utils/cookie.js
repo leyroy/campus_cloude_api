@@ -6,9 +6,8 @@ const date_time_1 = require("./date-time");
 exports.REFRESH_PATH = `${env_constants_1.ENV_CONSTANTS.BASE_PATH}/auth/refresh`;
 const defaults = {
     httpOnly: true,
-    secure: false, // backend on HTTP
-    sameSite: 'lax', // okay for localhost same-origin
-    path: '/',
+    secure: env_constants_1.ENV_CONSTANTS.NODE_ENV === 'production' ? true : false,
+    sameSite: env_constants_1.ENV_CONSTANTS.NODE_ENV === 'production' ? 'strict' : 'lax',
 };
 const getRefreshTokenCookieOptions = () => {
     const expiresIn = env_constants_1.ENV_CONSTANTS.JWT_ENV.REFRESH_TOKEN_EXPIRES_IN;
