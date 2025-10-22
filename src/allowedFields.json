@@ -285,11 +285,19 @@
       "id",
       "status",
       "schoolId",
-      "studentNumber",
-      "stuentEmail",
+      "studentPhone",
+      "studentEmail",
       "firstName",
       "lastName",
+      "address",
+      "gender",
+      "isDeleted",
+      "prefix",
+      "religion",
       "classId",
+      "departmentId",
+      "dateOfBirth",
+      "level",
       "createdAt",
       "indexNumber",
       "updatedAt"
@@ -355,7 +363,7 @@
     ]
   },
   {
-    "modelName": "StudentGuardian",
+    "modelName": "Guardian",
     "fields": [
       "id",
       "firstName",
@@ -469,8 +477,6 @@
       "id",
       "createdAt",
       "updatedAt",
-      "preferredContactMethod",
-      "preferredContactTime",
       "educationBackground",
       "isActive",
       "professionalExperience",
@@ -535,9 +541,10 @@
       "fileType",
       "isActive",
       "documentKey",
-      "mudelId",
+      "modelId",
       "purpose",
-      "createdAt"
+      "createdAt",
+      "updatedAt"
     ]
   },
   {
@@ -692,11 +699,47 @@
     ]
   },
   {
+    "modelName": "Gender",
+    "fields": [
+      "MALE",
+      "FEMALE",
+      "OTHER"
+    ]
+  },
+  {
+    "modelName": "Prefix",
+    "fields": [
+      "MR",
+      "MRS",
+      "MS",
+      "DR",
+      "PROF"
+    ]
+  },
+  {
+    "modelName": "PreferredContactTime",
+    "fields": [
+      "MORNING",
+      "AFTERNOON",
+      "EVENING"
+    ]
+  },
+  {
     "modelName": "EducationLevel",
     "fields": [
-      "KG1",
+      "KG",
       "PRIMARY",
-      "JHS"
+      "JHS",
+      "SHS"
+    ]
+  },
+  {
+    "modelName": "PreferredContactMethod",
+    "fields": [
+      "EMAIL",
+      "PHONE",
+      "IN_PERSON",
+      "OTHER"
     ]
   }
 ]

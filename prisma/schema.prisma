@@ -40,6 +40,8 @@ model User {
   teacher          Teacher[]
   grade            Grade[]
   assessment       Assessment[]
+
+  @@map("users")
 }
 
 model School {
@@ -70,6 +72,8 @@ model School {
 
   terms Term[]
   users User[]
+
+  @@map("schools")
 }
 
 model VerificationToken {
@@ -82,6 +86,7 @@ model VerificationToken {
   createdAt  DateTime         @default(now())
 
   @@index([identifier])
+  @@map("verificationTokens")
 }
 
 model Department {
@@ -100,6 +105,7 @@ model Department {
 
   @@unique([name, schoolId])
   @@index([schoolId])
+  @@map("departments")
 }
 
 model Subject {
@@ -123,6 +129,7 @@ model Subject {
   @@index([schoolId])
   @@index([courseId])
   @@index([termId])
+  @@map("subjects")
 }
 
 model AcademicYear {
@@ -141,6 +148,8 @@ model AcademicYear {
   classes     Class[]
 
   Assessment Assessment[]
+
+  @@map("academicYears")
 }
 
 model Term {
@@ -185,6 +194,7 @@ model Course {
   @@unique([name, departmentId])
   @@index([schoolId])
   @@index([departmentId])
+  @@map("courses")
 }
 
 // Assessment and Grading System
@@ -203,7 +213,7 @@ model GradingSystem {
   gradeScales GradeScale[]
   assessments Assessment[]
 
-  @@map("grading_systems")
+  @@map("gradingSystems")
 }
 
 model GradeScale {
@@ -218,7 +228,7 @@ model GradeScale {
   gradingSystem   GradingSystem @relation(fields: [gradingSystemId], references: [id])
   gradingSystemId String
 
-  @@map("grade_scales")
+  @@map("gradeScales")
 }
 
 // TODO: learn more about this assessment table
@@ -278,7 +288,7 @@ model ReportCard {
   // Relations
 
   @@unique([studentId, termId])
-  @@map("report_cards")
+  @@map("reportCards")
 }
 
 model Grade {
@@ -343,7 +353,7 @@ model ClassSubject {
   assessments Assessment[]
 
   @@unique([classId, subjectId])
-  @@map("class_subjects")
+  @@map("classSubjects")
 }
 
 model Class {
@@ -363,6 +373,8 @@ model Class {
   academicYear     AcademicYear[]
   attendanceRecord AttendanceRecord[]
   classSubject     ClassSubject[]
+
+  @@map("classes")
 }
 
 model Student {
@@ -375,10 +387,13 @@ model Student {
   lastName                String
   address                 String
   gender                  Gender
+  isDeleted               Boolean                   @default(false)
+  prefix                  Prefix?
   religion                String?
   classId                 String?
   departmentId            String?
   dateOfBirth             DateTime
+  level                   EducationLevel
   createdAt               DateTime                  @default(now())
   indexNumber             String                    @unique
   updatedAt               DateTime                  @updatedAt
@@ -390,8 +405,10 @@ model Student {
   reportCard              ReportCard[]
   attendanceRecord        AttendanceRecord[]
   grade                   Grade[]
-  studentGuardians        StudentGuardian[]
+  studentGuardians        Guardian[]
   studentAccadamicHistory StudentAccadamicHistory[]
+
+  @@map("students")
 }
 
 model StudentAccadamicHistory {
@@ -405,6 +422,8 @@ model StudentAccadamicHistory {
   updatedAt    DateTime @updatedAt
 
   student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@map("academicHistories")
 }
 
 model AttendanceRecord {
@@ -424,7 +443,7 @@ model AttendanceRecord {
   recordedById String
 
   @@unique([studentId, date])
-  @@map("attendance_records")
+  @@map("attendanceRecords")
 }
 
 // Discipline Management
@@ -441,7 +460,7 @@ model DisciplinaryRecord {
   student   Student @relation(fields: [studentId], references: [id])
   studentId String
 
-  @@map("disciplinary_records")
+  @@map("disciplinaryRecords")
 }
 
 model Session {
@@ -458,9 +477,10 @@ model Session {
   user         User     @relation(fields: [userId], references: [id])
 
   @@index([sessionToken])
+  @@map("sessions")
 }
 
-model StudentGuardian {
+model Guardian {
   id            String           @id @default(cuid())
   firstName     String
   lastName      String
@@ -473,6 +493,8 @@ model StudentGuardian {
   updatedAt     DateTime         @updatedAt
   // Relations
   student       Student          @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@map("guardians")
 }
 
 model SchoolProfile {
@@ -497,6 +519,8 @@ model SchoolProfile {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   schoolAddress Address[]
+
+  @@map("schoolProfiles")
 }
 
 model Plan {
@@ -510,6 +534,8 @@ model Plan {
   subscriptions Subscription[]
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
+
+  @@map("plans")
 }
 
 model PlanFeature {
@@ -520,6 +546,9 @@ model PlanFeature {
   metadata    Json?
   planId      String
   plan        Plan    @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@unique([name, planId])
+  @@map("planFeatures")
 }
 
 model PlanLimits {
@@ -550,6 +579,8 @@ model Subscription {
   updatedAt          DateTime           @updatedAt
   school             School             @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   plan               Plan               @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
 }
 
 model Address {
@@ -568,18 +599,20 @@ model Address {
 }
 
 model Owner {
-  id                     String   @id @default(cuid())
-  createdAt              DateTime @default(now())
-  updatedAt              DateTime @updatedAt
-  preferredContactMethod String   @default("EMAIL")
-  preferredContactTime   String   @default("MORNING")
+  id                     String                   @id @default(cuid())
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime                 @updatedAt
+  preferredContactMethod PreferredContactMethod[] @default([EMAIL])
+  preferredContactTime   PreferredContactTime[]   @default([MORNING])
   educationBackground    String
-  isActive               Boolean  @default(false)
+  isActive               Boolean                  @default(false)
   professionalExperience String
   currentPosition        String
   previousPositions      String
   yearsInEducation       Int
   School                 School[]
+
+  @@map("owners")
 }
 
 // bridge table for many-to-many relationship between User and School
@@ -590,6 +623,8 @@ model Permission {
   action          String
   description     String?
   rolePermissions RolePermission[]
+
+  @@map("permissions")
 }
 
 //Role model
@@ -604,6 +639,8 @@ model Role {
   createdBy       User             @relation("UserCreatedRoles", fields: [createdById], references: [id], onDelete: Cascade)
   rolePermissions RolePermission[]
   userRoles       UserRole[]
+
+  @@map("roles")
 }
 
 model RolePermission {
@@ -614,6 +651,7 @@ model RolePermission {
   permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
 
   @@unique([roleId, permissionId])
+  @@map("rolePermissions")
 }
 
 model UserRole {
@@ -627,6 +665,7 @@ model UserRole {
   assignedBy   User     @relation("AssignedByRelation", fields: [assignedById], references: [id], onDelete: Cascade)
 
   @@unique([userId, roleId])
+  @@map("userRoles")
 }
 
 model Document {
@@ -635,9 +674,12 @@ model Document {
   fileType    FileType
   isActive    Boolean    @default(true)
   documentKey String
-  mudelId     String
+  modelId     String
   purpose     DocPurpose
   createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@map("documents")
 }
 
 enum FileType {
@@ -772,8 +814,30 @@ enum Gender {
   OTHER
 }
 
+enum Prefix {
+  MR
+  MRS
+  MS
+  DR
+  PROF
+}
+
+enum PreferredContactTime {
+  MORNING
+  AFTERNOON
+  EVENING
+}
+
 enum EducationLevel {
-  KG1
+  KG
   PRIMARY
   JHS
+  SHS
+}
+
+enum PreferredContactMethod {
+  EMAIL
+  PHONE
+  IN_PERSON
+  OTHER
 }

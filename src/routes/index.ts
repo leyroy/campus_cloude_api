@@ -6,6 +6,7 @@ import authRouter from '../modules/auth/routes';
 import passwordRoutes from '../modules/password-managements/password.routes';
 import schoolRouter from '../modules/school-configuration/routes';
 import documentRouter from '../modules/document/routes';
+import studentRouter from '../modules/students/route';
 
 const appRouter = express.Router();
 
@@ -15,5 +16,6 @@ appRouter.use('/roles', roleRouter);
 appRouter.use('/password', passwordRoutes);
 appRouter.use('/school', schoolRouter);
 appRouter.use('/document', documentRouter);
+appRouter.use('/students', studentRouter);
 
 export default appRouter;

@@ -2,6 +2,9 @@
 CREATE TYPE "FileType" AS ENUM ('IMAGE', 'PDF', 'DOCX', 'XLSX', 'PPTX', 'VIDEO', 'TEXT', 'CSV', 'ZIP', 'OTHER');
 
 -- CreateEnum
+CREATE TYPE "RelationshipType" AS ENUM ('PARENT', 'GUARDIAN', 'SIBLING', 'RELATIVE', 'OTHER');
+
+-- CreateEnum
 CREATE TYPE "DocPurpose" AS ENUM ('SCHOOL_LOGO', 'SCHOOL_SEAL', 'LICENSE_CERT', 'PROOF_OF_ADDRESS', 'HEADMASTER_ID', 'GENERAL_UPLOAD');
 
 -- CreateEnum
@@ -38,7 +41,19 @@ CREATE TYPE "GradingType" AS ENUM ('DESCRIPTIVE', 'PERCENTAGE', 'LETTER_GRADE', 
 CREATE TYPE "SchooleType" AS ENUM ('PUBLIC', 'PRIVATE', 'CHARTER', 'MAGNET', 'RELIGIOUS', 'INTERNATIONAL');
 
 -- CreateEnum
-CREATE TYPE "EducationLevel" AS ENUM ('KG1', 'PRIMARY', 'JHS');
+CREATE TYPE "Gender" AS ENUM ('MALE', 'FEMALE', 'OTHER');
+
+-- CreateEnum
+CREATE TYPE "Prefix" AS ENUM ('MR', 'MRS', 'MS', 'DR', 'PROF');
+
+-- CreateEnum
+CREATE TYPE "PreferredContactTime" AS ENUM ('MORNING', 'AFTERNOON', 'EVENING');
+
+-- CreateEnum
+CREATE TYPE "EducationLevel" AS ENUM ('KG', 'PRIMARY', 'JHS', 'SHS');
+
+-- CreateEnum
+CREATE TYPE "PreferredContactMethod" AS ENUM ('EMAIL', 'PHONE', 'IN_PERSON', 'OTHER');
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -303,18 +318,38 @@ CREATE TABLE "Class" (
 -- CreateTable
 CREATE TABLE "Student" (
     "id" TEXT NOT NULL,
-    "firstName" TEXT NOT NULL,
-    "lastName" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "phone" TEXT NOT NULL,
-    "isActive" BOOLEAN NOT NULL DEFAULT false,
     "status" "AccountStatus" NOT NULL DEFAULT 'PENDING',
     "schoolId" TEXT NOT NULL,
-    "classId" TEXT NOT NULL,
+    "studentPhone" TEXT,
+    "studentEmail" TEXT,
+    "firstName" TEXT NOT NULL,
+    "lastName" TEXT NOT NULL,
+    "address" TEXT NOT NULL,
+    "gender" "Gender" NOT NULL,
+    "religion" TEXT,
+    "classId" TEXT,
+    "departmentId" TEXT,
+    "dateOfBirth" TIMESTAMP(3) NOT NULL,
+    "level" "EducationLevel" NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "indexNumber" TEXT NOT NULL,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Student_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "StudentAccadamicHistory" (
+    "id" TEXT NOT NULL,
+    "studentId" TEXT NOT NULL,
+    "fromClass" TEXT NOT NULL,
+    "toClass" TEXT NOT NULL,
+    "academicYear" TEXT NOT NULL,
+    "reason" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "StudentAccadamicHistory_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -360,6 +395,22 @@ CREATE TABLE "Session" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Session_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "StudentGuardian" (
+    "id" TEXT NOT NULL,
+    "firstName" TEXT NOT NULL,
+    "lastName" TEXT NOT NULL,
+    "relationship" "RelationshipType" NOT NULL,
+    "guardianEmail" TEXT NOT NULL,
+    "guardianPhone" TEXT NOT NULL,
+    "address" TEXT NOT NULL,
+    "studentId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "StudentGuardian_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -466,8 +517,8 @@ CREATE TABLE "Owner" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "preferredContactMethod" TEXT NOT NULL DEFAULT 'EMAIL',
-    "preferredContactTime" TEXT NOT NULL DEFAULT 'MORNING',
+    "preferredContactMethod" "PreferredContactMethod"[] DEFAULT ARRAY['EMAIL']::"PreferredContactMethod"[],
+    "preferredContactTime" "PreferredContactTime"[] DEFAULT ARRAY['MORNING']::"PreferredContactTime"[],
     "educationBackground" TEXT NOT NULL,
     "isActive" BOOLEAN NOT NULL DEFAULT false,
     "professionalExperience" TEXT NOT NULL,
@@ -596,7 +647,7 @@ CREATE UNIQUE INDEX "teachers_userId_key" ON "teachers"("userId");
 CREATE UNIQUE INDEX "class_subjects_classId_subjectId_key" ON "class_subjects"("classId", "subjectId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Student_email_key" ON "Student"("email");
+CREATE UNIQUE INDEX "Student_indexNumber_key" ON "Student"("indexNumber");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "attendance_records_studentId_date_key" ON "attendance_records"("studentId", "date");
@@ -728,10 +779,16 @@ ALTER TABLE "Class" ADD CONSTRAINT "Class_schoolId_fkey" FOREIGN KEY ("schoolId"
 ALTER TABLE "Class" ADD CONSTRAINT "Class_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "Course"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Student" ADD CONSTRAINT "Student_departmentId_fkey" FOREIGN KEY ("departmentId") REFERENCES "Department"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Student" ADD CONSTRAINT "Student_schoolId_fkey" FOREIGN KEY ("schoolId") REFERENCES "School"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Student" ADD CONSTRAINT "Student_classId_fkey" FOREIGN KEY ("classId") REFERENCES "Class"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "StudentAccadamicHistory" ADD CONSTRAINT "StudentAccadamicHistory_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Student"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "attendance_records" ADD CONSTRAINT "attendance_records_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Student"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -750,6 +807,9 @@ ALTER TABLE "disciplinary_records" ADD CONSTRAINT "disciplinary_records_studentI
 
 -- AddForeignKey
 ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "StudentGuardian" ADD CONSTRAINT "StudentGuardian_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Student"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "SchoolProfile" ADD CONSTRAINT "SchoolProfile_schoolId_fkey" FOREIGN KEY ("schoolId") REFERENCES "School"("id") ON DELETE CASCADE ON UPDATE CASCADE;
