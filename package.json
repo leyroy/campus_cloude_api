@@ -12,7 +12,7 @@
     "generate": "npx prisma generate",
     "postinstall": "prisma generate",
     "seed": "ts-node --transpile-only src/seed/seed.ts",
-    "build": "prisma generate && tsc"
+    "build": "tsc"
   },
   "prisma": {
     "seed": "ts-node --transpile-only src/seed/seed.ts"
