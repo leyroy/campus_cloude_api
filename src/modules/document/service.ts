@@ -3,24 +3,19 @@ import cloudinary from '../../config/cloudnary.config';
 import prisma from '../../config/prisma.config';
 
 interface CreateDocumentTypes {
-  moduleId: string;
+  modulId: string;
   purpose: DocPurpose;
   fileType: FileType;
   file: string;
 }
 class DocumentServices {
-  public async uploadDocument({
-    moduleId,
-    purpose,
-    fileType,
-    file,
-  }: CreateDocumentTypes) {
+  public async uploadDocument({ modulId, purpose, fileType, file }: CreateDocumentTypes) {
     try {
       const result = await cloudinary.uploader.upload(file);
       await prisma.document.create({
         data: {
           fileType: fileType,
-          mudelId: moduleId,
+          modelId: modulId,
           purpose: purpose,
           url: result.secure_url,
           documentKey: result.public_id,

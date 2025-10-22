@@ -1,4 +1,8 @@
-import { EducationLevel } from '@prisma/client';
+import {
+  EducationLevel,
+  PreferredContactMethod,
+  PreferredContactTime,
+} from '@prisma/client';
 import { z } from 'zod';
 
 const schoolProfileSchema = z.object({
@@ -33,8 +37,8 @@ export type schoolProfileData = {
 };
 
 const ownerSchema = z.object({
-  preferredContactMethod: z.string().default('EMAIL'),
-  preferredContactTime: z.string().default('MORNING'),
+  preferredContactMethod: z.array(z.nativeEnum(PreferredContactMethod)),
+  preferredContactTime: z.array(z.nativeEnum(PreferredContactTime)),
   educationBackground: z.string(),
   isActive: z.boolean().default(false),
   professionalExperience: z.string(),
