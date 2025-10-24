@@ -153,9 +153,10 @@
                 "educationLevel": {
                     "type": "array",
                     "enum": [
-                        "KG1",
+                        "KG",
                         "PRIMARY",
-                        "JHS"
+                        "JHS",
+                        "SHS"
                     ]
                 },
                 "type": {
@@ -605,9 +606,10 @@
                 "level": {
                     "type": "string",
                     "enum": [
-                        "KG1",
+                        "KG",
                         "PRIMARY",
-                        "JHS"
+                        "JHS",
+                        "SHS"
                     ]
                 },
                 "isActive": {
@@ -1128,6 +1130,23 @@
                         "OTHER"
                     ]
                 },
+                "isDeleted": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "prefix": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "enum": [
+                        "MR",
+                        "MRS",
+                        "MS",
+                        "DR",
+                        "PROF"
+                    ]
+                },
                 "religion": {
                     "type": [
                         "string",
@@ -1137,6 +1156,15 @@
                 "dateOfBirth": {
                     "type": "string",
                     "format": "date-time"
+                },
+                "level": {
+                    "type": "string",
+                    "enum": [
+                        "KG",
+                        "PRIMARY",
+                        "JHS",
+                        "SHS"
+                    ]
                 },
                 "createdAt": {
                     "type": "string",
@@ -1199,7 +1227,7 @@
                 "studentGuardians": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/StudentGuardian"
+                        "$ref": "#/definitions/Guardian"
                     }
                 },
                 "studentAccadamicHistory": {
@@ -1369,7 +1397,7 @@
                 }
             }
         },
-        "StudentGuardian": {
+        "Guardian": {
             "type": "object",
             "properties": {
                 "id": {
@@ -1391,10 +1419,13 @@
                         "OTHER"
                     ]
                 },
-                "guardianEmail": {
+                "email": {
                     "type": "string"
                 },
-                "guardianPhone": {
+                "occupation": {
+                    "type": "string"
+                },
+                "phone": {
                     "type": "string"
                 },
                 "address": {
@@ -1729,12 +1760,21 @@
                     "format": "date-time"
                 },
                 "preferredContactMethod": {
-                    "type": "string",
-                    "default": "EMAIL"
+                    "type": "array",
+                    "enum": [
+                        "EMAIL",
+                        "PHONE",
+                        "IN_PERSON",
+                        "OTHER"
+                    ]
                 },
                 "preferredContactTime": {
-                    "type": "string",
-                    "default": "MORNING"
+                    "type": "array",
+                    "enum": [
+                        "MORNING",
+                        "AFTERNOON",
+                        "EVENING"
+                    ]
                 },
                 "educationBackground": {
                     "type": "string"
@@ -1902,7 +1942,7 @@
                 "documentKey": {
                     "type": "string"
                 },
-                "mudelId": {
+                "modelId": {
                     "type": "string"
                 },
                 "purpose": {
@@ -1917,6 +1957,10 @@
                     ]
                 },
                 "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
                     "type": "string",
                     "format": "date-time"
                 }
@@ -1988,8 +2032,8 @@
         "session": {
             "$ref": "#/definitions/Session"
         },
-        "studentGuardian": {
-            "$ref": "#/definitions/StudentGuardian"
+        "guardian": {
+            "$ref": "#/definitions/Guardian"
         },
         "schoolProfile": {
             "$ref": "#/definitions/SchoolProfile"

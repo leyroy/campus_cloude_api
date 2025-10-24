@@ -16,13 +16,13 @@ const cloudnary_config_1 = __importDefault(require("../../config/cloudnary.confi
 const prisma_config_1 = __importDefault(require("../../config/prisma.config"));
 class DocumentServices {
     uploadDocument(_a) {
-        return __awaiter(this, arguments, void 0, function* ({ moduleId, purpose, fileType, file, }) {
+        return __awaiter(this, arguments, void 0, function* ({ modulId, purpose, fileType, file }) {
             try {
                 const result = yield cloudnary_config_1.default.uploader.upload(file);
                 yield prisma_config_1.default.document.create({
                     data: {
                         fileType: fileType,
-                        mudelId: moduleId,
+                        modelId: modulId,
                         purpose: purpose,
                         url: result.secure_url,
                         documentKey: result.public_id,

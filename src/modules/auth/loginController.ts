@@ -3,7 +3,7 @@ import { ErrorHandler } from '../../middlewares/errorHandler';
 import { handlePrismaError } from '../../utils/prismaErrorHandler';
 import { loginSchema } from './auth.validator';
 import { AuthService } from './auth.services';
-import sendEmail from '../../mailers/node-mailer';
+import { sendEmail } from '../../mailers/mailer';
 import { HTTPSTATUS } from '../../constants/http-status';
 import { setAuthenticationCookies } from '../../utils/cookie';
 
@@ -20,7 +20,7 @@ const loginController = async (req: Request, res: Response, next: NextFunction) 
     throw ErrorHandler.badRequest(`Invalid data: ${isValidData?.error?.message}`);
   }
   try {
-    const { refreshToken, accessToken, isEmailVerified, code } =
+    const { refreshToken, accessToken, isEmailVerified, code, token } =
       await authService.loginUser({
         ...isValidData.data,
         userAgent,
@@ -38,6 +38,7 @@ const loginController = async (req: Request, res: Response, next: NextFunction) 
         isEmailVerified,
         refreshToken,
         accessToken,
+        token: token,
         message:
           'An email has been sent to your account, Please verify your email to continue',
       });
@@ -58,7 +59,6 @@ const loginController = async (req: Request, res: Response, next: NextFunction) 
     if (error instanceof ErrorHandler) {
       return next(error);
     }
-    // Handle unexpected errors
     handlePrismaError(error);
     throw ErrorHandler.internal('An error occurred during login');
   }

@@ -1419,10 +1419,13 @@
             "OTHER"
           ]
         },
-        "guardianEmail": {
+        "email": {
           "type": "string"
         },
-        "guardianPhone": {
+        "occupation": {
+          "type": "string"
+        },
+        "phone": {
           "type": "string"
         },
         "address": {

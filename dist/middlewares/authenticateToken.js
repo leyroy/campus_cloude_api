@@ -31,6 +31,8 @@ const authenticateToken = (req, res, next) => __awaiter(void 0, void 0, void 0, 
         const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
         // Check if user still exists and is active
         const user = yield prisma_config_1.default.user.findUnique({ where: { id: decoded.userId } });
+        const islogOutPaht = req.path === '/logou';
+        console.log(req.path);
         if (!user) {
             throw new errorHandler_1.AppError({
                 message: 'User not found or inactive',
@@ -38,7 +40,7 @@ const authenticateToken = (req, res, next) => __awaiter(void 0, void 0, void 0, 
                 errorCode: "AUTH_USER_NOT_FOUND" /* ErrorCode.AUTH_USER_NOT_FOUND */,
             });
         }
-        if (!user.isEmailVerified) {
+        if (!user.isEmailVerified && !islogOutPaht) {
             throw errorHandler_1.ErrorHandler.badRequest('Please kindly verify your account');
         }
         // Add user info to request

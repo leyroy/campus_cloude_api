@@ -2,15 +2,13 @@ import { ENV_CONSTANTS } from '../../constants/env_constants';
 import { HTTPSTATUS } from '../../constants/http-status';
 import { ErrorCode } from '../../enums/error-code.enum';
 import { VerificationEnum } from '../../enums/verification-code.enum';
-import sendEmail from '../../mailers/node-mailer';
-import { verifyEmailTemplate } from '../../mailers/templates/template';
+import { sendEmail } from '../../mailers/mailer';
 import { AppError, ErrorHandler } from '../../middlewares/errorHandler';
 import { passwordManager } from '../../services/passwordMnager';
 import {
   calculateExpirationDate,
   fortyFiveMinutesFromNow,
   ONE_DAY_IN_MS,
-  thirtySecondsFromNow,
 } from '../../utils/date-time';
 import { commonDbService } from '../../utils/db/commonDbServices';
 import { generateTokens, verifyJwtToken } from '../../utils/jwt';
@@ -94,6 +92,7 @@ export class AuthService {
         accessToken: '',
         url: verifyUrl,
         code: verificationCode.code,
+        token: verificationCode.token,
         isEmailVerified: false,
       };
     }
@@ -119,7 +118,13 @@ export class AuthService {
     };
   }
 
-  public async verifyEmail(token: string, code: string) {
+  public async verifyEmail(
+    token: string,
+    code: string,
+    userAgent?: string,
+    ipAddress?: string,
+    isFromLogin?: boolean
+  ) {
     const verificationToken = await authHelpers.getVerificationCode(
       token,
       VerificationEnum.EMAIL_VERIFICATION
@@ -135,8 +140,26 @@ export class AuthService {
       throw ErrorHandler.badRequest(
         'We were not able to verify your account, please try again later'
       );
+    if (isFromLogin) {
+      const sessionPayload: CreateSessionDto = {
+        expires: calculateExpirationDate('7d'),
+        userAgent: userAgent!,
+        ipAddress: ipAddress!,
+        sessionToken: generateUniqueCode(),
+        userId: verifiedUser.id,
+      };
+
+      const session = await authHelpers.createSession(sessionPayload);
+      const { accessToken, refreshToken } = generateTokens({
+        userId: verifiedUser.id,
+        sessionId: session.id,
+        schoolId: verifiedUser.schoolId as string,
+      });
+      await commonDbService.deleteVerificationCode(verificationToken.id);
+      return { success: true, accessToken, refreshToken };
+    }
     await commonDbService.deleteVerificationCode(verificationToken.id);
-    return true;
+    return { success: true, accessToken: '', refreshToken: '' };
   }
   public async refreshToken(token: string) {
     const { error, payload } = verifyJwtToken(token);

@@ -481,18 +481,19 @@ model Session {
 }
 
 model Guardian {
-  id            String           @id @default(cuid())
-  firstName     String
-  lastName      String
-  relationship  RelationshipType
-  guardianEmail String
-  guardianPhone String
-  address       String
-  studentId     String
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @updatedAt
+  id           String           @id @default(cuid())
+  firstName    String
+  lastName     String
+  relationship RelationshipType
+  email        String
+  occupation   String
+  phone        String
+  address      String
+  studentId    String
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
   // Relations
-  student       Student          @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  student      Student          @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
   @@map("guardians")
 }

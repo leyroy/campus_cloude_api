@@ -9,10 +9,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const student_services_1 = require("./student.services");
 const createStudentController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const data = req.body;
     try {
-        // 🎯 Handle createStudentController logic here neger 😎
-        res.status(200).json({ message: 'createStudentController controller is live 🧨' });
+        const result = yield student_services_1.studentServices.createStudent(data);
+        res
+            .status(200)
+            .json({ success: true, message: result.message, modelId: result.newStudent.id });
     }
     catch (err) {
         next(err);

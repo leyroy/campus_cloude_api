@@ -18,12 +18,14 @@ const prisma_config_1 = __importDefault(require("../config/prisma.config"));
 function cleanDatabase() {
     return __awaiter(this, void 0, void 0, function* () {
         console.log('🧹 Cleaning up the database...');
-        yield prisma_config_1.default.user.deleteMany({});
-        yield prisma_config_1.default.school.deleteMany({});
-        yield prisma_config_1.default.planFeature.deleteMany({});
-        yield prisma_config_1.default.plan.deleteMany({});
-        yield prisma_config_1.default.role.deleteMany({});
-        yield prisma_config_1.default.permission.deleteMany({});
+        yield prisma_config_1.default.$transaction((tx) => __awaiter(this, void 0, void 0, function* () {
+            yield tx.user.deleteMany({});
+            yield tx.school.deleteMany({});
+            yield tx.planFeature.deleteMany({});
+            yield tx.plan.deleteMany({});
+            yield tx.role.deleteMany({});
+            yield tx.permission.deleteMany({});
+        }));
     });
 }
 function seedPermissions() {

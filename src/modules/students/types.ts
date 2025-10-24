@@ -20,19 +20,13 @@ export const studentSchema = z.object({
   indexNumber: z.string().min(1, 'Index number is required'),
 });
 
-// firstName     String
-// lastName      String
-// relationship  RelationshipType
-// guardianEmail String
-// guardianPhone String
-// address       String
-
 export const guardianSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
   relationship: z.nativeEnum(RelationshipType),
-  guardianEmail: z.string().email(),
-  guardianPhone: z.string().min(1, { message: 'Guardian phone number is required' }),
+  email: z.string().email(),
+  occupation: z.string(),
+  phone: z.string().min(1, { message: 'Guardian phone number is required' }),
   address: z.string().min(1, 'Address is required'),
 });
 

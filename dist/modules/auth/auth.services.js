@@ -19,14 +19,11 @@ var __rest = (this && this.__rest) || function (s, e) {
         }
     return t;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const env_constants_1 = require("../../constants/env_constants");
 const http_status_1 = require("../../constants/http-status");
-const node_mailer_1 = __importDefault(require("../../mailers/node-mailer"));
+const mailer_1 = require("../../mailers/mailer");
 const errorHandler_1 = require("../../middlewares/errorHandler");
 const passwordMnager_1 = require("../../services/passwordMnager");
 const date_time_1 = require("../../utils/date-time");
@@ -47,7 +44,7 @@ class AuthService {
                 type: "EMAIL_VERIFICATION" /* VerificationEnum.EMAIL_VERIFICATION */,
                 expires: (0, date_time_1.fortyFiveMinutesFromNow)(),
             });
-            (0, node_mailer_1.default)({
+            (0, mailer_1.sendEmail)({
                 value: verificationCode.code,
                 template: './src/mailers/templates/otp.mjml',
                 subject: 'Verify your email',
@@ -91,6 +88,7 @@ class AuthService {
                     accessToken: '',
                     url: verifyUrl,
                     code: verificationCode.code,
+                    token: verificationCode.token,
                     isEmailVerified: false,
                 };
             }
@@ -114,7 +112,7 @@ class AuthService {
             };
         });
     }
-    verifyEmail(token, code) {
+    verifyEmail(token, code, userAgent, ipAddress, isFromLogin) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
             const verificationToken = yield authHelpers.getVerificationCode(token, "EMAIL_VERIFICATION" /* VerificationEnum.EMAIL_VERIFICATION */);
@@ -127,8 +125,25 @@ class AuthService {
             const verifiedUser = yield authHelpers.verifyUser(verificationToken.identifier);
             if (!verifiedUser)
                 throw errorHandler_1.ErrorHandler.badRequest('We were not able to verify your account, please try again later');
+            if (isFromLogin) {
+                const sessionPayload = {
+                    expires: (0, date_time_1.calculateExpirationDate)('7d'),
+                    userAgent: userAgent,
+                    ipAddress: ipAddress,
+                    sessionToken: (0, uuid_1.generateUniqueCode)(),
+                    userId: verifiedUser.id,
+                };
+                const session = yield authHelpers.createSession(sessionPayload);
+                const { accessToken, refreshToken } = (0, jwt_1.generateTokens)({
+                    userId: verifiedUser.id,
+                    sessionId: session.id,
+                    schoolId: verifiedUser.schoolId,
+                });
+                yield commonDbServices_1.commonDbService.deleteVerificationCode(verificationToken.id);
+                return { success: true, accessToken, refreshToken };
+            }
             yield commonDbServices_1.commonDbService.deleteVerificationCode(verificationToken.id);
-            return true;
+            return { success: true, accessToken: '', refreshToken: '' };
         });
     }
     refreshToken(token) {

@@ -2,14 +2,14 @@ import { Request, Response, NextFunction } from 'express';
 import { ErrorHandler } from '../../middlewares/errorHandler';
 import { studentServices } from './student.services';
 
-const updateGauirdian = async (req: Request, res: Response, next: NextFunction) => {
-  const { gauirdianId } = req.params as { gauirdianId: string };
+const updateGaurdian = async (req: Request, res: Response, next: NextFunction) => {
+  const { gaurdianId } = req.params as { gaurdianId: string };
   const data = req.body;
   try {
-    if (!gauirdianId) {
+    if (!gaurdianId) {
       throw ErrorHandler.forbidden('This action connot be completed');
     }
-    const result = await studentServices.updateGauidian(gauirdianId, data);
+    const result = await studentServices.updateGaurdian(gaurdianId, data);
 
     res
       .status(200)
@@ -19,4 +19,4 @@ const updateGauirdian = async (req: Request, res: Response, next: NextFunction) 
   }
 };
 
-export default updateGauirdian;
+export default updateGaurdian;

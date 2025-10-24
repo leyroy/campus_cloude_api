@@ -8,15 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const errorHandler_1 = require("../../middlewares/errorHandler");
 const prismaErrorHandler_1 = require("../../utils/prismaErrorHandler");
 const auth_validator_1 = require("./auth.validator");
 const auth_services_1 = require("./auth.services");
-const node_mailer_1 = __importDefault(require("../../mailers/node-mailer"));
+const mailer_1 = require("../../mailers/mailer");
 const http_status_1 = require("../../constants/http-status");
 const cookie_1 = require("../../utils/cookie");
 const authService = new auth_services_1.AuthService();
@@ -31,10 +28,10 @@ const loginController = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         throw errorHandler_1.ErrorHandler.badRequest(`Invalid data: ${(_a = isValidData === null || isValidData === void 0 ? void 0 : isValidData.error) === null || _a === void 0 ? void 0 : _a.message}`);
     }
     try {
-        const { refreshToken, accessToken, isEmailVerified, code } = yield authService.loginUser(Object.assign(Object.assign({}, isValidData.data), { userAgent,
+        const { refreshToken, accessToken, isEmailVerified, code, token } = yield authService.loginUser(Object.assign(Object.assign({}, isValidData.data), { userAgent,
             ipAddress }));
         if (!isEmailVerified) {
-            (0, node_mailer_1.default)({
+            (0, mailer_1.sendEmail)({
                 value: code || '',
                 template: './src/mailers/templates/otp.mjml',
                 subject: 'Verify your email',
@@ -44,6 +41,7 @@ const loginController = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
                 isEmailVerified,
                 refreshToken,
                 accessToken,
+                token: token,
                 message: 'An email has been sent to your account, Please verify your email to continue',
             });
         }
@@ -64,7 +62,6 @@ const loginController = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         if (error instanceof errorHandler_1.ErrorHandler) {
             return next(error);
         }
-        // Handle unexpected errors
         (0, prismaErrorHandler_1.handlePrismaError)(error);
         throw errorHandler_1.ErrorHandler.internal('An error occurred during login');
     }

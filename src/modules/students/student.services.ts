@@ -50,9 +50,9 @@ class StudentService {
       await prisma.document.delete({ where: { id: document.id } });
     }
   }
-  public async updateGauidian(gauidianId: string, data: Partial<GauidainUpdateDto>) {
+  public async updateGaurdian(gaurdianId: string, data: Partial<GauidainUpdateDto>) {
     return await prisma.guardian.update({
-      where: { id: gauidianId },
+      where: { id: gaurdianId },
       data: {
         ...data,
       },

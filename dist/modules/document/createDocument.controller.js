@@ -15,18 +15,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const service_1 = __importDefault(require("./service"));
 const uploadDocumentController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const file = req.file ? req.file.path : null;
-    const { moduleId } = req.params;
+    const { modulId } = req.params;
     const { purpose, fileType } = req.body;
     if (!file) {
         return next(new Error('No file uploaded'));
     }
     const result = yield service_1.default.uploadDocument({
-        moduleId,
+        modulId,
         purpose,
         fileType,
         file,
     });
-    console.log(result);
     res.status(200).json({ success: true, message: 'Uploaded successfully' });
 });
 exports.default = uploadDocumentController;

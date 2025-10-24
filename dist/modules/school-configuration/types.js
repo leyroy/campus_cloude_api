@@ -22,8 +22,8 @@ const schoolProfileSchema = zod_1.z.object({
     adminNote: zod_1.z.string().max(1000).min(1, { message: 'Admin note is required' }),
 });
 const ownerSchema = zod_1.z.object({
-    preferredContactMethod: zod_1.z.string().default('EMAIL'),
-    preferredContactTime: zod_1.z.string().default('MORNING'),
+    preferredContactMethod: zod_1.z.array(zod_1.z.nativeEnum(client_1.PreferredContactMethod)),
+    preferredContactTime: zod_1.z.array(zod_1.z.nativeEnum(client_1.PreferredContactTime)),
     educationBackground: zod_1.z.string(),
     isActive: zod_1.z.boolean().default(false),
     professionalExperience: zod_1.z.string(),

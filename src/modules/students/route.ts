@@ -10,7 +10,7 @@ import getStudentsBySchoolId from './getSudentsBySchoolId.controller';
 import updateStuent from './updateStudent.controller';
 import deleteStudent from './deleteStudent.controller';
 import { combindedStudentGuardianSchema, guardianSchema, studentSchema } from './types';
-import updateGauirdian from './updataGauidian.controller';
+import updateGaurdian from './updataGaurdian.controller';
 
 const studentRouter = Router();
 
@@ -42,7 +42,7 @@ studentRouter.put(
   validatePayload(TABELS_NAMES_ENUM.GAUIDIAN),
   zodValidator(guardianSchema),
   permissionHandler({ action: Action.UPDATE, resource: Resource.GAUIDIAN }),
-  catchAsync(updateGauirdian)
+  catchAsync(updateGaurdian)
 );
 studentRouter.delete(
   '/update-student',
