@@ -3,11 +3,20 @@ import { ErrorHandler } from '../../middlewares/errorHandler';
 import { CombindedStudent, GauidainUpdateDto, StudentUpdateDto } from './types';
 
 class StudentService {
-  public async createStudent(data: CombindedStudent) {
+  public async createStudent(
+    data: CombindedStudent,
+    schoolId: string,
+    indexNumber: string
+  ) {
     try {
       const { studentInformation, guardianInformation } = data;
       const newStudent = await prisma.student.create({
-        data: { ...studentInformation },
+        data: {
+          ...studentInformation,
+          classId: studentInformation.classId as string,
+          schoolId,
+          indexNumber,
+        },
       });
       if (!newStudent || !newStudent?.id) {
         throw ErrorHandler.internal();

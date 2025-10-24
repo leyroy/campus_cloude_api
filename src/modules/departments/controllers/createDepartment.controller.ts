@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { CustomRequest } from '../../../types/types';
 import { departmentServices } from '../services/department.services';
 import { AppError } from '../../../middlewares/errorHandler';
@@ -6,7 +6,11 @@ import { HTTPSTATUS } from '../../../constants/http-status';
 import { ErrorCode } from '../../../enums/error-code.enum';
 import { CreateDepartmentType } from '../types';
 
-const createDepartmentController = async (req: Request, res: Response) => {
+const createDepartmentController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { name, description } = req.body as CreateDepartmentType;
   const { userId, schoolId } = (req as CustomRequest).user;
   if (!schoolId || !userId) {

@@ -17,15 +17,15 @@ const { catchAsync } = new ErrorHandler();
 
 departmentRouter.use(authenticateToken);
 departmentRouter.post(
-  '/',
+  '/create-department',
   validatePayload(TABELS_NAMES_ENUM.DEPARTMENT),
   zodValidator(CreateDepartmentSchema),
-  catchAsync(
-    permissionHandler({
-      resource: Resource.DEPARTMENT,
-      action: Action.CREATE,
-    })
-  ),
+  // catchAsync(
+  //   permissionHandler({
+  //     resource: Resource.DEPARTMENT,
+  //     action: Action.CREATE,
+  //   })
+  // ),
   catchAsync(createDepartmentController)
 );
 
@@ -33,12 +33,12 @@ departmentRouter.put(
   '/:departmentId',
   validatePayload(TABELS_NAMES_ENUM.DEPARTMENT),
   zodValidator(CreateDepartmentSchema),
-  catchAsync(
-    permissionHandler({
-      resource: Resource.DEPARTMENT,
-      action: Action.UPDATE,
-    })
-  ),
+  // catchAsync(
+  //   permissionHandler({
+  //     resource: Resource.DEPARTMENT,
+  //     action: Action.UPDATE,
+  //   })
+  // ),
   catchAsync(updateDepartmentController)
 );
 departmentRouter.get(
