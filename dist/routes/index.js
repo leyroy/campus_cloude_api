@@ -11,12 +11,14 @@ const password_routes_1 = __importDefault(require("../modules/password-managemen
 const routes_3 = __importDefault(require("../modules/school-configuration/routes"));
 const routes_4 = __importDefault(require("../modules/document/routes"));
 const route_1 = __importDefault(require("../modules/students/route"));
+const routes_5 = __importDefault(require("../modules/departments/routes"));
 const appRouter = express_1.default.Router();
 appRouter.use('/auth', routes_2.default);
 appRouter.use('/users', users_1.default);
 appRouter.use('/roles', routes_1.default);
 appRouter.use('/password', password_routes_1.default);
 appRouter.use('/school', routes_3.default);
+appRouter.use('/department', routes_5.default);
 appRouter.use('/document', routes_4.default);
 appRouter.use('/students', route_1.default);
 exports.default = appRouter;

@@ -13,7 +13,7 @@ class DepartmentHelpers {
         return prisma_config_1.default.department.findUnique({ where: { id: departmentId } });
     }
     getDepartmentsBySchoolId(schoolId) {
-        return prisma_config_1.default.department.findMany({ where: { schoolId } });
+        return prisma_config_1.default.department.findMany({ where: { schoolId: schoolId } });
     }
     updateDepartment(departmentId, data) {
         return prisma_config_1.default.department.update({

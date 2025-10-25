@@ -16,12 +16,13 @@ exports.studentServices = void 0;
 const prisma_config_1 = __importDefault(require("../../config/prisma.config"));
 const errorHandler_1 = require("../../middlewares/errorHandler");
 class StudentService {
-    createStudent(data) {
+    createStudent(data, schoolId, indexNumber) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { studentInformation, guardianInformation } = data;
                 const newStudent = yield prisma_config_1.default.student.create({
-                    data: Object.assign({}, studentInformation),
+                    data: Object.assign(Object.assign({}, studentInformation), { classId: studentInformation.classId, schoolId,
+                        indexNumber }),
                 });
                 if (!newStudent || !(newStudent === null || newStudent === void 0 ? void 0 : newStudent.id)) {
                     throw errorHandler_1.ErrorHandler.internal();

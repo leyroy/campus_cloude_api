@@ -71,10 +71,6 @@ class DepartmentServices {
     }
     deleteDepartment(departmentId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const department = yield this.departmentHelpers.getDepartmentById(departmentId);
-            if (!department) {
-                throw errorHandler_1.ErrorHandler.notFound('Department not found');
-            }
             yield this.departmentHelpers.deleteDepartment(departmentId);
             return {
                 success: true,

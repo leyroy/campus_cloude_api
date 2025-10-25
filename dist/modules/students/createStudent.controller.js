@@ -10,10 +10,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const student_services_1 = require("./student.services");
+const errorHandler_1 = require("../../middlewares/errorHandler");
 const createStudentController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const data = req.body;
+    const { schoolId, userId } = req === null || req === void 0 ? void 0 : req.user;
+    const indexNumber = '1234567890';
     try {
-        const result = yield student_services_1.studentServices.createStudent(data);
+        if (!schoolId) {
+            throw errorHandler_1.ErrorHandler.forbidden('This action connot be completed');
+        }
+        const result = yield student_services_1.studentServices.createStudent(data, schoolId, indexNumber);
         res
             .status(200)
             .json({ success: true, message: result.message, modelId: result.newStudent.id });

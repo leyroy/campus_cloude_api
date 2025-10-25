@@ -8,7 +8,6 @@ const authenticateToken_1 = require("../../middlewares/authenticateToken");
 const errorHandler_1 = require("../../middlewares/errorHandler");
 const validate_payload_1 = require("../../middlewares/validate-payload");
 const types_1 = require("../../types/types");
-const permissionsManager_1 = __importDefault(require("../../middlewares/permissionsManager"));
 const createDepartment_controller_1 = __importDefault(require("./controllers/createDepartment.controller"));
 const updateDepartment_controller_1 = __importDefault(require("./controllers/updateDepartment.controller"));
 const zodValidator_1 = __importDefault(require("../../middlewares/zodValidator"));
@@ -19,24 +18,44 @@ const deleteDepartment_controller_1 = __importDefault(require("./controllers/del
 const departmentRouter = (0, express_1.Router)();
 const { catchAsync } = new errorHandler_1.ErrorHandler();
 departmentRouter.use(authenticateToken_1.authenticateToken);
-departmentRouter.post('/', (0, validate_payload_1.validatePayload)(types_1.TABELS_NAMES_ENUM.DEPARTMENT), (0, zodValidator_1.default)(types_2.CreateDepartmentSchema), catchAsync((0, permissionsManager_1.default)({
-    resource: types_1.Resource.DEPARTMENT,
-    action: types_1.Action.CREATE,
-})), catchAsync(createDepartment_controller_1.default));
-departmentRouter.put('/:departmentId', (0, validate_payload_1.validatePayload)(types_1.TABELS_NAMES_ENUM.DEPARTMENT), (0, zodValidator_1.default)(types_2.CreateDepartmentSchema), catchAsync((0, permissionsManager_1.default)({
-    resource: types_1.Resource.DEPARTMENT,
-    action: types_1.Action.UPDATE,
-})), catchAsync(updateDepartment_controller_1.default));
-departmentRouter.get('/:departmentId', catchAsync((0, permissionsManager_1.default)({
-    resource: types_1.Resource.DEPARTMENT,
-    action: types_1.Action.VIEW,
-})), catchAsync(getDepartmentId_controller_1.default));
-departmentRouter.get('/school', catchAsync((0, permissionsManager_1.default)({
-    action: types_1.Action.VIEW,
-    resource: types_1.Resource.DEPARTMENT,
-})), catchAsync(getDepartmentsBySchoolId_controller_1.default));
-departmentRouter.delete('/:deparmentId', catchAsync((0, permissionsManager_1.default)({
-    action: types_1.Action.VIEW,
-    resource: types_1.Resource.DEPARTMENT,
-})), catchAsync(deleteDepartment_controller_1.default));
+departmentRouter.delete('/delete/:departmentId', 
+// catchAsync(
+//   permissionHandler({
+//     action: Action.VIEW,
+//     resource: Resource.DEPARTMENT,
+//   })
+// ),
+catchAsync(deleteDepartment_controller_1.default));
+departmentRouter.post('/create-department', (0, validate_payload_1.validatePayload)(types_1.TABELS_NAMES_ENUM.DEPARTMENT), (0, zodValidator_1.default)(types_2.CreateDepartmentSchema), 
+// catchAsync(
+//   permissionHandler({
+//     resource: Resource.DEPARTMENT,
+//     action: Action.CREATE,
+//   })
+// ),
+catchAsync(createDepartment_controller_1.default));
+departmentRouter.put('/:departmentId', (0, validate_payload_1.validatePayload)(types_1.TABELS_NAMES_ENUM.DEPARTMENT), (0, zodValidator_1.default)(types_2.CreateDepartmentSchema), 
+// catchAsync(
+//   permissionHandler({
+//     resource: Resource.DEPARTMENT,
+//     action: Action.UPDATE,
+//   })
+// ),
+catchAsync(updateDepartment_controller_1.default));
+departmentRouter.get('/department-by-school', 
+// catchAsync(
+//   permissionHandler({
+//     action: Action.VIEW,
+//     resource: Resource.DEPARTMENT,
+//   })
+// ),
+catchAsync(getDepartmentsBySchoolId_controller_1.default));
+departmentRouter.get('/department-by-department-id/:departmentId', 
+// catchAsync(
+//   permissionHandler({
+//     resource: Resource.DEPARTMENT,
+//     action: Action.VIEW,
+//   })
+// ),
+catchAsync(getDepartmentId_controller_1.default));
 exports.default = departmentRouter;

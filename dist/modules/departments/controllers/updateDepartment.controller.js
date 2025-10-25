@@ -15,7 +15,7 @@ const updateDepartmentController = (req, res) => __awaiter(void 0, void 0, void 
     const { departmentId } = req.params;
     const { userId } = req === null || req === void 0 ? void 0 : req.user;
     const updatedData = req.body;
-    yield department_services_1.departmentServices.updateDepartment(departmentId, Object.assign(Object.assign({}, updatedData), { updatedBy: userId }));
+    yield department_services_1.departmentServices.updateDepartment(departmentId, Object.assign(Object.assign({}, updatedData), { updatedById: userId }));
     res.status(http_status_1.HTTPSTATUS.OK).json(updatedData);
 });
 exports.default = updateDepartmentController;

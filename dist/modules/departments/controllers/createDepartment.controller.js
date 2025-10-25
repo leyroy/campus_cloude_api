@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const department_services_1 = require("../services/department.services");
 const errorHandler_1 = require("../../../middlewares/errorHandler");
 const http_status_1 = require("../../../constants/http-status");
-const createDepartmentController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const createDepartmentController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, description } = req.body;
     const { userId, schoolId } = req.user;
     if (!schoolId || !userId) {

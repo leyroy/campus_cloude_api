@@ -17,7 +17,8 @@ const getDepartmentBySchoolId = (req, res) => __awaiter(void 0, void 0, void 0, 
     if (!schoolId) {
         throw errorHandler_1.ErrorHandler.unauthorized();
     }
+    console.log(schoolId, 'this is the school id');
     const result = yield department_services_1.departmentServices.getDepartmentsBySchoolId(schoolId);
-    res.status(http_status_1.HTTPSTATUS.OK).json(Object.assign({}, result));
+    res.status(http_status_1.HTTPSTATUS.OK).json({ success: result.success, department: result.data });
 });
 exports.default = getDepartmentBySchoolId;

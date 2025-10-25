@@ -11,9 +11,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const department_services_1 = require("../services/department.services");
 const http_status_1 = require("../../../constants/http-status");
-const deleteDepartmentController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // 🎯 Handle deleteDepartment logic here neger 😎
+const errorHandler_1 = require("../../../middlewares/errorHandler");
+const deleteDepartmentController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { departmentId } = req.params;
+    if (!departmentId) {
+        throw errorHandler_1.ErrorHandler.badRequest('This action connot be completed');
+    }
     const result = yield department_services_1.departmentServices.deleteDepartment(departmentId);
     res.status(http_status_1.HTTPSTATUS.OK).json(Object.assign({}, result));
 });
