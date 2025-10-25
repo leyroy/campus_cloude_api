@@ -9,7 +9,7 @@ export class DepartmentHelpers {
     return prisma.department.findUnique({ where: { id: departmentId } });
   }
   public getDepartmentsBySchoolId(schoolId: string) {
-    return prisma.department.findMany({ where: { schoolId } });
+    return prisma.department.findMany({ where: { schoolId: schoolId } });
   }
   public updateDepartment(departmentId: string, data: Partial<Department>) {
     return prisma.department.update({

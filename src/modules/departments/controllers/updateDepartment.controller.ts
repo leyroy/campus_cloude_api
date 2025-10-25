@@ -9,9 +9,8 @@ const updateDepartmentController = async (req: Request, res: Response) => {
   const updatedData = req.body;
   await departmentServices.updateDepartment(departmentId, {
     ...updatedData,
-    updatedBy: userId,
+    updatedById: userId,
   });
-
   res.status(HTTPSTATUS.OK).json(updatedData);
 };
 

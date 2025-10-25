@@ -65,10 +65,6 @@ class DepartmentServices {
   }
 
   public async deleteDepartment(departmentId: string) {
-    const department = await this.departmentHelpers.getDepartmentById(departmentId);
-    if (!department) {
-      throw ErrorHandler.notFound('Department not found');
-    }
     await this.departmentHelpers.deleteDepartment(departmentId);
     return {
       success: true,

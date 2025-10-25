@@ -16,6 +16,16 @@ const departmentRouter = Router();
 const { catchAsync } = new ErrorHandler();
 
 departmentRouter.use(authenticateToken);
+departmentRouter.delete(
+  '/delete/:departmentId',
+  // catchAsync(
+  //   permissionHandler({
+  //     action: Action.VIEW,
+  //     resource: Resource.DEPARTMENT,
+  //   })
+  // ),
+  catchAsync(deleteDepartmentController)
+);
 departmentRouter.post(
   '/create-department',
   validatePayload(TABELS_NAMES_ENUM.DEPARTMENT),
@@ -42,35 +52,24 @@ departmentRouter.put(
   catchAsync(updateDepartmentController)
 );
 departmentRouter.get(
-  '/:departmentId',
-  catchAsync(
-    permissionHandler({
-      resource: Resource.DEPARTMENT,
-      action: Action.VIEW,
-    })
-  ),
-  catchAsync(getDepartmentById)
-);
-
-departmentRouter.get(
-  '/school',
-  catchAsync(
-    permissionHandler({
-      action: Action.VIEW,
-      resource: Resource.DEPARTMENT,
-    })
-  ),
+  '/department-by-school',
+  // catchAsync(
+  //   permissionHandler({
+  //     action: Action.VIEW,
+  //     resource: Resource.DEPARTMENT,
+  //   })
+  // ),
   catchAsync(getDepartmentBySchoolId)
 );
-departmentRouter.delete(
-  '/:deparmentId',
-  catchAsync(
-    permissionHandler({
-      action: Action.VIEW,
-      resource: Resource.DEPARTMENT,
-    })
-  ),
-  catchAsync(deleteDepartmentController)
+departmentRouter.get(
+  '/department-by-department-id/:departmentId',
+  // catchAsync(
+  //   permissionHandler({
+  //     resource: Resource.DEPARTMENT,
+  //     action: Action.VIEW,
+  //   })
+  // ),
+  catchAsync(getDepartmentById)
 );
 
 export default departmentRouter;

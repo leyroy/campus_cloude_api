@@ -361,7 +361,8 @@ model Class {
   name             String
   description      String?
   gradeLevel       Int
-  updatedById      String
+  capacity         Int
+  createdById      String
   courseId         String?
   schoolId         String
   createdAt        DateTime           @default(now())
