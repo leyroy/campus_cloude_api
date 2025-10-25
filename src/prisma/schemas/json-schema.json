@@ -1033,7 +1033,10 @@
         "gradeLevel": {
           "type": "integer"
         },
-        "updatedById": {
+        "capacity": {
+          "type": "integer"
+        },
+        "createdById": {
           "type": "string"
         },
         "createdAt": {

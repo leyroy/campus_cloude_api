@@ -14,9 +14,8 @@ const verifyEmailController = async (req: Request, res: Response, next: NextFunc
       code?: string;
       isFromLogin?: boolean;
     };
-    console.log('Verify Email Request Body:', req.body);
     if (!token) {
-      throw ErrorHandler.badRequest('Verification Token is required');
+      throw ErrorHandler.badRequest('Verification token is required');
     }
     const { success, accessToken, refreshToken } = await authService.verifyEmail(
       token,
@@ -26,7 +25,9 @@ const verifyEmailController = async (req: Request, res: Response, next: NextFunc
       isFromLogin
     );
     if (!success)
-      throw ErrorHandler.badRequest('Invalid verification token or it has expired');
+      throw ErrorHandler.badRequest(
+        'Invalid/expired verification token. Please request a new one.'
+      );
 
     if (isFromLogin) {
       return setAuthenticationCookies({

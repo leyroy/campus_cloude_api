@@ -8,7 +8,9 @@ class ClassService {
     this.classHelper = classHelper;
   }
 
-  public async createClass(data: CreateClassDto) {
+  public async createClass(
+    data: CreateClassDto & { createdById: string; capacity: number }
+  ) {
     const newClass = await this.classHelper.createClass(data);
     if (!newClass) {
       throw ErrorHandler.internal('Failed to create class');

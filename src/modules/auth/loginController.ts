@@ -40,7 +40,7 @@ const loginController = async (req: Request, res: Response, next: NextFunction) 
         accessToken,
         token: token,
         message:
-          'An email has been sent to your account, Please verify your email to continue',
+          'Email has been sent to your account, Please verify your email to continue',
       });
     }
     return setAuthenticationCookies({
