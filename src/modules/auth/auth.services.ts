@@ -2,7 +2,7 @@ import { ENV_CONSTANTS } from '../../constants/env_constants';
 import { HTTPSTATUS } from '../../constants/http-status';
 import { ErrorCode } from '../../enums/error-code.enum';
 import { VerificationEnum } from '../../enums/verification-code.enum';
-import { sendEmail } from '../../mailers/mailer';
+import sendEmail from '../../mailers/node-mailer';
 import { AppError, ErrorHandler } from '../../middlewares/errorHandler';
 import { passwordManager } from '../../services/passwordMnager';
 import {

@@ -3,9 +3,9 @@ import { ErrorHandler } from '../../middlewares/errorHandler';
 import { handlePrismaError } from '../../utils/prismaErrorHandler';
 import { loginSchema } from './auth.validator';
 import { AuthService } from './auth.services';
-import { sendEmail } from '../../mailers/mailer';
 import { HTTPSTATUS } from '../../constants/http-status';
 import { setAuthenticationCookies } from '../../utils/cookie';
+import sendEmail from '../../mailers/node-mailer';
 
 const authService = new AuthService();
 

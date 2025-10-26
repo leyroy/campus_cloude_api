@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { passwordServices } from './password.services';
 import { ErrorHandler } from '../../middlewares/errorHandler';
-import { sendEmail } from '../../mailers/mailer';
+import sendEmail from '../../mailers/node-mailer';
 import { HTTPSTATUS } from '../../constants/http-status';
 import { ENV_CONSTANTS } from '../../constants/env_constants';
 
