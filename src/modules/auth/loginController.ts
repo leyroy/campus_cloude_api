@@ -6,6 +6,7 @@ import { AuthService } from './auth.services';
 import { HTTPSTATUS } from '../../constants/http-status';
 import { setAuthenticationCookies } from '../../utils/cookie';
 import sendEmail from '../../mailers/node-mailer';
+import { IS_PRODUCTION } from '../../constants/env_constants';
 
 const authService = new AuthService();
 
@@ -30,7 +31,9 @@ const loginController = async (req: Request, res: Response, next: NextFunction) 
     if (!isEmailVerified) {
       sendEmail({
         value: code || '',
-        template: './src/mailers/templates/otp.mjml',
+        template: IS_PRODUCTION
+          ? './mailers/templates/otp.mjml'
+          : './src/mailers/templates/otp.mjml',
         subject: 'Verify your email',
         to: isValidData.data.email,
       });

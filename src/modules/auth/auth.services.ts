@@ -1,4 +1,4 @@
-import { ENV_CONSTANTS } from '../../constants/env_constants';
+import { ENV_CONSTANTS, IS_PRODUCTION } from '../../constants/env_constants';
 import { HTTPSTATUS } from '../../constants/http-status';
 import { ErrorCode } from '../../enums/error-code.enum';
 import { VerificationEnum } from '../../enums/verification-code.enum';
@@ -41,7 +41,9 @@ export class AuthService {
     });
     sendEmail({
       value: verificationCode.code as string,
-      template: './src/mailers/templates/otp.mjml',
+      template: IS_PRODUCTION
+        ? './mailers/templates/otp.mjml'
+        : './src/mailers/templates/otp.mjml',
       subject: 'Verify your email',
       to: newUser.email,
     });

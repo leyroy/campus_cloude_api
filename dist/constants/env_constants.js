@@ -1,8 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ENV_CONSTANTS = void 0;
+exports.IS_PRODUCTION = exports.ENV_CONSTANTS = void 0;
 //export all environment constants
 exports.ENV_CONSTANTS = {
+    ENVIRONMENT: process.env.ENVIRONMENT,
+    PORT: process.env.PORT || 5000,
     JWT_ENV: {
         JWT_SECRET: process.env.JWT_SECRET,
         JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN,
@@ -22,3 +24,4 @@ exports.ENV_CONSTANTS = {
     MAILER_SENDER: process.env.MAILER_SENDER,
     NODE_ENV: process.env.NODE_ENV,
 };
+exports.IS_PRODUCTION = exports.ENV_CONSTANTS.NODE_ENV === 'production';
