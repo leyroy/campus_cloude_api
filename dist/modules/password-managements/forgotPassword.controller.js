@@ -8,10 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const password_services_1 = require("./password.services");
 const errorHandler_1 = require("../../middlewares/errorHandler");
-const mailer_1 = require("../../mailers/mailer");
+const node_mailer_1 = __importDefault(require("../../mailers/node-mailer"));
 const http_status_1 = require("../../constants/http-status");
 const env_constants_1 = require("../../constants/env_constants");
 const forgotPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -26,7 +29,7 @@ const forgotPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         }
         //TODO: Update the reset link to point to the frontend application and design a reset password email template
         const resetLink = `${env_constants_1.ENV_CONSTANTS.FRONTEND_BASE_PATH}/reset-password?token=${forgotPasswordToken.token}`;
-        yield (0, mailer_1.sendEmail)({
+        yield (0, node_mailer_1.default)({
             to: email,
             subject: 'Password Reset Request',
             template: './src/mailers/templates/password-reset.mjml',

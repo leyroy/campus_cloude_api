@@ -26,6 +26,7 @@ const uploadDocumentController = (req, res, next) => __awaiter(void 0, void 0, v
         fileType,
         file,
     });
-    res.status(200).json({ success: true, message: 'Uploaded successfully' });
+    console.log('working now');
+    res.status(200).json({ success: true, message: 'Uploaded successfully', data: result });
 });
 exports.default = uploadDocumentController;

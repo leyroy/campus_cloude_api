@@ -20,7 +20,7 @@ const uploadDocumentController = async (
     file,
   });
   console.log('working now');
-  res.status(200).json({ success: true, message: 'Uploaded successfully' });
+  res.status(200).json({ success: true, message: 'Uploaded successfully', data: result });
 };
 
 export default uploadDocumentController;

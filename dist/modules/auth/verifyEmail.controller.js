@@ -19,13 +19,12 @@ const verifyEmailController = (req, res, next) => __awaiter(void 0, void 0, void
     const ipAddress = req.ip || req.socket.remoteAddress || 'unknown';
     try {
         const { token, code, isFromLogin } = req.body;
-        console.log('Verify Email Request Body:', req.body);
         if (!token) {
-            throw errorHandler_1.ErrorHandler.badRequest('Verification Token is required');
+            throw errorHandler_1.ErrorHandler.badRequest('Verification token is required');
         }
         const { success, accessToken, refreshToken } = yield authService.verifyEmail(token, code, userAgent, ipAddress, isFromLogin);
         if (!success)
-            throw errorHandler_1.ErrorHandler.badRequest('Invalid verification token or it has expired');
+            throw errorHandler_1.ErrorHandler.badRequest('Invalid/expired verification token. Please request a new one.');
         if (isFromLogin) {
             return (0, cookie_1.setAuthenticationCookies)({
                 res,

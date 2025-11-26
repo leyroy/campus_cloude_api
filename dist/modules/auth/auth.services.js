@@ -19,11 +19,14 @@ var __rest = (this && this.__rest) || function (s, e) {
         }
     return t;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const env_constants_1 = require("../../constants/env_constants");
 const http_status_1 = require("../../constants/http-status");
-const mailer_1 = require("../../mailers/mailer");
+const node_mailer_1 = __importDefault(require("../../mailers/node-mailer"));
 const errorHandler_1 = require("../../middlewares/errorHandler");
 const passwordMnager_1 = require("../../services/passwordMnager");
 const date_time_1 = require("../../utils/date-time");
@@ -44,7 +47,7 @@ class AuthService {
                 type: "EMAIL_VERIFICATION" /* VerificationEnum.EMAIL_VERIFICATION */,
                 expires: (0, date_time_1.fortyFiveMinutesFromNow)(),
             });
-            (0, mailer_1.sendEmail)({
+            (0, node_mailer_1.default)({
                 value: verificationCode.code,
                 template: './src/mailers/templates/otp.mjml',
                 subject: 'Verify your email',

@@ -8,14 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const errorHandler_1 = require("../../middlewares/errorHandler");
 const prismaErrorHandler_1 = require("../../utils/prismaErrorHandler");
 const auth_validator_1 = require("./auth.validator");
 const auth_services_1 = require("./auth.services");
-const mailer_1 = require("../../mailers/mailer");
 const http_status_1 = require("../../constants/http-status");
 const cookie_1 = require("../../utils/cookie");
+const node_mailer_1 = __importDefault(require("../../mailers/node-mailer"));
 const authService = new auth_services_1.AuthService();
 const loginController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
@@ -31,7 +34,7 @@ const loginController = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         const { refreshToken, accessToken, isEmailVerified, code, token } = yield authService.loginUser(Object.assign(Object.assign({}, isValidData.data), { userAgent,
             ipAddress }));
         if (!isEmailVerified) {
-            (0, mailer_1.sendEmail)({
+            (0, node_mailer_1.default)({
                 value: code || '',
                 template: './src/mailers/templates/otp.mjml',
                 subject: 'Verify your email',
@@ -42,7 +45,7 @@ const loginController = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
                 refreshToken,
                 accessToken,
                 token: token,
-                message: 'An email has been sent to your account, Please verify your email to continue',
+                message: 'Email has been sent to your account, Please verify your email to continue',
             });
         }
         return (0, cookie_1.setAuthenticationCookies)({
