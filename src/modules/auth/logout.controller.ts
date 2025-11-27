@@ -7,7 +7,9 @@ import { HTTPSTATUS } from '../../constants/http-status';
 export async function logoutController(req: Request, res: Response) {
   const user = (req as CustomRequest).user;
   console.log('User logging out:', user);
-  await commonDbService.deleteSession(user.sessionId);
+  if (user && user.sessionId) {
+    await commonDbService.deleteSession(user.sessionId);
+  }
 
   clearAuthenticationCookies(res).status(HTTPSTATUS.OK).json({
     success: true,

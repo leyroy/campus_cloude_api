@@ -13,6 +13,11 @@ export const authenticateToken = async (
 ) => {
   try {
     const { campus_cloud_accessToken: token } = req.cookies;
+    const islogOutPaht = req.path === '/logout';
+    // No token provided
+    if (!token && islogOutPaht) {
+      return next();
+    }
     if (!token) {
       throw new AppError({
         message: 'No token provided',
@@ -24,8 +29,10 @@ export const authenticateToken = async (
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as TokenTypes;
     // Check if user still exists and is active
     const user = await prisma.user.findUnique({ where: { id: decoded.userId } });
-    const islogOutPaht = req.path === '/logout';
-    console.log(req.path);
+
+    if (!user && islogOutPaht) {
+      return next();
+    }
 
     if (!user) {
       throw new AppError({
