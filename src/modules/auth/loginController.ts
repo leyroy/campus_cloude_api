@@ -29,7 +29,7 @@ const loginController = async (req: Request, res: Response, next: NextFunction) 
       });
 
     if (!isEmailVerified) {
-      sendEmail({
+      await sendEmail({
         value: code || '',
         template: 'otp.mjml',
         subject: 'Verify your email',

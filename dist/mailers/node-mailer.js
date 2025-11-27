@@ -23,6 +23,10 @@ const transporter = nodemailer_1.default.createTransport({
         user: 'leyroycontact@gmail.com',
         pass: 'oayhiobkbnlwcoja',
     },
+    options: {
+        dnsTimeout: 7000,
+        connectionTimeout: 7000,
+    },
 });
 const sendEmail = (_a) => __awaiter(void 0, [_a], void 0, function* ({ value, to, subject, text, template, }) {
     const templatePath = path_1.default.join(__dirname, '/templates', template);

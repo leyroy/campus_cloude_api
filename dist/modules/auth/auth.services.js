@@ -47,7 +47,7 @@ class AuthService {
                 type: "EMAIL_VERIFICATION" /* VerificationEnum.EMAIL_VERIFICATION */,
                 expires: (0, date_time_1.fortyFiveMinutesFromNow)(),
             });
-            (0, node_mailer_1.default)({
+            yield (0, node_mailer_1.default)({
                 value: verificationCode.code,
                 template: 'otp.mjml',
                 subject: 'Verify your email',

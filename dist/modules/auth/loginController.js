@@ -34,7 +34,7 @@ const loginController = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         const { refreshToken, accessToken, isEmailVerified, code, token } = yield authService.loginUser(Object.assign(Object.assign({}, isValidData.data), { userAgent,
             ipAddress }));
         if (!isEmailVerified) {
-            (0, node_mailer_1.default)({
+            yield (0, node_mailer_1.default)({
                 value: code || '',
                 template: 'otp.mjml',
                 subject: 'Verify your email',

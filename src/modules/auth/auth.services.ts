@@ -39,7 +39,7 @@ export class AuthService {
       type: VerificationEnum.EMAIL_VERIFICATION,
       expires: fortyFiveMinutesFromNow(),
     });
-    sendEmail({
+    await sendEmail({
       value: verificationCode.code as string,
       template: 'otp.mjml',
       subject: 'Verify your email',
