@@ -29,7 +29,10 @@ const sendEmail = (_a) => __awaiter(void 0, [_a], void 0, function* ({ value, to
     // Resolve to absolute path
     const isDevelopment = env_constants_1.ENV_CONSTANTS.NODE_ENV !== 'production';
     const basePath = isDevelopment ? 'src' : 'dist';
-    const templatePath = path_1.default.join(process.cwd(), basePath, 'mailers/templates', template);
+    // D:\Developer\campus_cloude_api\src\mailers\templates
+    // D:\Developer\campus_cloude_api\src\mailers\src\\mailers\\templates\\otp.mjml
+    const templatePath = path_1.default.join(__dirname, '/templates', template);
+    console.log('Using template path:', templatePath);
     const { html: otpHtml } = (0, mjml_1.default)(fs_1.default
         .readFileSync(templatePath, 'utf8')
         .replace(/{{otp}}/g, value)

@@ -33,7 +33,11 @@ const sendEmail = async ({
   const isDevelopment = ENV_CONSTANTS.NODE_ENV !== 'production';
   const basePath = isDevelopment ? 'src' : 'dist';
 
-  const templatePath = path.join(process.cwd(), basePath, 'mailers/templates', template);
+  // D:\Developer\campus_cloude_api\src\mailers\templates
+  // D:\Developer\campus_cloude_api\src\mailers\src\\mailers\\templates\\otp.mjml
+
+  const templatePath = path.join(__dirname, '/templates', template);
+  console.log('Using template path:', templatePath);
   const { html: otpHtml } = mjml2html(
     fs
       .readFileSync(templatePath, 'utf8')
