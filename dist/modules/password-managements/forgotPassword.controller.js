@@ -32,7 +32,7 @@ const forgotPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         yield (0, node_mailer_1.default)({
             to: email,
             subject: 'Password Reset Request',
-            template: './src/mailers/templates/password-reset.mjml',
+            template: 'password-reset.mjml',
             value: resetLink,
         });
         res

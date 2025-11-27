@@ -49,9 +49,7 @@ class AuthService {
             });
             (0, node_mailer_1.default)({
                 value: verificationCode.code,
-                template: env_constants_1.IS_PRODUCTION
-                    ? './mailers/templates/otp.mjml'
-                    : './src/mailers/templates/otp.mjml',
+                template: 'otp.mjml',
                 subject: 'Verify your email',
                 to: newUser.email,
             });

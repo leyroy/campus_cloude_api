@@ -19,7 +19,6 @@ const auth_services_1 = require("./auth.services");
 const http_status_1 = require("../../constants/http-status");
 const cookie_1 = require("../../utils/cookie");
 const node_mailer_1 = __importDefault(require("../../mailers/node-mailer"));
-const env_constants_1 = require("../../constants/env_constants");
 const authService = new auth_services_1.AuthService();
 const loginController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
@@ -37,9 +36,7 @@ const loginController = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         if (!isEmailVerified) {
             (0, node_mailer_1.default)({
                 value: code || '',
-                template: env_constants_1.IS_PRODUCTION
-                    ? './mailers/templates/otp.mjml'
-                    : './src/mailers/templates/otp.mjml',
+                template: 'otp.mjml',
                 subject: 'Verify your email',
                 to: isValidData.data.email,
             });
