@@ -22,6 +22,7 @@ const prisma_config_1 = __importDefault(require("./config/prisma.config"));
 const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const swagger_config_1 = __importDefault(require("./config/swagger.config"));
+const commonDbServices_1 = require("./utils/db/commonDbServices");
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 5000;
 const errorHandler = new errorHandler_1.ErrorHandler();
@@ -37,10 +38,19 @@ dotenv_1.default.config();
 errorHandler.setupGlobalHandlers();
 app.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swagger_config_1.default));
 app.use('/campcloud/api/v1', routes_1.default);
+app.get('/campcloud/api/v1/create-admin-role', (req, res, next) => {
+    commonDbServices_1.commonDbService
+        .assignAllPermissionsToSuperAdmin()
+        .then(() => {
+        res.status(201).json({ message: 'Admin role created successfully' });
+    })
+        .catch((error) => {
+        next(error);
+    });
+});
 app.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.json({ message: 'Welcome to the Express server!' });
 }));
-// commonDbService.assignAllPermissionsToSuperAdmin();
 app.use(errorHandler.handleError);
 app.listen(PORT, () => {
     console.log(`Server is running on port http://localhost:${PORT}`);

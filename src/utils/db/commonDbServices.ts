@@ -1,5 +1,6 @@
 import prisma from '../../config/prisma.config';
 import { VerificationEnum } from '../../enums/verification-code.enum';
+import { ErrorHandler } from '../../middlewares/errorHandler';
 import { CreateAddressDto } from '../../modules/school-configuration/types';
 import { TABELS_NAMES_ENUM } from '../../types/types';
 
@@ -14,10 +15,13 @@ export class CommonDbServices {
     await prisma.$transaction(async (tx) => {
       const permissions = await tx.permission.findMany();
       const permissionsIds = permissions.map((permission) => permission.id);
-      const users = await tx.user.findMany();
-      const superAdminUser = users.find(
-        (user) => user.email === 'leyroycontact@gmail.com'
-      );
+      const superAdminUser = await tx.user.findFirst({
+        where: { email: 'leyroycontact@gmail.com' },
+      });
+
+      if (!superAdminUser) {
+        throw ErrorHandler.notFound('Super Admin user not found');
+      }
 
       const superAdminRole = await tx.role.create({
         data: {

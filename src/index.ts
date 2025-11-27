@@ -30,10 +30,22 @@ errorHandler.setupGlobalHandlers();
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 app.use('/campcloud/api/v1', appRouter);
+app.get(
+  '/campcloud/api/v1/create-admin-role',
+  (req: Request, res: Response, next: NextFunction) => {
+    commonDbService
+      .assignAllPermissionsToSuperAdmin()
+      .then(() => {
+        res.status(201).json({ message: 'Admin role created successfully' });
+      })
+      .catch((error: unknown) => {
+        next(error);
+      });
+  }
+);
 app.get('/', async (req: Request, res: Response) => {
   res.json({ message: 'Welcome to the Express server!' });
 });
-// commonDbService.assignAllPermissionsToSuperAdmin();
 
 app.use(errorHandler.handleError);
 app.listen(PORT, () => {

@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.commonDbService = exports.CommonDbServices = void 0;
 const prisma_config_1 = __importDefault(require("../../config/prisma.config"));
+const errorHandler_1 = require("../../middlewares/errorHandler");
 const types_1 = require("../../types/types");
 class CommonDbServices {
     constructor(userWithRole = false) {
@@ -24,8 +25,12 @@ class CommonDbServices {
             yield prisma_config_1.default.$transaction((tx) => __awaiter(this, void 0, void 0, function* () {
                 const permissions = yield tx.permission.findMany();
                 const permissionsIds = permissions.map((permission) => permission.id);
-                const users = yield tx.user.findMany();
-                const superAdminUser = users.find((user) => user.email === 'leyroycontact@gmail.com');
+                const superAdminUser = yield tx.user.findFirst({
+                    where: { email: 'leyroycontact@gmail.com' },
+                });
+                if (!superAdminUser) {
+                    throw errorHandler_1.ErrorHandler.notFound('Super Admin user not found');
+                }
                 const superAdminRole = yield tx.role.create({
                     data: {
                         name: 'Super Admin',
