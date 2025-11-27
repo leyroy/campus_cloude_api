@@ -2,6 +2,8 @@
 import nodemailer, { Transporter } from 'nodemailer';
 import mjml2html from 'mjml';
 import fs from 'fs';
+import path from 'path';
+import { ENV_CONSTANTS } from '../constants/env_constants';
 
 const transporter: Transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -27,9 +29,14 @@ const sendEmail = async ({
   text,
   template,
 }: MailOptions): Promise<boolean> => {
+  // Resolve to absolute path
+  const isDevelopment = ENV_CONSTANTS.NODE_ENV !== 'production';
+  const basePath = isDevelopment ? 'src' : 'dist';
+
+  const templatePath = path.join(process.cwd(), basePath, 'mailers/templates', template);
   const { html: otpHtml } = mjml2html(
     fs
-      .readFileSync(template, 'utf8')
+      .readFileSync(templatePath, 'utf8')
       .replace(/{{otp}}/g, value)
       .replace(/{{resetUrl}}/g, value)
   );

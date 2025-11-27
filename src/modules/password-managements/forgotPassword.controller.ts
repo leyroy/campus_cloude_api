@@ -20,7 +20,7 @@ const forgotPassword = async (req: Request, res: Response, next: NextFunction) =
     await sendEmail({
       to: email,
       subject: 'Password Reset Request',
-      template: './src/mailers/templates/password-reset.mjml',
+      template: 'password-reset.mjml',
       value: resetLink,
     });
     res

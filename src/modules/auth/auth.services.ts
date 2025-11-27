@@ -41,9 +41,7 @@ export class AuthService {
     });
     sendEmail({
       value: verificationCode.code as string,
-      template: IS_PRODUCTION
-        ? './mailers/templates/otp.mjml'
-        : './src/mailers/templates/otp.mjml',
+      template: 'otp.mjml',
       subject: 'Verify your email',
       to: newUser.email,
     });
