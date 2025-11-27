@@ -17,7 +17,9 @@ function logoutController(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const user = req.user;
         console.log('User logging out:', user);
-        yield commonDbServices_1.commonDbService.deleteSession(user.sessionId);
+        if (user && user.sessionId) {
+            yield commonDbServices_1.commonDbService.deleteSession(user.sessionId);
+        }
         (0, cookie_1.clearAuthenticationCookies)(res).status(http_status_1.HTTPSTATUS.OK).json({
             success: true,
             message: 'Logout successful',

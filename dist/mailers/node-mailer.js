@@ -17,7 +17,6 @@ const nodemailer_1 = __importDefault(require("nodemailer"));
 const mjml_1 = __importDefault(require("mjml"));
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
-const env_constants_1 = require("../constants/env_constants");
 const transporter = nodemailer_1.default.createTransport({
     service: 'gmail',
     auth: {
@@ -26,11 +25,6 @@ const transporter = nodemailer_1.default.createTransport({
     },
 });
 const sendEmail = (_a) => __awaiter(void 0, [_a], void 0, function* ({ value, to, subject, text, template, }) {
-    // Resolve to absolute path
-    const isDevelopment = env_constants_1.ENV_CONSTANTS.NODE_ENV !== 'production';
-    const basePath = isDevelopment ? 'src' : 'dist';
-    // D:\Developer\campus_cloude_api\src\mailers\templates
-    // D:\Developer\campus_cloude_api\src\mailers\src\\mailers\\templates\\otp.mjml
     const templatePath = path_1.default.join(__dirname, '/templates', template);
     console.log('Using template path:', templatePath);
     const { html: otpHtml } = (0, mjml_1.default)(fs_1.default

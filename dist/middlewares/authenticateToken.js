@@ -20,6 +20,11 @@ const http_status_1 = require("../constants/http-status");
 const authenticateToken = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { campus_cloud_accessToken: token } = req.cookies;
+        const islogOutPaht = req.path === '/logout';
+        // No token provided
+        if (!token && islogOutPaht) {
+            return next();
+        }
         if (!token) {
             throw new errorHandler_1.AppError({
                 message: 'No token provided',
@@ -31,8 +36,9 @@ const authenticateToken = (req, res, next) => __awaiter(void 0, void 0, void 0, 
         const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
         // Check if user still exists and is active
         const user = yield prisma_config_1.default.user.findUnique({ where: { id: decoded.userId } });
-        const islogOutPaht = req.path === '/logout';
-        console.log(req.path);
+        if (!user && islogOutPaht) {
+            return next();
+        }
         if (!user) {
             throw new errorHandler_1.AppError({
                 message: 'User not found or inactive',

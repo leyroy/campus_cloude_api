@@ -12,7 +12,7 @@
     "generate": "npx prisma generate",
     "postinstall": "prisma generate",
     "seed": "ts-node --transpile-only src/seed/seed.ts",
-    "build": "npx prisma migrate deploy && tsc"
+    "build": "npx prisma migrate deploy && tsc && cp -r src/mailers/templates dist/mailers"
   },
   "prisma": {
     "seed": "ts-node --transpile-only src/seed/seed.ts"
