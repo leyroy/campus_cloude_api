@@ -24,7 +24,7 @@ export const authenticateToken = async (
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as TokenTypes;
     // Check if user still exists and is active
     const user = await prisma.user.findUnique({ where: { id: decoded.userId } });
-    const islogOutPaht = req.path === '/logou';
+    const islogOutPaht = req.path === '/logout';
     console.log(req.path);
 
     if (!user) {
