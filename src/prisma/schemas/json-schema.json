@@ -130,6 +130,12 @@
           "items": {
             "$ref": "#/definitions/Assessment"
           }
+        },
+        "classes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Class"
+          }
         }
       }
     },
@@ -355,6 +361,12 @@
           "items": {
             "$ref": "#/definitions/Student"
           }
+        },
+        "classes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Class"
+          }
         }
       }
     },
@@ -548,14 +560,14 @@
         "name": {
           "type": "string"
         },
+        "code": {
+          "type": "string"
+        },
         "description": {
           "type": [
             "string",
             "null"
           ]
-        },
-        "updatedById": {
-          "type": "string"
         },
         "createdAt": {
           "type": "string",
@@ -571,10 +583,10 @@
         "department": {
           "$ref": "#/definitions/Department"
         },
-        "classes": {
+        "classSubject": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Class"
+            "$ref": "#/definitions/ClassSubject"
           }
         },
         "subjects": {
@@ -1012,6 +1024,16 @@
           "items": {
             "$ref": "#/definitions/Assessment"
           }
+        },
+        "course": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Course"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       }
     },
@@ -1036,8 +1058,14 @@
         "capacity": {
           "type": "integer"
         },
-        "createdById": {
-          "type": "string"
+        "level": {
+          "type": "string",
+          "enum": [
+            "KG",
+            "PRIMARY",
+            "JHS",
+            "SHS"
+          ]
         },
         "createdAt": {
           "type": "string",
@@ -1050,17 +1078,20 @@
         "school": {
           "$ref": "#/definitions/School"
         },
-        "course": {
+        "department": {
           "anyOf": [
             {
-              "$ref": "#/definitions/Course"
+              "$ref": "#/definitions/Department"
             },
             {
               "type": "null"
             }
           ]
         },
-        "student": {
+        "createdBy": {
+          "$ref": "#/definitions/User"
+        },
+        "students": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Student"
@@ -1180,16 +1211,6 @@
           "type": "string",
           "format": "date-time"
         },
-        "department": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Department"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
         "school": {
           "$ref": "#/definitions/School"
         },
@@ -1238,6 +1259,16 @@
           "items": {
             "$ref": "#/definitions/StudentAccadamicHistory"
           }
+        },
+        "department": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Department"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       }
     },
@@ -1406,10 +1437,7 @@
         "id": {
           "type": "string"
         },
-        "firstName": {
-          "type": "string"
-        },
-        "lastName": {
+        "fullName": {
           "type": "string"
         },
         "relationship": {
@@ -1423,7 +1451,10 @@
           ]
         },
         "email": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "occupation": {
           "type": "string"

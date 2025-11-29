@@ -40,6 +40,7 @@ model User {
   teacher          Teacher[]
   grade            Grade[]
   assessment       Assessment[]
+  classes          Class[]
 
   @@map("users")
 }
@@ -102,6 +103,7 @@ model Department {
   courses     Course[]
   teachers    Teacher[]
   Student     Student[]
+  classes     Class[]
 
   @@unique([name, schoolId])
   @@index([schoolId])
@@ -177,23 +179,21 @@ model Term {
 }
 
 model Course {
-  id           String     @id @default(cuid())
+  id           String   @id @default(cuid())
   name         String
+  code         String
   description  String?
-  updatedById  String
-  departmentId String
+  departmentId String // Courses can belong to departments (for SHS)
   schoolId     String
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
   // Relations
-  school       School     @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
-  classes      Class[]
+  school       School         @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  department   Department     @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  classSubject ClassSubject[]
   subjects     Subject[]
 
-  @@unique([name, departmentId])
-  @@index([schoolId])
-  @@index([departmentId])
   @@map("courses")
 }
 
@@ -351,26 +351,31 @@ model ClassSubject {
   teacherId   String
   // Relations
   assessments Assessment[]
+  course      Course?      @relation(fields: [courseId], references: [id])
+  courseId    String?
 
   @@unique([classId, subjectId])
   @@map("classSubjects")
 }
 
 model Class {
-  id               String             @id @default(cuid())
-  name             String
-  description      String?
-  gradeLevel       Int
-  capacity         Int
-  createdById      String
-  courseId         String?
-  schoolId         String
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
+  id           String         @id @default(cuid())
+  name         String
+  description  String?
+  gradeLevel   Int
+  capacity     Int
+  createdById  String
+  departmentId String? // Only for SHS - nullable
+  level        EducationLevel
+  schoolId     String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
   // Relations
   school           School             @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  course           Course?            @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  student          Student[]
+  department       Department?        @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  createdBy        User               @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  students         Student[]
   academicYear     AcademicYear[]
   attendanceRecord AttendanceRecord[]
   classSubject     ClassSubject[]
@@ -379,35 +384,38 @@ model Class {
 }
 
 model Student {
-  id                      String                    @id @default(cuid())
-  status                  AccountStatus             @default(PENDING)
-  schoolId                String
-  studentPhone            String?
-  studentEmail            String?
-  firstName               String
-  lastName                String
-  address                 String
-  gender                  Gender
-  isDeleted               Boolean                   @default(false)
-  prefix                  Prefix?
-  religion                String?
-  classId                 String?
-  departmentId            String?
-  dateOfBirth             DateTime
-  level                   EducationLevel
-  createdAt               DateTime                  @default(now())
-  indexNumber             String                    @unique
-  updatedAt               DateTime                  @updatedAt
+  id           String         @id @default(cuid())
+  status       AccountStatus  @default(PENDING)
+  schoolId     String
+  studentPhone String?
+  studentEmail String?
+  firstName    String
+  lastName     String
+  address      String
+  gender       Gender
+  isDeleted    Boolean        @default(false)
+  prefix       Prefix?
+  religion     String?
+  classId      String?
+  // REMOVED departmentId - derive from class instead
+  dateOfBirth  DateTime
+  level        EducationLevel
+  createdAt    DateTime       @default(now())
+  indexNumber  String         @unique
+  updatedAt    DateTime       @updatedAt
+
   // Relations
-  department              Department?               @relation(fields: [departmentId], references: [id], onDelete: Cascade)
-  school                  School                    @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  class                   Class?                    @relation(fields: [classId], references: [id], onDelete: Cascade)
+  school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  class  Class? @relation(fields: [classId], references: [id], onDelete: Cascade)
+
   disciplinaryRecord      DisciplinaryRecord[]
   reportCard              ReportCard[]
   attendanceRecord        AttendanceRecord[]
   grade                   Grade[]
   studentGuardians        Guardian[]
   studentAccadamicHistory StudentAccadamicHistory[]
+  department              Department?               @relation(fields: [departmentId], references: [id])
+  departmentId            String?
 
   @@map("students")
 }
@@ -483,10 +491,9 @@ model Session {
 
 model Guardian {
   id           String           @id @default(cuid())
-  firstName    String
-  lastName     String
+  fullName     String
   relationship RelationshipType
-  email        String
+  email        String?
   occupation   String
   phone        String
   address      String

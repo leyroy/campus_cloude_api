@@ -56,7 +56,7 @@ CREATE TYPE "EducationLevel" AS ENUM ('KG', 'PRIMARY', 'JHS', 'SHS');
 CREATE TYPE "PreferredContactMethod" AS ENUM ('EMAIL', 'PHONE', 'IN_PERSON', 'OTHER');
 
 -- CreateTable
-CREATE TABLE "User" (
+CREATE TABLE "users" (
     "id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "firstName" TEXT NOT NULL,
@@ -74,11 +74,11 @@ CREATE TABLE "User" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "School" (
+CREATE TABLE "schools" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "isActive" BOOLEAN NOT NULL DEFAULT false,
@@ -92,11 +92,11 @@ CREATE TABLE "School" (
     "description" TEXT NOT NULL,
     "ownerId" TEXT NOT NULL,
 
-    CONSTRAINT "School_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "schools_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "VerificationToken" (
+CREATE TABLE "verificationTokens" (
     "id" TEXT NOT NULL,
     "identifier" TEXT NOT NULL,
     "token" TEXT NOT NULL,
@@ -105,11 +105,11 @@ CREATE TABLE "VerificationToken" (
     "type" "VerificationType" NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "VerificationToken_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "verificationTokens_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Department" (
+CREATE TABLE "departments" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
@@ -118,11 +118,11 @@ CREATE TABLE "Department" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Department_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "departments_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Subject" (
+CREATE TABLE "subjects" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
@@ -133,11 +133,11 @@ CREATE TABLE "Subject" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "termId" TEXT NOT NULL,
 
-    CONSTRAINT "Subject_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "subjects_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "AcademicYear" (
+CREATE TABLE "academicYears" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "startDate" TIMESTAMP(3) NOT NULL,
@@ -148,7 +148,7 @@ CREATE TABLE "AcademicYear" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "AcademicYear_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "academicYears_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -168,21 +168,21 @@ CREATE TABLE "terms" (
 );
 
 -- CreateTable
-CREATE TABLE "Course" (
+CREATE TABLE "courses" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "code" TEXT NOT NULL,
     "description" TEXT,
-    "updatedById" TEXT NOT NULL,
-    "departmentId" TEXT NOT NULL,
+    "departmentId" TEXT,
     "schoolId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Course_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "courses_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "grading_systems" (
+CREATE TABLE "gradingSystems" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "type" "GradingType" NOT NULL,
@@ -192,11 +192,11 @@ CREATE TABLE "grading_systems" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "schoolId" TEXT NOT NULL,
 
-    CONSTRAINT "grading_systems_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "gradingSystems_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "grade_scales" (
+CREATE TABLE "gradeScales" (
     "id" TEXT NOT NULL,
     "grade" TEXT NOT NULL,
     "minScore" DOUBLE PRECISION NOT NULL,
@@ -206,7 +206,7 @@ CREATE TABLE "grade_scales" (
     "order" INTEGER NOT NULL,
     "gradingSystemId" TEXT NOT NULL,
 
-    CONSTRAINT "grade_scales_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "gradeScales_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -232,7 +232,7 @@ CREATE TABLE "assessments" (
 );
 
 -- CreateTable
-CREATE TABLE "report_cards" (
+CREATE TABLE "reportCards" (
     "id" TEXT NOT NULL,
     "overallGrade" TEXT,
     "overallPercentage" DOUBLE PRECISION,
@@ -249,7 +249,7 @@ CREATE TABLE "report_cards" (
     "studentId" TEXT NOT NULL,
     "termId" TEXT NOT NULL,
 
-    CONSTRAINT "report_cards_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "reportCards_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -289,34 +289,38 @@ CREATE TABLE "teachers" (
 );
 
 -- CreateTable
-CREATE TABLE "class_subjects" (
+CREATE TABLE "classSubjects" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "classId" TEXT NOT NULL,
     "subjectId" TEXT NOT NULL,
     "teacherId" TEXT NOT NULL,
+    "courseId" TEXT,
 
-    CONSTRAINT "class_subjects_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "classSubjects_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Class" (
+CREATE TABLE "classes" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
     "gradeLevel" INTEGER NOT NULL,
-    "updatedById" TEXT NOT NULL,
-    "courseId" TEXT,
+    "capacity" INTEGER NOT NULL,
+    "createdById" TEXT NOT NULL,
+    "departmentId" TEXT,
+    "level" "EducationLevel" NOT NULL,
     "schoolId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "courseId" TEXT,
 
-    CONSTRAINT "Class_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "classes_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Student" (
+CREATE TABLE "students" (
     "id" TEXT NOT NULL,
     "status" "AccountStatus" NOT NULL DEFAULT 'PENDING',
     "schoolId" TEXT NOT NULL,
@@ -326,20 +330,22 @@ CREATE TABLE "Student" (
     "lastName" TEXT NOT NULL,
     "address" TEXT NOT NULL,
     "gender" "Gender" NOT NULL,
+    "isDeleted" BOOLEAN NOT NULL DEFAULT false,
+    "prefix" "Prefix",
     "religion" TEXT,
     "classId" TEXT,
-    "departmentId" TEXT,
     "dateOfBirth" TIMESTAMP(3) NOT NULL,
     "level" "EducationLevel" NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "indexNumber" TEXT NOT NULL,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "departmentId" TEXT,
 
-    CONSTRAINT "Student_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "students_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "StudentAccadamicHistory" (
+CREATE TABLE "academicHistories" (
     "id" TEXT NOT NULL,
     "studentId" TEXT NOT NULL,
     "fromClass" TEXT NOT NULL,
@@ -349,11 +355,11 @@ CREATE TABLE "StudentAccadamicHistory" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "StudentAccadamicHistory_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "academicHistories_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "attendance_records" (
+CREATE TABLE "attendanceRecords" (
     "id" TEXT NOT NULL,
     "date" DATE NOT NULL,
     "status" "AttendanceStatus" NOT NULL,
@@ -364,11 +370,11 @@ CREATE TABLE "attendance_records" (
     "termId" TEXT NOT NULL,
     "recordedById" TEXT NOT NULL,
 
-    CONSTRAINT "attendance_records_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "attendanceRecords_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "disciplinary_records" (
+CREATE TABLE "disciplinaryRecords" (
     "id" TEXT NOT NULL,
     "incident" TEXT NOT NULL,
     "action" TEXT,
@@ -379,11 +385,11 @@ CREATE TABLE "disciplinary_records" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "studentId" TEXT NOT NULL,
 
-    CONSTRAINT "disciplinary_records_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "disciplinaryRecords_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Session" (
+CREATE TABLE "sessions" (
     "id" TEXT NOT NULL,
     "sessionToken" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
@@ -394,27 +400,28 @@ CREATE TABLE "Session" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Session_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "sessions_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "StudentGuardian" (
+CREATE TABLE "guardians" (
     "id" TEXT NOT NULL,
     "firstName" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
     "relationship" "RelationshipType" NOT NULL,
-    "guardianEmail" TEXT NOT NULL,
-    "guardianPhone" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "occupation" TEXT NOT NULL,
+    "phone" TEXT NOT NULL,
     "address" TEXT NOT NULL,
     "studentId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "StudentGuardian_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "guardians_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "SchoolProfile" (
+CREATE TABLE "schoolProfiles" (
     "id" TEXT NOT NULL,
     "schoolId" TEXT NOT NULL,
     "updatedById" TEXT NOT NULL,
@@ -435,11 +442,11 @@ CREATE TABLE "SchoolProfile" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "SchoolProfile_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "schoolProfiles_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Plan" (
+CREATE TABLE "plans" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "price" INTEGER NOT NULL,
@@ -448,11 +455,11 @@ CREATE TABLE "Plan" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Plan_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "plans_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "PlanFeature" (
+CREATE TABLE "planFeatures" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
@@ -460,7 +467,7 @@ CREATE TABLE "PlanFeature" (
     "metadata" JSONB,
     "planId" TEXT NOT NULL,
 
-    CONSTRAINT "PlanFeature_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "planFeatures_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -481,7 +488,7 @@ CREATE TABLE "PlanLimits" (
 );
 
 -- CreateTable
-CREATE TABLE "Subscription" (
+CREATE TABLE "subscriptions" (
     "id" TEXT NOT NULL,
     "schoolId" TEXT NOT NULL,
     "planId" TEXT NOT NULL,
@@ -493,7 +500,7 @@ CREATE TABLE "Subscription" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Subscription_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "subscriptions_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -513,7 +520,7 @@ CREATE TABLE "Address" (
 );
 
 -- CreateTable
-CREATE TABLE "Owner" (
+CREATE TABLE "owners" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -526,22 +533,22 @@ CREATE TABLE "Owner" (
     "previousPositions" TEXT NOT NULL,
     "yearsInEducation" INTEGER NOT NULL,
 
-    CONSTRAINT "Owner_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "owners_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Permission" (
+CREATE TABLE "permissions" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "resource" TEXT NOT NULL,
     "action" TEXT NOT NULL,
     "description" TEXT,
 
-    CONSTRAINT "Permission_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "permissions_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Role" (
+CREATE TABLE "roles" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
@@ -550,41 +557,42 @@ CREATE TABLE "Role" (
     "isActive" BOOLEAN NOT NULL DEFAULT true,
     "createdById" TEXT NOT NULL,
 
-    CONSTRAINT "Role_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "roles_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "RolePermission" (
+CREATE TABLE "rolePermissions" (
     "id" TEXT NOT NULL,
     "roleId" TEXT NOT NULL,
     "permissionId" TEXT NOT NULL,
 
-    CONSTRAINT "RolePermission_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "rolePermissions_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "UserRole" (
+CREATE TABLE "userRoles" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "roleId" TEXT NOT NULL,
     "assignedById" TEXT NOT NULL,
     "assignedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "UserRole_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "userRoles_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Document" (
+CREATE TABLE "documents" (
     "id" TEXT NOT NULL,
     "url" TEXT NOT NULL,
     "fileType" "FileType" NOT NULL,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
     "documentKey" TEXT NOT NULL,
-    "mudelId" TEXT NOT NULL,
+    "modelId" TEXT NOT NULL,
     "purpose" "DocPurpose" NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Document_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "documents_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -596,43 +604,34 @@ CREATE TABLE "_AcademicYearToClass" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "VerificationToken_token_key" ON "VerificationToken"("token");
+CREATE UNIQUE INDEX "verificationTokens_token_key" ON "verificationTokens"("token");
 
 -- CreateIndex
-CREATE INDEX "VerificationToken_identifier_idx" ON "VerificationToken"("identifier");
+CREATE INDEX "verificationTokens_identifier_idx" ON "verificationTokens"("identifier");
 
 -- CreateIndex
-CREATE INDEX "Department_schoolId_idx" ON "Department"("schoolId");
+CREATE INDEX "departments_schoolId_idx" ON "departments"("schoolId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Department_name_schoolId_key" ON "Department"("name", "schoolId");
+CREATE UNIQUE INDEX "departments_name_schoolId_key" ON "departments"("name", "schoolId");
 
 -- CreateIndex
-CREATE INDEX "Subject_schoolId_idx" ON "Subject"("schoolId");
+CREATE INDEX "subjects_schoolId_idx" ON "subjects"("schoolId");
 
 -- CreateIndex
-CREATE INDEX "Subject_courseId_idx" ON "Subject"("courseId");
+CREATE INDEX "subjects_courseId_idx" ON "subjects"("courseId");
 
 -- CreateIndex
-CREATE INDEX "Subject_termId_idx" ON "Subject"("termId");
+CREATE INDEX "subjects_termId_idx" ON "subjects"("termId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "terms_academicYearId_number_key" ON "terms"("academicYearId", "number");
 
 -- CreateIndex
-CREATE INDEX "Course_schoolId_idx" ON "Course"("schoolId");
-
--- CreateIndex
-CREATE INDEX "Course_departmentId_idx" ON "Course"("departmentId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Course_name_departmentId_key" ON "Course"("name", "departmentId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "report_cards_studentId_termId_key" ON "report_cards"("studentId", "termId");
+CREATE UNIQUE INDEX "reportCards_studentId_termId_key" ON "reportCards"("studentId", "termId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "grades_studentId_assessmentId_key" ON "grades"("studentId", "assessmentId");
@@ -644,214 +643,226 @@ CREATE UNIQUE INDEX "teachers_employeeNumber_key" ON "teachers"("employeeNumber"
 CREATE UNIQUE INDEX "teachers_userId_key" ON "teachers"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "class_subjects_classId_subjectId_key" ON "class_subjects"("classId", "subjectId");
+CREATE UNIQUE INDEX "classSubjects_classId_subjectId_key" ON "classSubjects"("classId", "subjectId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Student_indexNumber_key" ON "Student"("indexNumber");
+CREATE UNIQUE INDEX "students_indexNumber_key" ON "students"("indexNumber");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "attendance_records_studentId_date_key" ON "attendance_records"("studentId", "date");
+CREATE UNIQUE INDEX "attendanceRecords_studentId_date_key" ON "attendanceRecords"("studentId", "date");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Session_sessionToken_key" ON "Session"("sessionToken");
+CREATE UNIQUE INDEX "sessions_sessionToken_key" ON "sessions"("sessionToken");
 
 -- CreateIndex
-CREATE INDEX "Session_sessionToken_idx" ON "Session"("sessionToken");
+CREATE INDEX "sessions_sessionToken_idx" ON "sessions"("sessionToken");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "SchoolProfile_schoolId_key" ON "SchoolProfile"("schoolId");
+CREATE UNIQUE INDEX "schoolProfiles_schoolId_key" ON "schoolProfiles"("schoolId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "planFeatures_name_planId_key" ON "planFeatures"("name", "planId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "PlanLimits_planId_key" ON "PlanLimits"("planId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Permission_name_key" ON "Permission"("name");
+CREATE UNIQUE INDEX "permissions_name_key" ON "permissions"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Role_name_key" ON "Role"("name");
+CREATE UNIQUE INDEX "roles_name_key" ON "roles"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "RolePermission_roleId_permissionId_key" ON "RolePermission"("roleId", "permissionId");
+CREATE UNIQUE INDEX "rolePermissions_roleId_permissionId_key" ON "rolePermissions"("roleId", "permissionId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "UserRole_userId_roleId_key" ON "UserRole"("userId", "roleId");
+CREATE UNIQUE INDEX "userRoles_userId_roleId_key" ON "userRoles"("userId", "roleId");
 
 -- CreateIndex
 CREATE INDEX "_AcademicYearToClass_B_index" ON "_AcademicYearToClass"("B");
 
 -- AddForeignKey
-ALTER TABLE "User" ADD CONSTRAINT "User_schoolId_fkey" FOREIGN KEY ("schoolId") REFERENCES "School"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "users" ADD CONSTRAINT "users_schoolId_fkey" FOREIGN KEY ("schoolId") REFERENCES "schools"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "School" ADD CONSTRAINT "School_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "Owner"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "schools" ADD CONSTRAINT "schools_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "owners"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Department" ADD CONSTRAINT "Department_schoolId_fkey" FOREIGN KEY ("schoolId") REFERENCES "School"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "departments" ADD CONSTRAINT "departments_schoolId_fkey" FOREIGN KEY ("schoolId") REFERENCES "schools"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Subject" ADD CONSTRAINT "Subject_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "Course"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "subjects" ADD CONSTRAINT "subjects_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "courses"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Subject" ADD CONSTRAINT "Subject_schoolId_fkey" FOREIGN KEY ("schoolId") REFERENCES "School"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "subjects" ADD CONSTRAINT "subjects_schoolId_fkey" FOREIGN KEY ("schoolId") REFERENCES "schools"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Subject" ADD CONSTRAINT "Subject_termId_fkey" FOREIGN KEY ("termId") REFERENCES "terms"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "subjects" ADD CONSTRAINT "subjects_termId_fkey" FOREIGN KEY ("termId") REFERENCES "terms"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "AcademicYear" ADD CONSTRAINT "AcademicYear_schoolId_fkey" FOREIGN KEY ("schoolId") REFERENCES "School"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "academicYears" ADD CONSTRAINT "academicYears_schoolId_fkey" FOREIGN KEY ("schoolId") REFERENCES "schools"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "terms" ADD CONSTRAINT "terms_academicYearId_fkey" FOREIGN KEY ("academicYearId") REFERENCES "AcademicYear"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "terms" ADD CONSTRAINT "terms_academicYearId_fkey" FOREIGN KEY ("academicYearId") REFERENCES "academicYears"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "terms" ADD CONSTRAINT "terms_schoolId_fkey" FOREIGN KEY ("schoolId") REFERENCES "School"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "terms" ADD CONSTRAINT "terms_schoolId_fkey" FOREIGN KEY ("schoolId") REFERENCES "schools"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Course" ADD CONSTRAINT "Course_schoolId_fkey" FOREIGN KEY ("schoolId") REFERENCES "School"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "courses" ADD CONSTRAINT "courses_schoolId_fkey" FOREIGN KEY ("schoolId") REFERENCES "schools"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Course" ADD CONSTRAINT "Course_departmentId_fkey" FOREIGN KEY ("departmentId") REFERENCES "Department"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "courses" ADD CONSTRAINT "courses_departmentId_fkey" FOREIGN KEY ("departmentId") REFERENCES "departments"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "grading_systems" ADD CONSTRAINT "grading_systems_schoolId_fkey" FOREIGN KEY ("schoolId") REFERENCES "School"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "gradingSystems" ADD CONSTRAINT "gradingSystems_schoolId_fkey" FOREIGN KEY ("schoolId") REFERENCES "schools"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "grade_scales" ADD CONSTRAINT "grade_scales_gradingSystemId_fkey" FOREIGN KEY ("gradingSystemId") REFERENCES "grading_systems"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "gradeScales" ADD CONSTRAINT "gradeScales_gradingSystemId_fkey" FOREIGN KEY ("gradingSystemId") REFERENCES "gradingSystems"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "assessments" ADD CONSTRAINT "assessments_classSubjectId_fkey" FOREIGN KEY ("classSubjectId") REFERENCES "class_subjects"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "assessments" ADD CONSTRAINT "assessments_classSubjectId_fkey" FOREIGN KEY ("classSubjectId") REFERENCES "classSubjects"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "assessments" ADD CONSTRAINT "assessments_subjectId_fkey" FOREIGN KEY ("subjectId") REFERENCES "Subject"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "assessments" ADD CONSTRAINT "assessments_subjectId_fkey" FOREIGN KEY ("subjectId") REFERENCES "subjects"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "assessments" ADD CONSTRAINT "assessments_termId_fkey" FOREIGN KEY ("termId") REFERENCES "terms"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "assessments" ADD CONSTRAINT "assessments_academicYearId_fkey" FOREIGN KEY ("academicYearId") REFERENCES "AcademicYear"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "assessments" ADD CONSTRAINT "assessments_academicYearId_fkey" FOREIGN KEY ("academicYearId") REFERENCES "academicYears"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "assessments" ADD CONSTRAINT "assessments_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "assessments" ADD CONSTRAINT "assessments_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "assessments" ADD CONSTRAINT "assessments_teacherId_fkey" FOREIGN KEY ("teacherId") REFERENCES "teachers"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "assessments" ADD CONSTRAINT "assessments_gradingSystemId_fkey" FOREIGN KEY ("gradingSystemId") REFERENCES "grading_systems"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "assessments" ADD CONSTRAINT "assessments_gradingSystemId_fkey" FOREIGN KEY ("gradingSystemId") REFERENCES "gradingSystems"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "report_cards" ADD CONSTRAINT "report_cards_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Student"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "reportCards" ADD CONSTRAINT "reportCards_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "students"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "report_cards" ADD CONSTRAINT "report_cards_termId_fkey" FOREIGN KEY ("termId") REFERENCES "terms"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "reportCards" ADD CONSTRAINT "reportCards_termId_fkey" FOREIGN KEY ("termId") REFERENCES "terms"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "grades" ADD CONSTRAINT "grades_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Student"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "grades" ADD CONSTRAINT "grades_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "students"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "grades" ADD CONSTRAINT "grades_assessmentId_fkey" FOREIGN KEY ("assessmentId") REFERENCES "assessments"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "grades" ADD CONSTRAINT "grades_subjectId_fkey" FOREIGN KEY ("subjectId") REFERENCES "Subject"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "grades" ADD CONSTRAINT "grades_subjectId_fkey" FOREIGN KEY ("subjectId") REFERENCES "subjects"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "grades" ADD CONSTRAINT "grades_gradedById_fkey" FOREIGN KEY ("gradedById") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "grades" ADD CONSTRAINT "grades_gradedById_fkey" FOREIGN KEY ("gradedById") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "teachers" ADD CONSTRAINT "teachers_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "teachers" ADD CONSTRAINT "teachers_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "teachers" ADD CONSTRAINT "teachers_departmentId_fkey" FOREIGN KEY ("departmentId") REFERENCES "Department"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "teachers" ADD CONSTRAINT "teachers_departmentId_fkey" FOREIGN KEY ("departmentId") REFERENCES "departments"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "class_subjects" ADD CONSTRAINT "class_subjects_classId_fkey" FOREIGN KEY ("classId") REFERENCES "Class"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "classSubjects" ADD CONSTRAINT "classSubjects_classId_fkey" FOREIGN KEY ("classId") REFERENCES "classes"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "class_subjects" ADD CONSTRAINT "class_subjects_subjectId_fkey" FOREIGN KEY ("subjectId") REFERENCES "Subject"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "classSubjects" ADD CONSTRAINT "classSubjects_subjectId_fkey" FOREIGN KEY ("subjectId") REFERENCES "subjects"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "class_subjects" ADD CONSTRAINT "class_subjects_teacherId_fkey" FOREIGN KEY ("teacherId") REFERENCES "teachers"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "classSubjects" ADD CONSTRAINT "classSubjects_teacherId_fkey" FOREIGN KEY ("teacherId") REFERENCES "teachers"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Class" ADD CONSTRAINT "Class_schoolId_fkey" FOREIGN KEY ("schoolId") REFERENCES "School"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "classSubjects" ADD CONSTRAINT "classSubjects_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "courses"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Class" ADD CONSTRAINT "Class_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "Course"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "classes" ADD CONSTRAINT "classes_schoolId_fkey" FOREIGN KEY ("schoolId") REFERENCES "schools"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Student" ADD CONSTRAINT "Student_departmentId_fkey" FOREIGN KEY ("departmentId") REFERENCES "Department"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "classes" ADD CONSTRAINT "classes_departmentId_fkey" FOREIGN KEY ("departmentId") REFERENCES "departments"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Student" ADD CONSTRAINT "Student_schoolId_fkey" FOREIGN KEY ("schoolId") REFERENCES "School"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "classes" ADD CONSTRAINT "classes_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Student" ADD CONSTRAINT "Student_classId_fkey" FOREIGN KEY ("classId") REFERENCES "Class"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "classes" ADD CONSTRAINT "classes_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "courses"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "StudentAccadamicHistory" ADD CONSTRAINT "StudentAccadamicHistory_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Student"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "students" ADD CONSTRAINT "students_schoolId_fkey" FOREIGN KEY ("schoolId") REFERENCES "schools"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "attendance_records" ADD CONSTRAINT "attendance_records_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Student"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "students" ADD CONSTRAINT "students_classId_fkey" FOREIGN KEY ("classId") REFERENCES "classes"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "attendance_records" ADD CONSTRAINT "attendance_records_classId_fkey" FOREIGN KEY ("classId") REFERENCES "Class"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "students" ADD CONSTRAINT "students_departmentId_fkey" FOREIGN KEY ("departmentId") REFERENCES "departments"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "attendance_records" ADD CONSTRAINT "attendance_records_termId_fkey" FOREIGN KEY ("termId") REFERENCES "terms"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "academicHistories" ADD CONSTRAINT "academicHistories_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "students"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "attendance_records" ADD CONSTRAINT "attendance_records_recordedById_fkey" FOREIGN KEY ("recordedById") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "attendanceRecords" ADD CONSTRAINT "attendanceRecords_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "students"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "disciplinary_records" ADD CONSTRAINT "disciplinary_records_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Student"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "attendanceRecords" ADD CONSTRAINT "attendanceRecords_classId_fkey" FOREIGN KEY ("classId") REFERENCES "classes"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "attendanceRecords" ADD CONSTRAINT "attendanceRecords_termId_fkey" FOREIGN KEY ("termId") REFERENCES "terms"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "StudentGuardian" ADD CONSTRAINT "StudentGuardian_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Student"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "attendanceRecords" ADD CONSTRAINT "attendanceRecords_recordedById_fkey" FOREIGN KEY ("recordedById") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "SchoolProfile" ADD CONSTRAINT "SchoolProfile_schoolId_fkey" FOREIGN KEY ("schoolId") REFERENCES "School"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "disciplinaryRecords" ADD CONSTRAINT "disciplinaryRecords_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "students"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "PlanFeature" ADD CONSTRAINT "PlanFeature_planId_fkey" FOREIGN KEY ("planId") REFERENCES "Plan"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "sessions" ADD CONSTRAINT "sessions_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "PlanLimits" ADD CONSTRAINT "PlanLimits_planId_fkey" FOREIGN KEY ("planId") REFERENCES "Plan"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "guardians" ADD CONSTRAINT "guardians_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "students"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Subscription" ADD CONSTRAINT "Subscription_schoolId_fkey" FOREIGN KEY ("schoolId") REFERENCES "School"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "schoolProfiles" ADD CONSTRAINT "schoolProfiles_schoolId_fkey" FOREIGN KEY ("schoolId") REFERENCES "schools"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Subscription" ADD CONSTRAINT "Subscription_planId_fkey" FOREIGN KEY ("planId") REFERENCES "Plan"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "planFeatures" ADD CONSTRAINT "planFeatures_planId_fkey" FOREIGN KEY ("planId") REFERENCES "plans"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Address" ADD CONSTRAINT "Address_schoolId_fkey" FOREIGN KEY ("schoolId") REFERENCES "SchoolProfile"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "PlanLimits" ADD CONSTRAINT "PlanLimits_planId_fkey" FOREIGN KEY ("planId") REFERENCES "plans"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Address" ADD CONSTRAINT "Address_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "subscriptions" ADD CONSTRAINT "subscriptions_schoolId_fkey" FOREIGN KEY ("schoolId") REFERENCES "schools"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Role" ADD CONSTRAINT "Role_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "subscriptions" ADD CONSTRAINT "subscriptions_planId_fkey" FOREIGN KEY ("planId") REFERENCES "plans"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "RolePermission" ADD CONSTRAINT "RolePermission_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "Role"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Address" ADD CONSTRAINT "Address_schoolId_fkey" FOREIGN KEY ("schoolId") REFERENCES "schoolProfiles"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "RolePermission" ADD CONSTRAINT "RolePermission_permissionId_fkey" FOREIGN KEY ("permissionId") REFERENCES "Permission"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Address" ADD CONSTRAINT "Address_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "UserRole" ADD CONSTRAINT "UserRole_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "roles" ADD CONSTRAINT "roles_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "UserRole" ADD CONSTRAINT "UserRole_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "Role"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "rolePermissions" ADD CONSTRAINT "rolePermissions_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "roles"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "UserRole" ADD CONSTRAINT "UserRole_assignedById_fkey" FOREIGN KEY ("assignedById") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "rolePermissions" ADD CONSTRAINT "rolePermissions_permissionId_fkey" FOREIGN KEY ("permissionId") REFERENCES "permissions"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_AcademicYearToClass" ADD CONSTRAINT "_AcademicYearToClass_A_fkey" FOREIGN KEY ("A") REFERENCES "AcademicYear"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "userRoles" ADD CONSTRAINT "userRoles_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_AcademicYearToClass" ADD CONSTRAINT "_AcademicYearToClass_B_fkey" FOREIGN KEY ("B") REFERENCES "Class"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "userRoles" ADD CONSTRAINT "userRoles_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "roles"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "userRoles" ADD CONSTRAINT "userRoles_assignedById_fkey" FOREIGN KEY ("assignedById") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_AcademicYearToClass" ADD CONSTRAINT "_AcademicYearToClass_A_fkey" FOREIGN KEY ("A") REFERENCES "academicYears"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_AcademicYearToClass" ADD CONSTRAINT "_AcademicYearToClass_B_fkey" FOREIGN KEY ("B") REFERENCES "classes"("id") ON DELETE CASCADE ON UPDATE CASCADE;

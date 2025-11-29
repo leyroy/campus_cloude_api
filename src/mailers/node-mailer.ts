@@ -11,11 +11,9 @@ const transporter: Transporter = nodemailer.createTransport({
     user: 'leyroycontact@gmail.com',
     pass: 'oayhiobkbnlwcoja',
   },
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 10000,
-  tls: {
-    rejectUnauthorized: false,
+  options: {
+    dnsTimeout: 7000,
+    connectionTimeout: 7000,
   },
 });
 
