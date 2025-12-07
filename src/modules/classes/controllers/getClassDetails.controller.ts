@@ -17,7 +17,7 @@ const getClassDetailByClassIdController = async (
     if (!result) {
       throw ErrorHandler.notFound('Class not found');
     }
-    res.status(200).json({ success: true, data: result });
+    res.status(200).json({ success: true, data: result.data });
   } catch (err) {
     next(err);
   }

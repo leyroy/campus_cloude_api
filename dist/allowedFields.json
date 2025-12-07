@@ -129,8 +129,8 @@
         "fields": [
             "id",
             "name",
+            "code",
             "description",
-            "updatedById",
             "departmentId",
             "schoolId",
             "createdAt",
@@ -262,7 +262,8 @@
             "updatedAt",
             "classId",
             "subjectId",
-            "teacherId"
+            "teacherId",
+            "courseId"
         ]
     },
     {
@@ -271,10 +272,10 @@
             "id",
             "name",
             "description",
-            "gradeLevel",
             "capacity",
             "createdById",
-            "courseId",
+            "departmentId",
+            "level",
             "schoolId",
             "createdAt",
             "updatedAt"
@@ -296,12 +297,11 @@
             "prefix",
             "religion",
             "classId",
-            "departmentId",
             "dateOfBirth",
-            "level",
             "createdAt",
             "indexNumber",
-            "updatedAt"
+            "updatedAt",
+            "departmentId"
         ]
     },
     {
@@ -367,8 +367,7 @@
         "modelName": "Guardian",
         "fields": [
             "id",
-            "firstName",
-            "lastName",
+            "fullName",
             "relationship",
             "email",
             "occupation",

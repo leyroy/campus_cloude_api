@@ -1052,9 +1052,6 @@
             "null"
           ]
         },
-        "gradeLevel": {
-          "type": "integer"
-        },
         "capacity": {
           "type": "integer"
         },
@@ -1190,15 +1187,6 @@
         "dateOfBirth": {
           "type": "string",
           "format": "date-time"
-        },
-        "level": {
-          "type": "string",
-          "enum": [
-            "KG",
-            "PRIMARY",
-            "JHS",
-            "SHS"
-          ]
         },
         "createdAt": {
           "type": "string",
@@ -1457,7 +1445,10 @@
           ]
         },
         "occupation": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "phone": {
           "type": "string"

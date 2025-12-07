@@ -15,6 +15,7 @@ const zodValidator = (Schema) => {
     return (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         const result = Schema.safeParse(req.body);
         if (!result.success) {
+            console.log(result.error);
             throw new errorHandler_1.AppError({
                 message: result.error.errors
                     .map((err) => `${err.path.join('.')} - ${err.message}`)

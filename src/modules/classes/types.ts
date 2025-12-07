@@ -9,13 +9,6 @@ export const createClassSchema = z
     name: z.string().min(1, 'Class name is required').max(100, 'Class name is too long'),
 
     description: z.string().max(500, 'Description is too long').optional(),
-
-    gradeLevel: z
-      .number()
-      .int('Grade level must be an integer')
-      .min(1, 'Grade level must be at least 1')
-      .max(20, 'Grade level cannot exceed 20'),
-
     capacity: z
       .number()
       .int('Capacity must be an integer')

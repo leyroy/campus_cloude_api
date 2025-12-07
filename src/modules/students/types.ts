@@ -2,25 +2,21 @@ import { AccountStatus, EducationLevel, Gender, RelationshipType } from '@prisma
 import { z } from 'zod';
 
 export const studentSchema = z.object({
-  courseId: z.string().optional(),
   studentPhone: z.string().optional(),
   studentEmail: z.string().email().optional(),
-  level: z.nativeEnum(EducationLevel),
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
   address: z.string().min(1, 'Address is required'),
   gender: z.nativeEnum(Gender),
   classId: z.string().optional(),
-  departmentId: z.string().optional(),
   dateOfBirth: z.coerce.date(),
 });
 
 export const guardianSchema = z.object({
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
+  fullName: z.string().min(1, 'Full name is required'),
   relationship: z.nativeEnum(RelationshipType),
   email: z.string().email(),
-  occupation: z.string(),
+  occupation: z.string().optional(),
   phone: z.string().min(1, { message: 'Guardian phone number is required' }),
   address: z.string().min(1, 'Address is required'),
 });

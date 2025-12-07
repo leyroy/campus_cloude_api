@@ -20,5 +20,69 @@ class ClassHelpers {
             return yield prisma_config_1.default.class.create({ data: Object.assign({}, data) });
         });
     }
+    updateClass(data, classId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma_config_1.default.class.update({
+                where: { id: classId },
+                data: Object.assign({}, data),
+            });
+        });
+    }
+    deleteClass(classId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma_config_1.default.class.delete({
+                where: { id: classId },
+            });
+        });
+    }
+    getClassById(classId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma_config_1.default.class.findUnique({
+                where: { id: classId },
+                include: {
+                    department: true,
+                    students: {
+                        select: {
+                            id: true,
+                            indexNumber: true,
+                            firstName: true,
+                            lastName: true,
+                            studentGuardians: {
+                                select: {
+                                    fullName: true,
+                                    id: true,
+                                    relationship: true,
+                                    phone: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            });
+        });
+    }
+    getClassesBySchoolId(schoolId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma_config_1.default.class.findMany({
+                where: { schoolId },
+                include: {
+                    department: true,
+                    createdBy: {
+                        select: {
+                            id: true,
+                            firstName: true,
+                            lastName: true,
+                            email: true,
+                        },
+                    },
+                },
+            });
+        });
+    }
+    listAllClasses() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield prisma_config_1.default.class.findMany();
+        });
+    }
 }
 exports.ClassHelpers = ClassHelpers;

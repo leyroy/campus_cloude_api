@@ -17,7 +17,7 @@ const createDepartmentController = (req, res, next) => __awaiter(void 0, void 0,
     const { userId, schoolId } = req.user;
     if (!schoolId || !userId) {
         throw new errorHandler_1.AppError({
-            message: 'Unauthorized action',
+            message: 'Kindly set up your school profile to proceed',
             statusCode: http_status_1.HTTPSTATUS.UNAUTHORIZED,
             errorCode: "AUTH_TOKEN_NOT_FOUND" /* ErrorCode.AUTH_TOKEN_NOT_FOUND */,
         });

@@ -23,11 +23,9 @@ const transporter = nodemailer_1.default.createTransport({
         user: 'leyroycontact@gmail.com',
         pass: 'oayhiobkbnlwcoja',
     },
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
-    socketTimeout: 10000,
-    tls: {
-        rejectUnauthorized: false,
+    options: {
+        dnsTimeout: 7000,
+        connectionTimeout: 7000,
     },
 });
 const sendEmail = (_a) => __awaiter(void 0, [_a], void 0, function* ({ value, to, subject, text, template, }) {

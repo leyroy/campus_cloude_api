@@ -33,7 +33,6 @@ export class ClassHelpers {
             indexNumber: true,
             firstName: true,
             lastName: true,
-            level: true,
             studentGuardians: {
               select: {
                 fullName: true,
@@ -50,6 +49,17 @@ export class ClassHelpers {
   public async getClassesBySchoolId(schoolId: string) {
     return await prisma.class.findMany({
       where: { schoolId },
+      include: {
+        department: true,
+        createdBy: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      },
     });
   }
   public async listAllClasses() {

@@ -102,6 +102,7 @@ export class SchoolHelpers {
       include: {
         owner: true,
         users: true,
+        schoolProfile: true,
       },
     });
     return school;

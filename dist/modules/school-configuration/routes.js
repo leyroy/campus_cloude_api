@@ -19,9 +19,7 @@ const schoolRouter = (0, express_1.Router)();
 const { catchAsync } = new errorHandler_1.ErrorHandler();
 //middlewares configuration
 schoolRouter.use(catchAsync(authenticateToken_1.authenticateToken));
-schoolRouter.post('/configure', (0, zodValidator_1.default)(types_1.SchoolConfigurationSchema), 
-// catchAsync(permissionHandler({ action: Action.CREATE, resource: Resource.SCHOOL })),
-catchAsync(create_controller_1.default));
+schoolRouter.post('/configure', (0, zodValidator_1.default)(types_1.SchoolConfigurationSchema), catchAsync((0, permissionsManager_1.default)({ action: types_2.Action.CREATE, resource: types_2.Resource.SCHOOL })), catchAsync(create_controller_1.default));
 schoolRouter.put('/:schoolId', (0, validate_payload_1.validatePayload)(types_2.TABELS_NAMES_ENUM.SCHOOL), catchAsync((0, permissionsManager_1.default)({ action: types_2.Action.UPDATE, resource: types_2.Resource.SCHOOL })), catchAsync(update_controller_1.default));
 schoolRouter.get('/current', 
 // catchAsync(permissionHandler({ action: Action.VIEW, resource: Resource.SCHOOL })),

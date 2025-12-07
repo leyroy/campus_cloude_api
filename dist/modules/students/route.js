@@ -19,7 +19,7 @@ const updataGaurdian_controller_1 = __importDefault(require("./updataGaurdian.co
 const studentRouter = (0, express_1.Router)();
 const { catchAsync } = new errorHandler_1.ErrorHandler();
 studentRouter.use(catchAsync(authenticateToken_1.authenticateToken));
-studentRouter.post('/create-student', (0, validate_payload_1.validatePayload)(types_1.TABELS_NAMES_ENUM.STUDENT), (0, zodValidator_1.default)(types_2.combindedStudentGuardianSchema), (0, permissionsManager_1.default)({ action: types_1.Action.CREATE, resource: types_1.Resource.STUDENT }), catchAsync(createStudent_controller_1.default));
+studentRouter.post('/create-student', (0, zodValidator_1.default)(types_2.combindedStudentGuardianSchema), (0, permissionsManager_1.default)({ action: types_1.Action.CREATE, resource: types_1.Resource.STUDENT }), catchAsync(createStudent_controller_1.default));
 studentRouter.get('/get-by-school', (0, permissionsManager_1.default)({ action: types_1.Action.VIEW, resource: types_1.Resource.STUDENT }), catchAsync(getSudentsBySchoolId_controller_1.default));
 studentRouter.put('/update-student', (0, validate_payload_1.validatePayload)(types_1.TABELS_NAMES_ENUM.STUDENT), (0, zodValidator_1.default)(types_2.studentSchema), (0, permissionsManager_1.default)({ action: types_1.Action.UPDATE, resource: types_1.Resource.STUDENT }), catchAsync(updateStudent_controller_1.default));
 studentRouter.put('/update-guardian', (0, validate_payload_1.validatePayload)(types_1.TABELS_NAMES_ENUM.GAUIDIAN), (0, zodValidator_1.default)(types_2.guardianSchema), (0, permissionsManager_1.default)({ action: types_1.Action.UPDATE, resource: types_1.Resource.GAUIDIAN }), catchAsync(updataGaurdian_controller_1.default));

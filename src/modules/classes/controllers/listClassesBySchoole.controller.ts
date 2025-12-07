@@ -15,7 +15,7 @@ const getClassesBySchooleController = async (
     }
     const result = await classService.listClassesBySchoolId(schoolId);
     // 🎯 Handle getClassesBySchoole logic here neger 😎
-    res.status(HTTPSTATUS.OK).json({ success: true, data: result });
+    res.status(HTTPSTATUS.OK).json({ classes: result.data, success: true });
   } catch (err) {
     next(err);
   }

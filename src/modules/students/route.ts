@@ -19,7 +19,6 @@ const { catchAsync } = new ErrorHandler();
 studentRouter.use(catchAsync(authenticateToken));
 studentRouter.post(
   '/create-student',
-  validatePayload(TABELS_NAMES_ENUM.STUDENT),
   zodValidator(combindedStudentGuardianSchema),
   permissionHandler({ action: Action.CREATE, resource: Resource.STUDENT }),
   catchAsync(createStudentController)

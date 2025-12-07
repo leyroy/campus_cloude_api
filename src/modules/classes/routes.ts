@@ -18,7 +18,7 @@ const { catchAsync } = new ErrorHandler();
 classRouter.use(catchAsync(authenticateToken));
 
 classRouter.post(
-  '/',
+  '/new-class',
   catchAsync(permissionHandler({ action: Action.CREATE, resource: Resource.CLASS })),
   validatePayload(TABELS_NAMES_ENUM.CLASS),
   zodValidator(createClassSchema),
@@ -37,7 +37,7 @@ classRouter.get(
   catchAsync(getAllClassesController)
 );
 classRouter.get(
-  '/get-all-classes-by-school-id/:schoolId',
+  '/list-by-school/:schoolId',
   catchAsync(permissionHandler({ action: Action.VIEW, resource: Resource.CLASS })),
   catchAsync(getClassesBySchooleController)
 );

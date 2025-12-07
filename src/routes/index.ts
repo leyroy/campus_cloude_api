@@ -8,6 +8,7 @@ import schoolRouter from '../modules/school-configuration/routes';
 import documentRouter from '../modules/document/routes';
 import studentRouter from '../modules/students/route';
 import departmentRouter from '../modules/departments/routes';
+import classRouter from '../modules/classes/routes';
 
 const appRouter = express.Router();
 
@@ -19,5 +20,6 @@ appRouter.use('/school', schoolRouter);
 appRouter.use('/department', departmentRouter);
 appRouter.use('/document', documentRouter);
 appRouter.use('/students', studentRouter);
+appRouter.use('/class', classRouter);
 
 export default appRouter;
