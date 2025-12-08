@@ -35,6 +35,10 @@ class StudentService {
   public async getStudentsBySchoolId(schoolId: string) {
     return await prisma.student.findMany({
       where: { schoolId, AND: { isDeleted: false } },
+      include: {
+        class: true,
+        department: true,
+      },
     });
   }
   public async updateStudent(studentId: string, data: StudentUpdateDto) {

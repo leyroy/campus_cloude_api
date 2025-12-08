@@ -96,6 +96,7 @@ model Department {
   description String?
   updatedById String
   schoolId    String
+  isActive    Boolean   @default(true)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   // Relations
@@ -115,6 +116,10 @@ model Subject {
   name         String
   description  String?
   updatedById  String
+  isElective   Boolean        @default(false)
+  isCore       Boolean        @default(false)
+  isActive     Boolean        @default(true)
+  subjectCode  String?
   courseId     String?
   schoolId     String
   createdAt    DateTime       @default(now())
@@ -135,17 +140,17 @@ model Subject {
 }
 
 model AcademicYear {
-  id          String   @id @default(cuid())
+  id          String             @id @default(cuid())
   name        String
   startDate   DateTime
   endDate     DateTime
-  isActive    Boolean  @default(false)
   updatedById String
+  status      AcademicYearStatus @default(ACTIVE)
   schoolId    String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
   // Relations
-  school      School   @relation(fields: [schoolId], references: [id])
+  school      School             @relation(fields: [schoolId], references: [id])
   term        Term[]
   classes     Class[]
 
@@ -156,7 +161,6 @@ model AcademicYear {
 
 model Term {
   id             String       @id @default(cuid())
-  number         Int // 1, 2, 3
   name           String // "First Term", "Second Term", "Third Term"
   startDate      DateTime
   endDate        DateTime
@@ -174,7 +178,7 @@ model Term {
   attendanceRecords AttendanceRecord[]
   Subject           Subject[]
 
-  @@unique([academicYearId, number])
+  @@unique([academicYearId, name])
   @@map("terms")
 }
 
@@ -189,10 +193,10 @@ model Course {
   updatedAt    DateTime @updatedAt
 
   // Relations
-  school       School         @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  department   Department     @relation(fields: [departmentId], references: [id], onDelete: SetNull)
-  classSubject ClassSubject[]
-  subjects     Subject[]
+  school        School         @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  department    Department     @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  subjects      Subject[]
+  classSubjects ClassSubject[]
 
   @@map("courses")
 }
@@ -351,8 +355,8 @@ model ClassSubject {
   teacherId   String
   // Relations
   assessments Assessment[]
-  course      Course?      @relation(fields: [courseId], references: [id])
   courseId    String?
+  course      Course?      @relation(fields: [courseId], references: [id])
 
   @@unique([classId, subjectId])
   @@map("classSubjects")
@@ -847,4 +851,10 @@ enum PreferredContactMethod {
   PHONE
   IN_PERSON
   OTHER
+}
+
+enum AcademicYearStatus {
+  ACTIVE
+  INACTIVE
+  ARCHIVED
 }

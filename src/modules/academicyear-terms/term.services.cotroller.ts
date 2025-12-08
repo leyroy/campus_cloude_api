@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { CustomRequest } from '../../types/types';
 import { termService, TermService } from './helpers/term.services';
 import { CreateTermType } from './types';
@@ -25,7 +25,7 @@ class TermControllersServices {
     res.status(200).json(term);
   };
   //update term controller
-  public update = async (req: Request, res: Response) => {
+  public update = async (req: Request, res: Response, next: NextFunction) => {
     const { schoolId, userId } = (req as CustomRequest).user;
     const termData = req.body as CreateTermType;
     const { id } = req.params;
@@ -50,13 +50,13 @@ class TermControllersServices {
     });
   };
   //TODO:
-  public getTermBySchoolId = async (req: Request, res: Response) => {
+  public getTermByTermId = async (req: Request, res: Response) => {
     const { schoolId, userId } = (req as CustomRequest).user;
     const { id } = req.params;
     if (!schoolId || !userId || id) {
       throw ErrorHandler.unauthorized();
     }
-    const term = await this.termServices.getTermBySchoolId(id, schoolId);
+    const term = await this.termServices.getTermByTermId(id);
     res.status(HTTPSTATUS.ACCEPTED).json({
       ...term,
     });
@@ -68,9 +68,10 @@ class TermControllersServices {
     if (!schoolId || !userId || id) {
       throw ErrorHandler.unauthorized();
     }
-    const terms = await this.termServices.getAllTermsBySchoolId(id, schoolId);
+    const terms = await this.termServices.getAllTermsBySchoolId(schoolId);
     res.status(HTTPSTATUS.OK).json({
-      ...terms,
+      success: true,
+      term: terms?.data || [],
     });
   };
 }

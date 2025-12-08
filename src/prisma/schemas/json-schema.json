@@ -333,6 +333,10 @@
         "updatedById": {
           "type": "string"
         },
+        "isActive": {
+          "type": "boolean",
+          "default": true
+        },
         "createdAt": {
           "type": "string",
           "format": "date-time"
@@ -387,6 +391,24 @@
         },
         "updatedById": {
           "type": "string"
+        },
+        "isElective": {
+          "type": "boolean",
+          "default": false
+        },
+        "isCore": {
+          "type": "boolean",
+          "default": false
+        },
+        "isActive": {
+          "type": "boolean",
+          "default": true
+        },
+        "subjectCode": {
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "createdAt": {
           "type": "string",
@@ -449,12 +471,17 @@
           "type": "string",
           "format": "date-time"
         },
-        "isActive": {
-          "type": "boolean",
-          "default": false
-        },
         "updatedById": {
           "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "default": "ACTIVE",
+          "enum": [
+            "ACTIVE",
+            "INACTIVE",
+            "ARCHIVED"
+          ]
         },
         "createdAt": {
           "type": "string",
@@ -492,9 +519,6 @@
       "properties": {
         "id": {
           "type": "string"
-        },
-        "number": {
-          "type": "integer"
         },
         "name": {
           "type": "string"
@@ -583,16 +607,16 @@
         "department": {
           "$ref": "#/definitions/Department"
         },
-        "classSubject": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ClassSubject"
-          }
-        },
         "subjects": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Subject"
+          }
+        },
+        "classSubjects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ClassSubject"
           }
         }
       }

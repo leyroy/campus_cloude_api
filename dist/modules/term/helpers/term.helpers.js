@@ -33,14 +33,21 @@ class TermHelpers {
             return yield prisma_config_1.default.term.delete({ where: { id } });
         });
     }
-    getTermBySchoolId(id, shcoolId) {
+    getTermByTermId(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield prisma_config_1.default.term.findFirst({ where: { id, schoolId: shcoolId } });
+            return yield prisma_config_1.default.term.findFirst({
+                where: { id },
+                include: {
+                    academicYear: true,
+                    school: true,
+                    Subject: true,
+                },
+            });
         });
     }
-    getAllTermsBySchoolId(id, shcoolId) {
+    getAllTermsBySchoolId(shcoolId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield prisma_config_1.default.term.findMany({ where: { id, schoolId: shcoolId } });
+            return yield prisma_config_1.default.term.findMany({ where: { schoolId: shcoolId } });
         });
     }
 }

@@ -26,7 +26,7 @@ class TermControllersServices {
             res.status(200).json(term);
         });
         //update term controller
-        this.update = (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.update = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
             const { schoolId, userId } = req.user;
             const termData = req.body;
             const { id } = req.params;
@@ -47,13 +47,13 @@ class TermControllersServices {
             res.status(http_status_1.HTTPSTATUS.ACCEPTED).json(Object.assign({}, deletedTerm));
         });
         //TODO:
-        this.getTermBySchoolId = (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.getTermByTermId = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const { schoolId, userId } = req.user;
             const { id } = req.params;
             if (!schoolId || !userId || id) {
                 throw errorHandler_1.ErrorHandler.unauthorized();
             }
-            const term = yield this.termServices.getTermBySchoolId(id, schoolId);
+            const term = yield this.termServices.getTermByTermId(id);
             res.status(http_status_1.HTTPSTATUS.ACCEPTED).json(Object.assign({}, term));
         });
         //all terms by school id
@@ -63,8 +63,11 @@ class TermControllersServices {
             if (!schoolId || !userId || id) {
                 throw errorHandler_1.ErrorHandler.unauthorized();
             }
-            const terms = yield this.termServices.getAllTermsBySchoolId(id, schoolId);
-            res.status(http_status_1.HTTPSTATUS.OK).json(Object.assign({}, terms));
+            const terms = yield this.termServices.getAllTermsBySchoolId(schoolId);
+            res.status(http_status_1.HTTPSTATUS.OK).json({
+                success: true,
+                term: (terms === null || terms === void 0 ? void 0 : terms.data) || [],
+            });
         });
         this.termServices = termServices;
     }

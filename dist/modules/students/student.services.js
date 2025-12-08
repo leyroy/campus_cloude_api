@@ -41,6 +41,10 @@ class StudentService {
         return __awaiter(this, void 0, void 0, function* () {
             return yield prisma_config_1.default.student.findMany({
                 where: { schoolId, AND: { isDeleted: false } },
+                include: {
+                    class: true,
+                    department: true,
+                },
             });
         });
     }

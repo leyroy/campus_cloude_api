@@ -18,10 +18,20 @@ export class TermHelpers {
   public async deleteTerm(id: string) {
     return await prisma.term.delete({ where: { id } });
   }
-  public async getTermBySchoolId(id: string, shcoolId: string) {
-    return await prisma.term.findFirst({ where: { id, schoolId: shcoolId } });
+  public async getTermByTermId(id: string) {
+    return await prisma.term.findFirst({
+      where: { id },
+      include: {
+        academicYear: true,
+        school: true,
+        Subject: true,
+      },
+    });
   }
-  public async getAllTermsBySchoolId(id: string, shcoolId: string) {
-    return await prisma.term.findMany({ where: { id, schoolId: shcoolId } });
+  public async getAllTermsBySchoolId(shcoolId: string) {
+    return await prisma.term.findMany({ where: { schoolId: shcoolId } });
+  }
+  public async getSchoolAcademicYears(schoolId: string) {
+    return await prisma.term.findMany({ where: { schoolId: schoolId } });
   }
 }

@@ -25,6 +25,7 @@ const createDepartmentController = async (
     description,
     schoolId,
     updatedById: userId,
+    isActive: true,
   });
   res.status(HTTPSTATUS.OK).json(result);
 };

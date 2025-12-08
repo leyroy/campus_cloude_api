@@ -12,24 +12,24 @@ datasource db {
 
 // Core System Models
 model School {
-  id          String      @id @default(cuid())
-  name        String
-  type        SchoolType
-  address     String?
-  phone       String?
-  email       String?
-  logo        String?
-  motto       String?
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id        String     @id @default(cuid())
+  name      String
+  type      SchoolType
+  address   String?
+  phone     String?
+  email     String?
+  logo      String?
+  motto     String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 
   // Relations
-  users         User[]
-  students      Student[]
-  classes       Class[]
-  subjects      Subject[]
-  academicYears AcademicYear[]
-  departments   Department[]
+  users          User[]
+  students       Student[]
+  classes        Class[]
+  subjects       Subject[]
+  academicYears  AcademicYear[]
+  departments    Department[]
   gradingSystems GradingSystem[]
 
   @@map("schools")
@@ -44,32 +44,32 @@ enum SchoolType {
 }
 
 model User {
-  id          String      @id @default(cuid())
-  email       String      @unique
-  username    String?     @unique
-  firstName   String
-  lastName    String
-  phone       String?
-  role        UserRole
-  isActive    Boolean     @default(true)
+  id           String   @id @default(cuid())
+  email        String   @unique
+  username     String?  @unique
+  firstName    String
+  lastName     String
+  phone        String?
+  role         UserRole
+  isActive     Boolean  @default(true)
   passwordHash String
-  avatar      String?
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  avatar       String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   // Relations
-  school      School      @relation(fields: [schoolId], references: [id])
-  schoolId    String
+  school   School @relation(fields: [schoolId], references: [id])
+  schoolId String
 
   // Role-specific relations
-  teacherProfile    Teacher?
-  studentProfile    Student?
-  parentProfile     Parent?
+  teacherProfile Teacher?
+  studentProfile Student?
+  parentProfile  Parent?
 
   // Activity tracking
   assessmentsCreated Assessment[]
-  gradesEntered     Grade[]
-  attendanceRecords AttendanceRecord[]
+  gradesEntered      Grade[]
+  attendanceRecords  AttendanceRecord[]
 
   @@map("users")
 }
@@ -91,16 +91,15 @@ enum UserRole {
 
 // Academic Structure
 model AcademicYear {
-  id          String      @id @default(cuid())
-  name        String      // e.g., "2024/2025"
-  startDate   DateTime
-  endDate     DateTime
-  isCurrent   Boolean     @default(false)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-
-  school      School      @relation(fields: [schoolId], references: [id])
-  schoolId    String
+  id        String             @id @default(cuid())
+  name      String // e.g., "2024/2025"
+  startDate DateTime
+  endDate   DateTime
+  status    AcademicYearStatus @default(ACTIVE)
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+  school    School             @relation(fields: [schoolId], references: [id])
+  schoolId  String
 
   // Relations
   terms       Term[]
@@ -112,21 +111,21 @@ model AcademicYear {
 }
 
 model Term {
-  id            String      @id @default(cuid())
-  number        Int         // 1, 2, 3
-  name          String      // "First Term", "Second Term", "Third Term"
-  startDate     DateTime
-  endDate       DateTime
-  isCurrent     Boolean     @default(false)
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  id        String   @id @default(cuid())
+  number    Int // 1, 2, 3
+  name      String // "First Term", "Second Term", "Third Term"
+  startDate DateTime
+  endDate   DateTime
+  isCurrent Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  academicYear  AcademicYear @relation(fields: [academicYearId], references: [id])
+  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
   academicYearId String
 
   // Relations
-  assessments   Assessment[]
-  reportCards   ReportCard[]
+  assessments       Assessment[]
+  reportCards       ReportCard[]
   attendanceRecords AttendanceRecord[]
 
   @@unique([academicYearId, number])
@@ -134,40 +133,40 @@ model Term {
 }
 
 model Department {
-  id          String      @id @default(cuid())
+  id          String   @id @default(cuid())
   name        String
-  code        String      // e.g., "MATH", "ENG", "SCI"
+  code        String // e.g., "MATH", "ENG", "SCI"
   description String?
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  school      School      @relation(fields: [schoolId], references: [id])
-  schoolId    String
+  school   School @relation(fields: [schoolId], references: [id])
+  schoolId String
 
   // Relations
-  subjects    Subject[]
-  teachers    Teacher[]
-  head        Teacher?    @relation("DepartmentHead", fields: [headId], references: [id])
-  headId      String?     @unique
+  subjects Subject[]
+  teachers Teacher[]
+  head     Teacher?  @relation("DepartmentHead", fields: [headId], references: [id])
+  headId   String?   @unique
 
   @@unique([schoolId, code])
   @@map("departments")
 }
 
 model Subject {
-  id          String      @id @default(cuid())
+  id          String         @id @default(cuid())
   name        String
-  code        String      // e.g., "MATH_P1", "ENG_JHS2"
+  code        String // e.g., "MATH_P1", "ENG_JHS2"
   description String?
-  isCore      Boolean     @default(true)
+  isCore      Boolean        @default(true)
   creditHours Int?
   level       EducationLevel
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
 
-  school      School      @relation(fields: [schoolId], references: [id])
-  schoolId    String
-  department  Department? @relation(fields: [departmentId], references: [id])
+  school       School      @relation(fields: [schoolId], references: [id])
+  schoolId     String
+  department   Department? @relation(fields: [departmentId], references: [id])
   departmentId String?
 
   // Relations
@@ -197,23 +196,23 @@ enum EducationLevel {
 }
 
 model Class {
-  id          String      @id @default(cuid())
-  name        String      // e.g., "Primary 1A", "JHS 2B"
-  level       EducationLevel
-  section     String?     // A, B, C, etc.
-  capacity    Int?
-  academicTrack String?   // For SHS: "General Arts", "General Science", etc.
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id            String         @id @default(cuid())
+  name          String // e.g., "Primary 1A", "JHS 2B"
+  level         EducationLevel
+  section       String? // A, B, C, etc.
+  capacity      Int?
+  academicTrack String? // For SHS: "General Arts", "General Science", etc.
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 
-  school      School      @relation(fields: [schoolId], references: [id])
-  schoolId    String
+  school   School @relation(fields: [schoolId], references: [id])
+  schoolId String
 
   // Relations
-  enrollments   Enrollment[]
-  classSubjects ClassSubject[]
-  classTeacher  Teacher?    @relation("ClassTeacher", fields: [classTeacherId], references: [id])
-  classTeacherId String?
+  enrollments       Enrollment[]
+  classSubjects     ClassSubject[]
+  classTeacher      Teacher?           @relation("ClassTeacher", fields: [classTeacherId], references: [id])
+  classTeacherId    String?
   attendanceRecords AttendanceRecord[]
 
   @@unique([schoolId, name, level])
@@ -221,16 +220,16 @@ model Class {
 }
 
 model ClassSubject {
-  id          String      @id @default(cuid())
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  class       Class       @relation(fields: [classId], references: [id])
-  classId     String
-  subject     Subject     @relation(fields: [subjectId], references: [id])
-  subjectId   String
-  teacher     Teacher     @relation(fields: [teacherId], references: [id])
-  teacherId   String
+  class     Class   @relation(fields: [classId], references: [id])
+  classId   String
+  subject   Subject @relation(fields: [subjectId], references: [id])
+  subjectId String
+  teacher   Teacher @relation(fields: [teacherId], references: [id])
+  teacherId String
 
   // Relations
   assessments Assessment[]
@@ -241,27 +240,27 @@ model ClassSubject {
 
 // People Models
 model Student {
-  id              String      @id @default(cuid())
-  studentNumber   String      @unique
-  admissionDate   DateTime
-  status          StudentStatus @default(ACTIVE)
-  medicalInfo     String?
+  id               String        @id @default(cuid())
+  studentNumber    String        @unique
+  admissionDate    DateTime
+  status           StudentStatus @default(ACTIVE)
+  medicalInfo      String?
   emergencyContact String?
-  guardianInfo    Json?       // Flexible storage for guardian details
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  guardianInfo     Json? // Flexible storage for guardian details
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
 
-  user            User        @relation(fields: [userId], references: [id])
-  userId          String      @unique
-  school          School      @relation(fields: [schoolId], references: [id])
-  schoolId        String
+  user     User   @relation(fields: [userId], references: [id])
+  userId   String @unique
+  school   School @relation(fields: [schoolId], references: [id])
+  schoolId String
 
   // Relations
-  enrollments     Enrollment[]
-  grades          Grade[]
-  attendanceRecords AttendanceRecord[]
-  reportCards     ReportCard[]
-  parents         StudentParent[]
+  enrollments         Enrollment[]
+  grades              Grade[]
+  attendanceRecords   AttendanceRecord[]
+  reportCards         ReportCard[]
+  parents             StudentParent[]
   disciplinaryRecords DisciplinaryRecord[]
 
   @@map("students")
@@ -276,26 +275,26 @@ enum StudentStatus {
 }
 
 model Teacher {
-  id              String      @id @default(cuid())
-  employeeNumber  String      @unique
-  qualification   String?
-  specialization  String?
-  experience      Int?        // Years of experience
-  hireDate        DateTime
-  status          TeacherStatus @default(ACTIVE)
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  id             String        @id @default(cuid())
+  employeeNumber String        @unique
+  qualification  String?
+  specialization String?
+  experience     Int? // Years of experience
+  hireDate       DateTime
+  status         TeacherStatus @default(ACTIVE)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 
-  user            User        @relation(fields: [userId], references: [id])
-  userId          String      @unique
-  department      Department? @relation(fields: [departmentId], references: [id])
-  departmentId    String?
+  user         User        @relation(fields: [userId], references: [id])
+  userId       String      @unique
+  department   Department? @relation(fields: [departmentId], references: [id])
+  departmentId String?
 
   // Relations
-  classSubjects   ClassSubject[]
+  classSubjects      ClassSubject[]
   assessmentsCreated Assessment[]
-  classesManaged  Class[]     @relation("ClassTeacher")
-  departmentHeaded Department? @relation("DepartmentHead")
+  classesManaged     Class[]        @relation("ClassTeacher")
+  departmentHeaded   Department?    @relation("DepartmentHead")
 
   @@map("teachers")
 }
@@ -308,18 +307,18 @@ enum TeacherStatus {
 }
 
 model Parent {
-  id          String      @id @default(cuid())
-  occupation  String?
-  workplace   String?
+  id           String             @id @default(cuid())
+  occupation   String?
+  workplace    String?
   relationship ParentRelationship
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
 
-  user        User        @relation(fields: [userId], references: [id])
-  userId      String      @unique
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique
 
   // Relations
-  children    StudentParent[]
+  children StudentParent[]
 
   @@map("parents")
 }
@@ -335,14 +334,14 @@ enum ParentRelationship {
 }
 
 model StudentParent {
-  id          String      @id @default(cuid())
-  isPrimary   Boolean     @default(false)
-  createdAt   DateTime    @default(now())
+  id        String   @id @default(cuid())
+  isPrimary Boolean  @default(false)
+  createdAt DateTime @default(now())
 
-  student     Student     @relation(fields: [studentId], references: [id])
-  studentId   String
-  parent      Parent      @relation(fields: [parentId], references: [id])
-  parentId    String
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId String
+  parent    Parent  @relation(fields: [parentId], references: [id])
+  parentId  String
 
   @@unique([studentId, parentId])
   @@map("student_parents")
@@ -350,20 +349,20 @@ model StudentParent {
 
 // Enrollment and Academic Records
 model Enrollment {
-  id              String      @id @default(cuid())
-  enrollmentDate  DateTime    @default(now())
-  status          EnrollmentStatus @default(ACTIVE)
-  finalGrade      String?     // Overall grade for the year
-  promoted        Boolean?    // null = pending, true = promoted, false = repeated
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  id             String           @id @default(cuid())
+  enrollmentDate DateTime         @default(now())
+  status         EnrollmentStatus @default(ACTIVE)
+  finalGrade     String? // Overall grade for the year
+  promoted       Boolean? // null = pending, true = promoted, false = repeated
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
 
-  student         Student     @relation(fields: [studentId], references: [id])
-  studentId       String
-  class           Class       @relation(fields: [classId], references: [id])
-  classId         String
-  academicYear    AcademicYear @relation(fields: [academicYearId], references: [id])
-  academicYearId  String
+  student        Student      @relation(fields: [studentId], references: [id])
+  studentId      String
+  class          Class        @relation(fields: [classId], references: [id])
+  classId        String
+  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
+  academicYearId String
 
   @@unique([studentId, academicYearId])
   @@map("enrollments")
@@ -378,16 +377,16 @@ enum EnrollmentStatus {
 
 // Assessment and Grading System
 model GradingSystem {
-  id          String      @id @default(cuid())
-  name        String      // e.g., "KG Descriptive", "Primary Percentage", "SHS WASSCE"
-  type        GradingType
-  level       EducationLevel
-  isActive    Boolean     @default(true)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id        String         @id @default(cuid())
+  name      String // e.g., "KG Descriptive", "Primary Percentage", "SHS WASSCE"
+  type      GradingType
+  level     EducationLevel
+  isActive  Boolean        @default(true)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
 
-  school      School      @relation(fields: [schoolId], references: [id])
-  schoolId    String
+  school   School @relation(fields: [schoolId], references: [id])
+  schoolId String
 
   // Relations
   gradeScales GradeScale[]
@@ -397,55 +396,55 @@ model GradingSystem {
 }
 
 enum GradingType {
-  DESCRIPTIVE     // Excellent, Very Good, Good, Needs Support (KG)
-  PERCENTAGE      // 0-100% (Primary)
-  LETTER_GRADE    // A1-F9 (JHS/SHS)
-  POINTS          // GPA system
+  DESCRIPTIVE // Excellent, Very Good, Good, Needs Support (KG)
+  PERCENTAGE // 0-100% (Primary)
+  LETTER_GRADE // A1-F9 (JHS/SHS)
+  POINTS // GPA system
 }
 
 model GradeScale {
-  id          String      @id @default(cuid())
-  grade       String      // "Excellent", "A1", "80-100%"
+  id          String  @id @default(cuid())
+  grade       String // "Excellent", "A1", "80-100%"
   minScore    Float
   maxScore    Float
-  points      Float?      // For GPA calculation
+  points      Float? // For GPA calculation
   description String?
-  order       Int         // For sorting grades
+  order       Int // For sorting grades
 
-  gradingSystem GradingSystem @relation(fields: [gradingSystemId], references: [id])
+  gradingSystem   GradingSystem @relation(fields: [gradingSystemId], references: [id])
   gradingSystemId String
 
   @@map("grade_scales")
 }
 
 model Assessment {
-  id              String      @id @default(cuid())
-  title           String
-  type            AssessmentType
-  weight          Float       // Percentage weight in final grade
-  totalMarks      Float
-  instructions    String?
-  dueDate         DateTime?
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  id           String         @id @default(cuid())
+  title        String
+  type         AssessmentType
+  weight       Float // Percentage weight in final grade
+  totalMarks   Float
+  instructions String?
+  dueDate      DateTime?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
 
-  classSubject    ClassSubject @relation(fields: [classSubjectId], references: [id])
+  classSubject    ClassSubject  @relation(fields: [classSubjectId], references: [id])
   classSubjectId  String
-  subject         Subject     @relation(fields: [subjectId], references: [id])
+  subject         Subject       @relation(fields: [subjectId], references: [id])
   subjectId       String
-  term            Term        @relation(fields: [termId], references: [id])
+  term            Term          @relation(fields: [termId], references: [id])
   termId          String
-  academicYear    AcademicYear @relation(fields: [academicYearId], references: [id])
+  academicYear    AcademicYear  @relation(fields: [academicYearId], references: [id])
   academicYearId  String
-  createdBy       User        @relation(fields: [createdById], references: [id])
+  createdBy       User          @relation(fields: [createdById], references: [id])
   createdById     String
-  teacher         Teacher     @relation(fields: [teacherId], references: [id])
+  teacher         Teacher       @relation(fields: [teacherId], references: [id])
   teacherId       String
   gradingSystem   GradingSystem @relation(fields: [gradingSystemId], references: [id])
   gradingSystemId String
 
   // Relations
-  grades          Grade[]
+  grades Grade[]
 
   @@map("assessments")
 }
@@ -473,24 +472,24 @@ enum AssessmentType {
 }
 
 model Grade {
-  id          String      @id @default(cuid())
-  score       Float?      // Raw score
-  grade       String?     // Computed grade (A1, Excellent, etc.)
-  percentage  Float?      // Percentage score
-  points      Float?      // Points for GPA
-  remarks     String?     // Teacher's comments
-  gradedAt    DateTime    @default(now())
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id         String   @id @default(cuid())
+  score      Float? // Raw score
+  grade      String? // Computed grade (A1, Excellent, etc.)
+  percentage Float? // Percentage score
+  points     Float? // Points for GPA
+  remarks    String? // Teacher's comments
+  gradedAt   DateTime @default(now())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
-  student     Student     @relation(fields: [studentId], references: [id])
-  studentId   String
-  assessment  Assessment  @relation(fields: [assessmentId], references: [id])
+  student      Student    @relation(fields: [studentId], references: [id])
+  studentId    String
+  assessment   Assessment @relation(fields: [assessmentId], references: [id])
   assessmentId String
-  subject     Subject     @relation(fields: [subjectId], references: [id])
-  subjectId   String
-  gradedBy    User        @relation(fields: [gradedById], references: [id])
-  gradedById  String
+  subject      Subject    @relation(fields: [subjectId], references: [id])
+  subjectId    String
+  gradedBy     User       @relation(fields: [gradedById], references: [id])
+  gradedById   String
 
   @@unique([studentId, assessmentId])
   @@map("grades")
@@ -498,63 +497,63 @@ model Grade {
 
 // Report Cards and Academic Records
 model ReportCard {
-  id              String      @id @default(cuid())
-  overallGrade    String?
-  overallPercentage Float?
-  position        Int?        // Class position
-  totalStudents   Int?        // Total students in class
-  attendance      Json?       // Attendance summary
-  conduct         String?     // Behavioral assessment
-  teacherRemarks  String?
+  id                 String   @id @default(cuid())
+  overallGrade       String?
+  overallPercentage  Float?
+  position           Int? // Class position
+  totalStudents      Int? // Total students in class
+  attendance         Json? // Attendance summary
+  conduct            String? // Behavioral assessment
+  teacherRemarks     String?
   headTeacherRemarks String?
-  promoted        Boolean?
-  nextClass       String?
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  promoted           Boolean?
+  nextClass          String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 
-  student         Student     @relation(fields: [studentId], references: [id])
-  studentId       String
-  term            Term        @relation(fields: [termId], references: [id])
-  termId          String
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId String
+  term      Term    @relation(fields: [termId], references: [id])
+  termId    String
 
   // Relations
-  subjectGrades   SubjectGrade[]
+  subjectGrades SubjectGrade[]
 
   @@unique([studentId, termId])
   @@map("report_cards")
 }
 
 model SubjectGrade {
-  id              String      @id @default(cuid())
-  subjectName     String
-  classScore      Float?      // Continuous assessment
-  examScore       Float?      // Examination score
-  totalScore      Float?      // Combined score
-  grade           String?     // Final grade
-  position        Int?        // Subject position
-  remarks         String?     // Subject-specific remarks
+  id          String  @id @default(cuid())
+  subjectName String
+  classScore  Float? // Continuous assessment
+  examScore   Float? // Examination score
+  totalScore  Float? // Combined score
+  grade       String? // Final grade
+  position    Int? // Subject position
+  remarks     String? // Subject-specific remarks
 
-  reportCard      ReportCard  @relation(fields: [reportCardId], references: [id])
-  reportCardId    String
+  reportCard   ReportCard @relation(fields: [reportCardId], references: [id])
+  reportCardId String
 
   @@map("subject_grades")
 }
 
 // Attendance Management
 model AttendanceRecord {
-  id          String      @id @default(cuid())
-  date        DateTime    @db.Date
-  status      AttendanceStatus
-  remarks     String?
-  recordedAt  DateTime    @default(now())
+  id         String           @id @default(cuid())
+  date       DateTime         @db.Date
+  status     AttendanceStatus
+  remarks    String?
+  recordedAt DateTime         @default(now())
 
-  student     Student     @relation(fields: [studentId], references: [id])
-  studentId   String
-  class       Class       @relation(fields: [classId], references: [id])
-  classId     String
-  term        Term        @relation(fields: [termId], references: [id])
-  termId      String
-  recordedBy  User        @relation(fields: [recordedById], references: [id])
+  student      Student @relation(fields: [studentId], references: [id])
+  studentId    String
+  class        Class   @relation(fields: [classId], references: [id])
+  classId      String
+  term         Term    @relation(fields: [termId], references: [id])
+  termId       String
+  recordedBy   User    @relation(fields: [recordedById], references: [id])
   recordedById String
 
   @@unique([studentId, date])
@@ -571,17 +570,17 @@ enum AttendanceStatus {
 
 // Discipline Management
 model DisciplinaryRecord {
-  id          String      @id @default(cuid())
-  incident    String
-  action      String?     // Action taken
-  date        DateTime    @db.Date
-  severity    DisciplinarySeverity
-  resolved    Boolean     @default(false)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id        String               @id @default(cuid())
+  incident  String
+  action    String? // Action taken
+  date      DateTime             @db.Date
+  severity  DisciplinarySeverity
+  resolved  Boolean              @default(false)
+  createdAt DateTime             @default(now())
+  updatedAt DateTime             @updatedAt
 
-  student     Student     @relation(fields: [studentId], references: [id])
-  studentId   String
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId String
 
   @@map("disciplinary_records")
 }
@@ -595,27 +594,27 @@ enum DisciplinarySeverity {
 
 // System Configuration
 model SystemSetting {
-  id          String      @id @default(cuid())
-  key         String      @unique
+  id          String   @id @default(cuid())
+  key         String   @unique
   value       String
   description String?
   category    String?
-  updatedAt   DateTime    @updatedAt
+  updatedAt   DateTime @updatedAt
 
   @@map("system_settings")
 }
 
 // Audit Trail
 model AuditLog {
-  id          String      @id @default(cuid())
-  action      String      // CREATE, UPDATE, DELETE
-  tableName   String      // Table affected
-  recordId    String      // ID of affected record
-  oldValues   Json?       // Previous values
-  newValues   Json?       // New values
-  userId      String?     // User who performed action
-  timestamp   DateTime    @default(now())
-  ipAddress   String?
+  id        String   @id @default(cuid())
+  action    String // CREATE, UPDATE, DELETE
+  tableName String // Table affected
+  recordId  String // ID of affected record
+  oldValues Json? // Previous values
+  newValues Json? // New values
+  userId    String? // User who performed action
+  timestamp DateTime @default(now())
+  ipAddress String?
 
   @@map("audit_logs")
 }

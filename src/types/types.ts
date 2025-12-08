@@ -52,6 +52,7 @@ export enum Resource {
   DEPARTMENT = 'department',
   AUTH = 'auth',
   REPORT = 'report',
+  TERM = 'term',
 }
 
 export enum Action {

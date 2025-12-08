@@ -49,9 +49,9 @@ class TermService {
         });
     }
     //get term by school id
-    getTermBySchoolId(id, schoolId) {
+    getTermByTermId(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const term = yield this.termHelpers.getTermBySchoolId(id, schoolId);
+            const term = yield this.termHelpers.getTermByTermId(id);
             if (!term) {
                 return errorHandler_1.ErrorHandler.notFound();
             }
@@ -63,9 +63,9 @@ class TermService {
         });
     }
     //get all terms for a school
-    getAllTermsBySchoolId(id, schoolId) {
+    getAllTermsBySchoolId(schoolId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const terms = yield this.termHelpers.getAllTermsBySchoolId(id, schoolId);
+            const terms = yield this.termHelpers.getAllTermsBySchoolId(schoolId);
             return {
                 success: true,
                 message: 'terms',

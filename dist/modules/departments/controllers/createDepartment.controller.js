@@ -27,6 +27,7 @@ const createDepartmentController = (req, res, next) => __awaiter(void 0, void 0,
         description,
         schoolId,
         updatedById: userId,
+        isActive: true,
     });
     res.status(http_status_1.HTTPSTATUS.OK).json(result);
 });

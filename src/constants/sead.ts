@@ -88,6 +88,12 @@ export const permissions = [
   { resource: 'report', action: 'generate' },
   { resource: 'report', action: 'view' },
   { resource: 'report', action: 'export' },
+
+  //Schoole Terms
+  { resource: 'term', action: 'create' },
+  { resource: 'term', action: 'view' },
+  { resource: 'term', action: 'update' },
+  { resource: 'term', action: 'delete' },
 ];
 
 export const plans = [

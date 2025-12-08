@@ -1,4 +1,4 @@
-import { number, z } from 'zod';
+import { z } from 'zod';
 
 export const CreateTermSchema = z.object({
   name: z.string().min(1, { message: 'Term name is required' }),

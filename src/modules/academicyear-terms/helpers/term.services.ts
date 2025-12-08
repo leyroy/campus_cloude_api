@@ -27,6 +27,14 @@ export class TermService {
       data: updatedTerm,
     };
   }
+  public async getSchoolAcademicYears(schoolId: string) {
+    const updatedTerm = await this.termHelpers.getSchoolAcademicYears(schoolId);
+    return {
+      success: true,
+      message: 'Updated successfully',
+      data: updatedTerm,
+    };
+  }
   //delete term
   public async deleteTerm(id: string) {
     await this.termHelpers.deleteTerm(id);
@@ -36,8 +44,8 @@ export class TermService {
     };
   }
   //get term by school id
-  public async getTermBySchoolId(id: string, schoolId: string) {
-    const term = await this.termHelpers.getTermBySchoolId(id, schoolId);
+  public async getTermByTermId(id: string) {
+    const term = await this.termHelpers.getTermByTermId(id);
     if (!term) {
       return ErrorHandler.notFound();
     }
@@ -48,8 +56,8 @@ export class TermService {
     };
   }
   //get all terms for a school
-  public async getAllTermsBySchoolId(id: string, schoolId: string) {
-    const terms = await this.termHelpers.getAllTermsBySchoolId(id, schoolId);
+  public async getAllTermsBySchoolId(schoolId: string) {
+    const terms = await this.termHelpers.getAllTermsBySchoolId(schoolId);
     return {
       success: true,
       message: 'terms',

@@ -45,6 +45,7 @@ var Resource;
     Resource["DEPARTMENT"] = "department";
     Resource["AUTH"] = "auth";
     Resource["REPORT"] = "report";
+    Resource["TERM"] = "term";
 })(Resource || (exports.Resource = Resource = {}));
 var Action;
 (function (Action) {
